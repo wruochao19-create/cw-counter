@@ -160,6 +160,9 @@ class FakeReader:
     def rebase(self,old,new):
         RapidReader.rebase(self,old,new)
 
+    def finish(self):
+        return self.tracker.finish()
+
     def read(self,image,timestamp):
         l,t,r,b=image.info['region'];rows=[]
         for source in self.world.specs:
@@ -192,7 +195,7 @@ class RecoveryIntegrationTests(unittest.TestCase):
                  patch.object(app,'CharacterMonitor',side_effect=lambda:CharacterMonitor(lambda image:None))]
         for item in patches:self.stack.enter_context(item)
         self.root=tk.Tk();self.root.withdraw()
-        self.ui=app.App(self.root)
+        self.ui=app.App(self.root,async_ocr=False)
         self.addCleanup(self.finish)
 
     def finish(self):
@@ -223,6 +226,21 @@ class RecoveryIntegrationTests(unittest.TestCase):
             for t in (1.5,2.,2.5):self.step(t)
         self.assertIs(self.ui.session,session)
         self.assertTrue(self.ui.was_valid)
+
+    def test_map_time_advances_without_a_notification_or_readable_exp(self):
+        self.begin()
+        before=self.ui.session.map_clock.seconds
+        for t in (1.1,1.3,1.5,1.7,1.9):
+            self.world.now=t
+            if self.ui.metric_job:self.root.after_cancel(self.ui.metric_job)
+            self.ui.metrics_tick()
+        self.assertAlmostEqual(self.ui.session.map_clock.seconds-before,1.)
+        self.assertIsNone(self.ui.session.exp_progress.snapshot()['exp_per_hour'])
+        self.world.focus=False
+        self.step(2.)
+        paused=self.ui.session.map_clock.seconds
+        self.step(12.)
+        self.assertEqual(paused,self.ui.session.map_clock.seconds)
 
     def test_2560_borderless_can_identify_map_before_hud_location_is_known(self):
         self.world.rect=(0,0,2560,1440)

@@ -4,6 +4,7 @@ from collections import Counter
 from datetime import datetime
 from pathlib import Path
 from exp_progress import ExperienceProgress
+from session_clock import MapClock
 
 
 def parse_monsters(text):
@@ -43,6 +44,7 @@ class CounterSession:
         self.personal_exp = self.party_exp = self.unresolved = 0
         self.active_seconds = 0.0
         self.exp_progress=ExperienceProgress()
+        self.map_clock=MapClock()
         self.writer = self.file = None
         self.path = None
 
@@ -168,6 +170,7 @@ class CounterSession:
             writer.writerow(['hud_estimated_kills',sum(self.hud_estimated_counts.values())])
             for name,count in self.estimated_counts.items():writer.writerow(['estimated_monster',self.safe_cell(name),count])
             for key,value in self.exp_progress.snapshot().items():writer.writerow([key,value])
+            writer.writerow(['map_active_seconds',round(self.map_clock.seconds,2)])
 
     def close(self):
         if self.file:

@@ -54,6 +54,7 @@ def build_interface(ui):
     ui.map_name = tk.StringVar(value=ui.settings.get('map') or ALL_MAPS)
     ui.character_display = tk.StringVar()
     ui.rate_display = tk.StringVar(value='—')
+    ui.rate_note = tk.StringVar(value='底部经验条 · 等待读数')
     ui.eta_display = tk.StringVar(value='开始后估算')
     ui.time_display = tk.StringVar(value='00:00')
     ui.percent_display = tk.StringVar(value='—')
@@ -169,9 +170,10 @@ def apply_topmost(ui, persist=False):
     if persist: ui.save_settings()
 
 
-def update_dashboard(ui):
+def update_dashboard(ui,now=None):
     s = ui.session
-    progress = s.exp_progress.snapshot()
+    progress = s.exp_progress.snapshot(now=now)
+    quality='paused' if ui.running and ui.needs_resume else progress['exp_reading_status']
     rate, eta = progress['exp_per_hour'], progress['level_eta_seconds']
     ui.rate_display.set(f'{rate:,.0f}' if rate is not None else '—')
     if eta is not None:
@@ -179,7 +181,13 @@ def update_dashboard(ui):
         ui.eta_display.set((f'{hours}小时 ' if hours else '') + f'{minutes:02d}分')
     else:
         ui.eta_display.set('暂无经验增长' if rate == 0 else '收集经验数据中' if ui.running else '开始后估算')
-    seconds = int(progress['hud_observed_seconds'])
+    if ui.running and not ui.needs_resume and quality in ('stale','rejected','level_change_pending'):
+        ui.eta_display.set('等待读数确认')
+    state={'stale':'读数过期，保留上次均值','rejected':'数字冲突，正在校验',
+           'level_change_pending':'正在确认升级','confirming':'正在验证数字',
+           'paused':'读取暂停','waiting':'等待读数','live':'有效读数均值'}[quality]
+    ui.rate_note.set('底部经验条 · '+state)
+    seconds = int(s.map_clock.seconds)
     ui.time_display.set(f'{seconds//60:02d}:{seconds%60:02d}')
     percent = progress['current_hud_percent']
     ui.percent_display.set(f'{percent:.2f}%' if percent is not None else '—')
@@ -191,6 +199,8 @@ def update_dashboard(ui):
     if sum(s.counts.values()):ui.empty_label.place_forget()
     else:ui.empty_label.place(relx=.5,rely=.55,anchor='center')
     if ui.running:
-        ui.state_text.set('已暂停' if ui.needs_resume else '统计中' if ui.was_valid else '识别中')
+        ui.state_text.set('已暂停' if ui.needs_resume else '读数过期' if quality=='stale' else
+                          '校验中' if quality in ('rejected','level_change_pending') else
+                          '统计中' if getattr(ui,'map_clock_active',ui.was_valid) else '识别中')
     else:
         ui.state_text.set('已结束' if s.counts and sum(s.counts.values()) else '准备开始')

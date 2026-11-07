@@ -9,6 +9,100 @@ from counter import CounterSession
 
 
 class ProgressTests(unittest.TestCase):
+    def test_real_mismatched_8196_222_read_never_poison_current_or_capacity(self):
+        p=ExperienceProgress()
+        self.point(p,8196,0,3.07)
+        trusted=p.capacity_range
+        self.point(p,222,.4,3.08)
+        self.assertEqual(p.current,ExpReading(8196,3.07))
+        self.assertEqual(p.capacity_range,trusted)
+        self.assertEqual(p.gained,0)
+        self.assertEqual(p.snapshot()['exp_reading_status'],'rejected')
+        self.point(p,8222,.8,3.08)
+        self.assertEqual(p.current,ExpReading(8222,3.08))
+        self.assertEqual(p.gained,26)
+
+    def test_capacity_survives_pause_and_rejects_two_bad_recovery_frames(self):
+        p=ExperienceProgress();self.point(p,8196,0,3.07)
+        p.break_interval()
+        self.point(p,222,20,3.08)
+        self.assertEqual(p.current,ExpReading(8196,3.07))
+        self.assertIsNone(p.baseline)
+        self.point(p,8222,21,3.08)
+        self.assertEqual(p.current,ExpReading(8222,3.08))
+        self.assertEqual(p.gained,0)  # No subtraction across the pause.
+
+    def test_larger_capacity_needs_two_distinct_stable_level_endpoints(self):
+        p=self.sixty_seconds()
+        self.point(p,200,61,1)
+        self.assertEqual(p.current,ExpReading(1600,16))
+        self.assertEqual(p.snapshot()['exp_reading_status'],'level_change_pending')
+        self.point(p,200,61.5,1)
+        self.assertEqual(p.current,ExpReading(1600,16))
+        self.point(p,220,62,1.1)
+        self.assertEqual(p.current,ExpReading(220,1.1))
+        self.assertEqual(p.gained,620)
+
+    def test_watchdog_separates_sample_and_confirmed_freshness_without_extrapolation(self):
+        p=self.baseline();before=p.snapshot()
+        self.assertTrue(p.snapshot(.5)['exp_reading_live'])
+        stale=p.snapshot(5)
+        self.assertFalse(stale['exp_reading_live'])
+        self.assertEqual(stale['exp_reading_status'],'stale')
+        self.assertEqual(stale['hud_observed_seconds'],before['hud_observed_seconds'])
+        self.assertEqual(stale['hud_exp_gained'],before['hud_exp_gained'])
+        for n in range(1,21):
+            p.observe(ExpReading(1000+n,10+n*.01),n*.15+.15)
+        waiting=p.snapshot(3.2)
+        self.assertFalse(waiting['exp_reading_live'])
+        self.assertEqual(waiting['exp_reading_status'],'stale')
+        self.assertLess(waiting['exp_sample_age_seconds'],.1)
+        self.assertGreater(waiting['exp_confirmed_age_seconds'],3)
+
+    def test_continuous_missing_samples_stay_stale_until_confirmed_recovery(self):
+        p=self.baseline();before=p.snapshot()
+        for n in range(1,31):
+            now=.15+n*.15
+            p.observe(None,now)
+            if now>1.35:
+                self.assertEqual(p.reading_status,'stale')
+                self.assertEqual(p.snapshot(now)['exp_reading_status'],'stale')
+                self.assertFalse(p.snapshot(now)['exp_reading_live'])
+        self.assertEqual(p.snapshot()['hud_exp_gained'],before['hud_exp_gained'])
+        self.assertEqual(p.snapshot()['hud_observed_seconds'],before['hud_observed_seconds'])
+        p.observe(ExpReading(1010,10.1),4.8)
+        self.assertEqual(p.snapshot(4.8)['exp_reading_status'],'stale')
+        p.observe(ExpReading(1010,10.1),4.95)
+        self.assertTrue(p.snapshot(4.95)['exp_reading_live'])
+        self.assertEqual(p.gained,0)
+
+    def test_startup_without_any_readable_sample_reports_continuous_stale(self):
+        p=ExperienceProgress()
+        for n in range(20):
+            now=n*.2
+            p.observe(None,now)
+            if now>1.2:
+                self.assertEqual(p.reading_status,'stale')
+                self.assertEqual(p.snapshot(now)['exp_reading_status'],'stale')
+        self.assertIsNone(p.current)
+        self.assertEqual(p.snapshot()['hud_observed_seconds'],0)
+
+    def test_short_missing_frame_keeps_candidate_but_long_gap_drops_it(self):
+        p=self.baseline()
+        p.observe(ExpReading(1010,10.1),.3);p.observe(None,.45)
+        p.observe(ExpReading(1010,10.1),.6)
+        self.assertEqual(p.gained,10)
+        p.observe(ExpReading(1020,10.2),.75);p.observe(None,.9)
+        p.observe(ExpReading(1020,10.2),2.5)
+        self.assertEqual(p.gained,10)
+        self.assertIsNone(p.baseline)
+
+    def test_old_queued_sample_after_break_cannot_rewind_current(self):
+        p=self.baseline();p.break_interval()
+        p.observe(ExpReading(900,9),.1)
+        p.observe(ExpReading(900,9),.11)
+        self.assertEqual(p.current,ExpReading(1000,10))
+
     def baseline(self):
         p=ExperienceProgress()
         p.observe(ExpReading(1000,10),0)

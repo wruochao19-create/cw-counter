@@ -76,6 +76,7 @@ def build_sidebar(ui, scale, open_settings, toggle_topmost):
     label(hero,'EXP / 小时',size=12,color=MUTED).grid(row=0,column=0,sticky='w')
     ui.hero_value=label(hero,variable=ui.rate_display,size=43,bold=True,color=TEXT)
     ui.hero_value.grid(row=1,column=0,sticky='w',pady=(0,4))
+    label(hero,variable=ui.rate_note,size=10,color=MUTED).grid(row=2,column=0,columnspan=2,sticky='w',pady=(0,7))
     clock=frame(hero);clock.grid(row=0,column=1,rowspan=2,sticky='e')
     label(clock,'本图用时',size=10,color=MUTED).pack(anchor='e')
     label(clock,variable=ui.time_display,size=13,color=MUTED).pack(anchor='e')

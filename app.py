@@ -17,15 +17,19 @@ from diagnostics import DiagnosticRecorder
 from hud_exp import HudReader,ExpLedger,HudSampler,search_box as hud_search_box
 import windows_capture as capture
 from sidebar_ui import build_interface, update_dashboard
+from async_reader import AsyncNotificationReader
 
 CONFIG = bootstrap.ROOT / 'settings.json'
 OUTPUT = bootstrap.ROOT / 'sessions'
-VERSION = '0.22'
+VERSION = '0.23'
 
 
 class App:
-    def __init__(self, root):
+    def __init__(self, root, async_ocr=True):
         self.root = root
+        self.async_ocr=async_ocr
+        self.metric_job=None
+        self.map_clock_active=False
         root.title(f'CW Counter · {VERSION}')
         self.running = False
         self.diagnostic=None
@@ -211,6 +215,7 @@ class App:
             self.session.note('reference', f'模式={self.mode.get()}; 倍率={self.multiplier.get()}; 来源={self.catalog.metadata}')
             self.session.note('reader', 'RapidOCR 1.4.4 / English PP-OCRv3 / CPU; 两帧+双路数字一致; 数字最低分>=0.7；整行低于0.8时要求数字>=0.85；分数不是正确率')
             self.reader = RapidReader(monsters)
+            if self.async_ocr:self.reader=AsyncNotificationReader(self.reader)
             self.reset_hud()
             self.active_map=None if automated else self.map_name.get()
             self.map_monitor=MapMonitor(self.catalog) if automated else None
@@ -230,9 +235,11 @@ class App:
             self.was_valid = False
             self.last_tick = None
             self.last_status = ''
+            self.map_clock_active=False
             self.set_controls(True)
             self.append_log(f'新会话：{self.session.path.name}')
             self.tick()
+            self.metrics_tick()
         except Exception as exc:
             self.session.close()
             self.running=False
@@ -274,6 +281,8 @@ class App:
         self.update_stats()
 
     def pause_capture(self,reason):
+        self.map_clock_active=False
+        self.session.map_clock.observe(time.monotonic(),False)
         if not self.needs_resume:
             self.flush_observed()
             self.reset_hud()
@@ -420,6 +429,11 @@ class App:
         if self.hud_sampler:
             if self.hud_sampler.rect!=rect:self.reset_hud();return
             samples,dropped=self.hud_sampler.drain()
+            if samples:self.hud_last_sample=samples[-1][0]
+            elif now-getattr(self,'hud_last_sample',now)>3:
+                self.reset_hud()
+                self.hud_status.set('经验条采样停滞，正在重新定位；保留可信读数')
+                return
             if dropped:
                 self.session.exp_progress.break_interval()
                 self.exp_ledger.reset();self.session.note('hud_gap',f'读取队列丢失{dropped}帧，重建基线')
@@ -454,6 +468,7 @@ class App:
         self.apply_hud_reading(reading,now,box)
         if reading and self.hud_reader.box:
             self.hud_sampler=HudSampler(self.hwnd,rect,self.hud_reader.box,capture)
+            self.hud_last_sample=now
             self.hud_sampler.start()
 
     def apply_hud_reading(self,reading,now,box,cost=None,cached=False):
@@ -487,13 +502,6 @@ class App:
         self.probe_character(rect,monitors)
         if not self.view_unchanged(rect):
             self.pause_capture('窗口正在移动或切换，等待画面稳定');return
-        visible=capture.visible_region(rect,self.auto_region.box,monitors)
-        if not visible or not valid_box(visible,rect[2],rect[3]) or visible[2]<rect[2]:
-            self.pause_capture('右侧经验提示区域已移出屏幕，请将游戏移回可见位置');return
-        if visible!=self.auto_region.box:
-            old=self.auto_region.box
-            self.change_region(old,visible,'适配屏幕可见范围')
-            self.auto_region.phase='verifying'
         if self.map_monitor is not None:
             desired=title_box(rect[2],rect[3])
             header_box=capture.visible_region(rect,desired,monitors)
@@ -508,6 +516,8 @@ class App:
                 self.pause_capture('窗口正在移动或切换，等待画面稳定');return
             detected=self.map_monitor.observe(header,time.monotonic())
             if detected is None:
+                self.map_clock_active=False
+                self.session.map_clock.observe(time.monotonic(),False)
                 if self.hud_sampler:self.reset_hud()
                 if self.was_valid:self.reader.reset()
                 self.was_valid=False;self.last_tick=None
@@ -515,6 +525,18 @@ class App:
                 self.notice('自动恢复中 · 地图确认中，'+detail+'。确认后自动继续。')
                 self.health('waiting_map',rect,started);return
             self.apply_detected_map(detected)
+        self.map_clock_active=True
+        self.session.map_clock.observe(time.monotonic(),True)
+        if self.view_unchanged(rect):self.probe_hud(rect,monitors)
+        visible=capture.visible_region(rect,self.auto_region.box,monitors)
+        if not visible or not valid_box(visible,rect[2],rect[3]) or visible[2]<rect[2]:
+            if self.was_valid:self.reader.reset()
+            self.was_valid=False;self.last_tick=None
+            self.notice('右侧经验提示区域已移出屏幕；底部经验条可见时继续统计 EXP／小时')
+            return
+        if visible!=self.auto_region.box:
+            self.change_region(self.auto_region.box,visible,'适配屏幕可见范围')
+            self.auto_region.phase='verifying'
         box=self.auto_region.box
         image=capture.grab_region(self.hwnd,box,mask_overlay=True)
         signature=tuple((l+box[0],t+box[1],r+box[0],b+box[1])
@@ -526,7 +548,18 @@ class App:
         if not self.view_unchanged(rect):
             self.pause_capture('窗口正在移动或切换，等待画面稳定');return
         now=time.monotonic()
-        events,gap=self.reader.read(image,now)
+        if isinstance(self.reader,AsyncNotificationReader):
+            hwnd=self.hwnd
+            result=self.reader.read(image,now,valid=lambda:
+                capture.foreground(hwnd) and capture.client_rect(hwnd)==rect)
+            if result is None:return
+            events,gap=result
+            image=self.reader.last_image
+            now=self.reader.last_timestamp
+        else:
+            events,gap=self.reader.read(image,now)
+        if not self.view_unchanged(rect):
+            self.pause_capture('窗口正在移动或切换，等待画面稳定');return
         if self.diagnostic and not self.diagnostic.done:
             hud=self.hud_sampler.snapshot() if self.hud_sampler else None
             self.diagnostic.add(image,now,box,getattr(self.reader,'last_lines',[]),events,hud=hud)
@@ -548,7 +581,6 @@ class App:
                        'uncertain_color':'颜色待确认，未计入'}.get(row['status'],row['status'])
                 reason=f"；{row['note']}" if row['status'].startswith('uncertain') else ''
                 self.append_log(f"{row['type']} +{row['exp']} {row['color']} → {row['monster'] or '无法匹配怪物'} [{label}]{reason}")
-        if self.view_unchanged(rect):self.probe_hud(rect,monitors)
         lines=getattr(self.reader,'last_lines',[])
         parsed=sum(bool(row.get('said')) for row in lines)
         verified=sum(bool(row.get('said')) and bool(row.get('digit_verified')) and row.get('map_verified',True) for row in lines)
@@ -575,7 +607,8 @@ class App:
         if not self.running:return
         began=time.monotonic()
         try:
-            self.capture_step(began)
+            if not isinstance(self.reader,AsyncNotificationReader) or not self.reader.busy:
+                self.capture_step(began)
             self.error_streak=0
         except Exception as exc:
             self.error_streak+=1
@@ -583,14 +616,39 @@ class App:
                 self.session.note('capture_error',str(exc))
             self.pause_capture('读取暂时失败：'+str(exc))
         if self.running:
-            delay=max(50,int(300-(time.monotonic()-began)*1000))
+            period=75 if self.async_ocr and self.map_clock_active and not self.needs_resume else 300
+            delay=max(25,int(period-(time.monotonic()-began)*1000))
             if self.error_streak:delay=max(delay,min(2000,300*2**min(self.error_streak,3)))
             self.tick_job=self.root.after(delay,self.tick)
 
+    def metrics_tick(self):
+        self.metric_job=None
+        if not self.running:return
+        now=time.monotonic()
+        try:
+            rect=capture.client_rect(self.hwnd)
+            visible=rect is not None and capture.foreground(self.hwnd) and rect==self.last_geometry
+            active=visible and self.map_clock_active and not self.needs_resume
+            self.session.map_clock.observe(now,active)
+            if not visible and not self.needs_resume:
+                self.pause_capture('CW 不在前台或窗口发生变化')
+            elif active and self.hud_sampler:
+                # Drain numeric samples only; never start OCR from the UI timer.
+                self.probe_hud(rect,capture.monitor_rectangles())
+            self.update_metrics(now)
+        except Exception as exc:
+            self.session.note('metrics_error',str(exc))
+        if self.running:self.metric_job=self.root.after(200,self.metrics_tick)
+
+    def update_metrics(self,now=None):
+        now=time.monotonic() if now is None else now
+        title,detail=self.session.exp_progress.display(self.running,now=now if self.running else None)
+        self.exp_summary.set(title);self.exp_detail.set(detail)
+        update_dashboard(self,now=now if self.running else None)
+
     def update_stats(self):
         s = self.session
-        title,detail=s.exp_progress.display(self.running)
-        self.exp_summary.set(title);self.exp_detail.set(detail)
+        self.update_metrics()
         self.stats.set(f'候选击杀 {sum(s.counts.values())}（含估计 {sum(s.estimated_counts.values())}）· 已读经验 {s.personal_exp:,} · 未确定事件 {s.unresolved}')
         wanted={name for name in s.monsters if s.counts[name]>0}
         for item in self.table.get_children():
@@ -602,7 +660,6 @@ class App:
             values=(name,count,f'{rate:.0f}')
             if self.table.exists(name):self.table.item(name,values=values)
             else:self.table.insert('', 'end',iid=name,values=values)
-        update_dashboard(self)
 
     def append_log(self, text):
         self.log.configure(state='normal')
@@ -612,6 +669,10 @@ class App:
         self.log.see('end'); self.log.configure(state='disabled')
 
     def stop(self):
+        self.map_clock_active=False
+        self.session.map_clock.observe(time.monotonic(),False)
+        if self.metric_job is not None:
+            self.root.after_cancel(self.metric_job);self.metric_job=None
         self.flush_observed()
         if self.hud_sampler:self.hud_sampler.stop();self.hud_sampler=None
         self.close_diagnostic()
@@ -630,6 +691,7 @@ class App:
             self.set_controls(False)
             self.status.set(f'已保存：{summary.name}')
             self.update_stats()
+        if isinstance(self.reader,AsyncNotificationReader):self.reader.close()
 
     def export(self):
         path = filedialog.asksaveasfilename(defaultextension='.csv', initialfile='cw-summary.csv', filetypes=[('CSV','*.csv')])
