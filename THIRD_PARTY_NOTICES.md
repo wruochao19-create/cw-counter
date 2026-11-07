@@ -9,3 +9,5 @@
 This private source package does not grant a new license for third-party game artwork or data.
 
 - `assets/map_overrides.json` contains explicit map-name/location corrections with checked date and references, independently of the older OSMS snapshot. The Murky Swamp I/II references are linked in that file. No map images or descriptions were copied.
+
+- `assets/catalog_reference.json` records factual map/name/level/EXP tuples checked on 2026-11-07 against the linked MapleClassic Wiki map index and individual pages (CC BY-NC-SA 4.0 site). The source and individual page URLs are retained; no prose or images were copied. The audit scope is explicitly limited.

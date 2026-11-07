@@ -14,6 +14,14 @@ from test_pixel_ocr import line
 
 
 class MapTests(unittest.TestCase):
+    def test_excavation_titles_and_angle_brackets_match_without_mixing_variants(self):
+        for text,expected in [('Excavation Site II','Excavation Site II'),
+                              ('Remains <Tomb> IV','Remains (Tomb) IV'),
+                              ('Remains <Cliff>','Remains (Cliff)'),('Camp 2','Camp 2'),('Camp 4',None)]:
+            with patch('map_reader.scan',return_value=[dict(text=text,score=.99,box=(0,0,220,24))]):
+                found=identify_map(Image.new('RGB',(250,40)),Catalog())
+                self.assertEqual(found['name'] if found else None,expected)
+
     def test_hidden_street_murky_swamp_titles_keep_roman_variants_separate(self):
         for title in ('The Murky Swamp I','The Murky Swamp II'):
             lines=[dict(text='Hidden Street',score=.99,box=(0,0,120,15)),

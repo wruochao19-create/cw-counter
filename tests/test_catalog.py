@@ -24,6 +24,32 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(sum(session.counts.values()), 3)
         self.assertEqual(session.unresolved, 0)
 
+    def test_launch_monsters_and_maps_have_exp_and_no_blank_map(self):
+        self.assertNotIn('',self.catalog.maps)
+        self.assertEqual(self.catalog.profile('Excavation Site I'),{'Ghost Stump':35,'Wooden Mask':43})
+        self.assertEqual(self.catalog.profile('Excavation Site III'),{'Rocky Mask':45,'Wooden Mask':43})
+        self.assertEqual(self.catalog.profile('Camp 1'),{'Skeleton Soldier':183,'Officer Skeleton':242})
+        self.assertEqual(self.catalog.profile('Remains (Cliff)'),{'Commander Skeleton':390,'Officer Skeleton':242})
+        self.assertIn(276,self.catalog.profile('Parched Land').values())
+        self.assertEqual(set(self.catalog.profile('Parched Land').values()),{32,43,69,276})
+        self.assertNotIn('Glowshroom',self.catalog.profile())
+        self.assertNotIn('Orange Slime',self.catalog.profile())
+
+    def test_dated_hunting_map_reference_is_covered(self):
+        from scripts.audit_catalog import audit
+        source,missing=audit(self.catalog)
+        self.assertEqual(source['index_rows_checked'],132)
+        self.assertEqual(missing,[])
+
+    def test_shared_exp_requires_map_instead_of_arbitrary_monster(self):
+        session=CounterSession(self.catalog.profile())
+        row=session.accept('global','exp',35,'white')
+        self.assertEqual(row['status'],'ambiguous_exp')
+        self.assertEqual(sum(session.counts.values()),0)
+        session=CounterSession(self.catalog.profile('Excavation Site I'))
+        row=session.accept('local','exp',35,'white')
+        self.assertEqual(row['monster'],'Ghost Stump')
+
     def test_duplicate_names_keep_distinct_variants(self):
         profile = self.catalog.profile()
         names = [name for name in profile if name.startswith('Blue Mushroom')]

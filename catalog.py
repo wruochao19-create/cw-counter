@@ -16,20 +16,30 @@ class Catalog:
         data = json.loads(Path(path).read_text('utf-8'))
         self.metadata = data['source']
         # Entries with no recorded location may be unreleased/test content.
-        self.records = [m for m in data['monsters'] if m['exp'] > 0 and m['maps']]
+        records = data['monsters']
         self.aliases = {}
         if bundled:
             corrections=json.loads(Path(path).with_name('map_overrides.json').read_text('utf-8'))
             self.aliases=corrections['renames']
-            by_id={m['id']:m for m in self.records}
-            for monster in self.records:
-                monster['maps']=[self.aliases.get(place,place) for place in monster['maps']]
+            for extra in corrections.get('additional_monsters',[]):
+                existing=next((m for m in records if (m['name'],m['level'],m['exp'])==
+                               (extra['name'],extra['level'],extra['exp'])),None)
+                if existing:
+                    existing['maps']=list(dict.fromkeys(existing['maps']+extra['maps']))
+                else:
+                    if any(m['id']==extra['id'] for m in records):raise ValueError('Conflicting supplemental monster ID')
+                    records.append(extra)
+            by_id={m['id']:m for m in records}
+            for monster in records:
+                monster['maps']=list(dict.fromkeys(self.aliases.get(place.strip(),place.strip())
+                                     for place in monster['maps'] if place.strip()))
             for location in corrections['additional_locations']:
                 for monster_id in location['monster_ids']:
                     if monster_id not in by_id:raise ValueError(f'Map correction references missing monster ID {monster_id}')
                     if location['map'] not in by_id[monster_id]['maps']:
                         by_id[monster_id]['maps'].append(location['map'])
             self.metadata={**self.metadata,'map_corrections':corrections['source']}
+        self.records = [m for m in records if m['exp'] > 0 and m['maps']]
         self.maps = sorted({place for m in self.records for place in m['maps']})
         names = Counter(m['name'] for m in self.records)
         self.labels = {m['id']: m['name'] if names[m['name']] == 1 else

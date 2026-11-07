@@ -1,15 +1,146 @@
 {
   "source": {
-    "checked_at": "2026-11-06",
-    "note": "Small explicit corrections to the older community snapshot. Map presence and spawn references; EXP remains the existing catalogue value, not inferred from another map.",
+    "checked_at": "2026-11-07",
+    "note": "Explicit corrections audited against 132 hunting-map pages and the launch monster roster. supplement:* IDs are stable application-local IDs, not asserted game IDs. Original snapshot preserved.",
     "references": [
       "https://mapleclassic.wiki/wiki/The_Murky_Swamp_I",
       "https://mapleclassic.wiki/wiki/The_Murky_Swamp_II",
-      "https://maplefm.gg/map/the-murky-swamp-ii/"
+      "https://maplefm.gg/map/the-murky-swamp-ii/",
+      "https://mapleclassic.wiki/wiki/Maps",
+      "https://mapleclassic.wiki/wiki/Monsters",
+      "https://mapleclassic.wiki/wiki/Update:21_October_2026_Grand_Launch",
+      "https://hubcw.com/cw-update",
+      "https://mapleclassic.wiki/wiki/Parched_Land"
     ]
   },
-  "renames": {"The Murky Swamp": "The Murky Swamp I"},
+  "renames": {
+    "The Murky Swamp": "The Murky Swamp I"
+  },
   "additional_locations": [
-    {"map": "The Murky Swamp II", "monster_ids": [18, 29]}
+    {
+      "map": "The Murky Swamp II",
+      "monster_ids": [
+        18,
+        29
+      ]
+    },
+    {
+      "map": "Parched Land",
+      "monster_ids": [
+        15,
+        20,
+        33,
+        34
+      ]
+    }
+  ],
+  "additional_monsters": [
+    {
+      "id": "supplement:ghost-stump",
+      "name": "Ghost Stump",
+      "level": 19,
+      "exp": 35,
+      "boss": false,
+      "maps": [
+        "Excavation Site I",
+        "Excavation Site II"
+      ]
+    },
+    {
+      "id": "supplement:wooden-mask",
+      "name": "Wooden Mask",
+      "level": 23,
+      "exp": 43,
+      "boss": false,
+      "maps": [
+        "Excavation Site I",
+        "Excavation Site II",
+        "Excavation Site III"
+      ]
+    },
+    {
+      "id": "supplement:rocky-mask",
+      "name": "Rocky Mask",
+      "level": 24,
+      "exp": 45,
+      "boss": false,
+      "maps": [
+        "Excavation Site II",
+        "Excavation Site III"
+      ]
+    },
+    {
+      "id": "supplement:stumpy",
+      "name": "Stumpy",
+      "level": 35,
+      "exp": 276,
+      "boss": true,
+      "maps": [
+        "Parched Land"
+      ]
+    },
+    {
+      "id": "supplement:skeledog",
+      "name": "Skeledog",
+      "level": 44,
+      "exp": 102,
+      "boss": false,
+      "maps": [
+        "Remains (Tomb) I",
+        "Remains (Tomb) II",
+        "Remains (Tomb) III"
+      ]
+    },
+    {
+      "id": "supplement:mummydog",
+      "name": "Mummydog",
+      "level": 47,
+      "exp": 117,
+      "boss": false,
+      "maps": [
+        "Remains (Tomb) I",
+        "Remains (Tomb) II",
+        "Remains (Tomb) III"
+      ]
+    },
+    {
+      "id": "supplement:skeleton-soldier",
+      "name": "Skeleton Soldier",
+      "level": 57,
+      "exp": 183,
+      "boss": false,
+      "maps": [
+        "Remains (Tomb) II",
+        "Remains (Tomb) III",
+        "Camp 1",
+        "Camp 2",
+        "Camp 3"
+      ]
+    },
+    {
+      "id": "supplement:officer-skeleton",
+      "name": "Officer Skeleton",
+      "level": 63,
+      "exp": 242,
+      "boss": false,
+      "maps": [
+        "Camp 1",
+        "Camp 2",
+        "Camp 3",
+        "Remains (Cliff)",
+        "Remains (Tomb) IV"
+      ]
+    },
+    {
+      "id": "supplement:commander-skeleton",
+      "name": "Commander Skeleton",
+      "level": 73,
+      "exp": 390,
+      "boss": false,
+      "maps": [
+        "Remains (Cliff)",
+        "Remains (Tomb) IV"
+      ]
+    }
   ]
 }

@@ -1,0 +1,3183 @@
+{
+  "source": {
+    "checked_at": "2026-11-07",
+    "index": "https://mapleclassic.wiki/wiki/Maps",
+    "index_rows_checked": 132,
+    "rows_with_monster_tables": 131,
+    "scope": "Hunting maps listed in this index snapshot only; not proof of complete live-server coverage. Facts only, no page prose/images."
+  },
+  "maps": [
+    {
+      "name": "Dangerous Forest",
+      "game_name": "Dangerous Forest",
+      "source": "https://mapleclassic.wiki/wiki/Dangerous_Forest",
+      "monsters": [
+        [
+          "Snail",
+          1,
+          2
+        ],
+        [
+          "Orange Mushroom",
+          8,
+          15
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ],
+        [
+          "Blue Snail",
+          2,
+          4
+        ]
+      ]
+    },
+    {
+      "name": "Henesys Hunting Ground I",
+      "game_name": "Henesys Hunting Ground I",
+      "source": "https://mapleclassic.wiki/wiki/Henesys_Hunting_Ground_I",
+      "monsters": [
+        [
+          "Shroom",
+          3,
+          6
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ],
+        [
+          "Green Mushroom",
+          14,
+          26
+        ],
+        [
+          "Orange Mushroom",
+          8,
+          15
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Blue Snail",
+          2,
+          4
+        ],
+        [
+          "Stump",
+          5,
+          10
+        ]
+      ]
+    },
+    {
+      "name": "Hunting Ground Middle of the Forest I",
+      "game_name": "Hunting Ground Middle of the Forest I",
+      "source": "https://mapleclassic.wiki/wiki/Hunting_Ground_Middle_of_the_Forest_I",
+      "monsters": [
+        [
+          "Snail",
+          1,
+          2
+        ],
+        [
+          "Blue Snail",
+          2,
+          4
+        ],
+        [
+          "Shroom",
+          3,
+          6
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ]
+      ]
+    },
+    {
+      "name": "Hunting Ground Middle of the Forest II",
+      "game_name": "Hunting Ground Middle of the Forest II",
+      "source": "https://mapleclassic.wiki/wiki/Hunting_Ground_Middle_of_the_Forest_II",
+      "monsters": [
+        [
+          "Blue Snail",
+          2,
+          4
+        ],
+        [
+          "Snail",
+          1,
+          2
+        ],
+        [
+          "Shroom",
+          3,
+          6
+        ],
+        [
+          "Orange Mushroom",
+          8,
+          15
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ]
+      ]
+    },
+    {
+      "name": "In a Small Forest",
+      "game_name": "In a Small Forest",
+      "source": "https://mapleclassic.wiki/wiki/In_a_Small_Forest",
+      "monsters": [
+        [
+          "Shroom",
+          3,
+          6
+        ],
+        [
+          "Snail",
+          1,
+          2
+        ],
+        [
+          "Blue Snail",
+          2,
+          4
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ],
+        [
+          "Orange Mushroom",
+          8,
+          15
+        ]
+      ]
+    },
+    {
+      "name": "Mushroom Garden (Maple Island)",
+      "game_name": "Mushroom Garden",
+      "source": "https://mapleclassic.wiki/wiki/Mushroom_Garden_(Maple_Island)",
+      "monsters": [
+        [
+          "Shroom",
+          3,
+          6
+        ],
+        [
+          "Snail",
+          1,
+          2
+        ],
+        [
+          "Orange Mushroom",
+          8,
+          15
+        ]
+      ]
+    },
+    {
+      "name": "Right Around Lith Harbor",
+      "game_name": "Right Around Lith Harbor",
+      "source": "https://mapleclassic.wiki/wiki/Right_Around_Lith_Harbor",
+      "monsters": [
+        [
+          "Blue Snail",
+          2,
+          4
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "Snail Field of Flowers",
+      "game_name": "Snail Field of Flowers",
+      "source": "https://mapleclassic.wiki/wiki/Snail_Field_of_Flowers",
+      "monsters": [
+        [
+          "Red Snail",
+          4,
+          8
+        ],
+        [
+          "Blue Snail",
+          2,
+          4
+        ],
+        [
+          "Orange Mushroom",
+          8,
+          15
+        ],
+        [
+          "Snail",
+          1,
+          2
+        ]
+      ]
+    },
+    {
+      "name": "Snail Garden",
+      "game_name": "Snail Garden",
+      "source": "https://mapleclassic.wiki/wiki/Snail_Garden",
+      "monsters": [
+        [
+          "Blue Snail",
+          2,
+          4
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ],
+        [
+          "Snail",
+          1,
+          2
+        ]
+      ]
+    },
+    {
+      "name": "The Field West of Amherst",
+      "game_name": "The Field West of Amherst",
+      "source": "https://mapleclassic.wiki/wiki/The_Field_West_of_Amherst",
+      "monsters": [
+        [
+          "Red Snail",
+          4,
+          8
+        ],
+        [
+          "Shroom",
+          3,
+          6
+        ],
+        [
+          "Blue Snail",
+          2,
+          4
+        ],
+        [
+          "Snail",
+          1,
+          2
+        ],
+        [
+          "Orange Mushroom",
+          8,
+          15
+        ]
+      ]
+    },
+    {
+      "name": "Thicket Around the Beach I",
+      "game_name": "Thicket Around the Beach I",
+      "source": "https://mapleclassic.wiki/wiki/Thicket_Around_the_Beach_I",
+      "monsters": [
+        [
+          "Snail",
+          1,
+          2
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ],
+        [
+          "Blue Snail",
+          2,
+          4
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Stump",
+          5,
+          10
+        ]
+      ]
+    },
+    {
+      "name": "Tomato Field",
+      "game_name": "Tomato Field",
+      "source": "https://mapleclassic.wiki/wiki/Tomato_Field",
+      "monsters": [
+        [
+          "Snail",
+          1,
+          2
+        ],
+        [
+          "Blue Snail",
+          2,
+          4
+        ],
+        [
+          "Orange Mushroom",
+          8,
+          15
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ]
+      ]
+    },
+    {
+      "name": "The Pig Beach",
+      "game_name": "The Pig Beach",
+      "source": "https://mapleclassic.wiki/wiki/The_Pig_Beach",
+      "monsters": [
+        [
+          "Pig",
+          7,
+          13
+        ],
+        [
+          "Ribbon Pig",
+          10,
+          19
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ],
+        [
+          "Blue Snail",
+          2,
+          4
+        ],
+        [
+          "Iron Hog",
+          28,
+          52
+        ]
+      ]
+    },
+    {
+      "name": "Thicket Around the Beach II",
+      "game_name": "Thicket Around the Beach II",
+      "source": "https://mapleclassic.wiki/wiki/Thicket_Around_the_Beach_II",
+      "monsters": [
+        [
+          "Pig",
+          7,
+          13
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Orange Mushroom",
+          8,
+          15
+        ],
+        [
+          "Snail",
+          1,
+          2
+        ]
+      ]
+    },
+    {
+      "name": "Thicket Around the Beach III",
+      "game_name": "Thicket Around the Beach III",
+      "source": "https://mapleclassic.wiki/wiki/Thicket_Around_the_Beach_III",
+      "monsters": [
+        [
+          "Snail",
+          1,
+          2
+        ],
+        [
+          "Stump",
+          5,
+          10
+        ],
+        [
+          "Orange Mushroom",
+          8,
+          15
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ],
+        [
+          "Blue Snail",
+          2,
+          4
+        ],
+        [
+          "Mano",
+          20,
+          148
+        ]
+      ]
+    },
+    {
+      "name": "Mushroom Garden (Victoria Island)",
+      "game_name": "Mushroom Garden",
+      "source": "https://mapleclassic.wiki/wiki/Mushroom_Garden_(Victoria_Island)",
+      "monsters": [
+        [
+          "Orange Mushroom",
+          8,
+          15
+        ],
+        [
+          "Shroom",
+          3,
+          6
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ]
+      ]
+    },
+    {
+      "name": "A Hill West of Henesys",
+      "game_name": "A Hill West of Henesys",
+      "source": "https://mapleclassic.wiki/wiki/A_Hill_West_of_Henesys",
+      "monsters": [
+        [
+          "Pig",
+          7,
+          13
+        ],
+        [
+          "Stump",
+          5,
+          10
+        ],
+        [
+          "Ribbon Pig",
+          10,
+          19
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ],
+        [
+          "Blue Snail",
+          2,
+          4
+        ]
+      ]
+    },
+    {
+      "name": "Caution Falling Down",
+      "game_name": "Caution Falling Down",
+      "source": "https://mapleclassic.wiki/wiki/Caution_Falling_Down",
+      "monsters": [
+        [
+          "Octopus",
+          12,
+          23
+        ],
+        [
+          "Orange Mushroom",
+          8,
+          15
+        ],
+        [
+          "Blue Mushroom",
+          19,
+          35
+        ]
+      ]
+    },
+    {
+      "name": "Sunset Sky",
+      "game_name": "Sunset Sky",
+      "source": "https://mapleclassic.wiki/wiki/Sunset_Sky",
+      "monsters": [
+        [
+          "Stump",
+          5,
+          10
+        ],
+        [
+          "Orange Mushroom",
+          8,
+          15
+        ],
+        [
+          "Blue Snail",
+          2,
+          4
+        ],
+        [
+          "Dark Stump",
+          11,
+          21
+        ],
+        [
+          "Green Mushroom",
+          14,
+          26
+        ]
+      ]
+    },
+    {
+      "name": "East Rocky Mountain II",
+      "game_name": "East Rocky Mountain II",
+      "source": "https://mapleclassic.wiki/wiki/East_Rocky_Mountain_II",
+      "monsters": [
+        [
+          "Stump",
+          5,
+          10
+        ],
+        [
+          "Axe Stump",
+          17,
+          32
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ]
+      ]
+    },
+    {
+      "name": "Over the Wall",
+      "game_name": "Over the Wall",
+      "source": "https://mapleclassic.wiki/wiki/Over_the_Wall",
+      "monsters": [
+        [
+          "Axe Stump",
+          17,
+          32
+        ],
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ],
+        [
+          "Dark Stump",
+          11,
+          21
+        ],
+        [
+          "Stump",
+          5,
+          10
+        ]
+      ]
+    },
+    {
+      "name": "The Field South of Ellinia",
+      "game_name": "The Field South of Ellinia",
+      "source": "https://mapleclassic.wiki/wiki/The_Field_South_of_Ellinia",
+      "monsters": [
+        [
+          "Stump",
+          5,
+          10
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Dark Stump",
+          11,
+          21
+        ],
+        [
+          "Green Mushroom",
+          14,
+          26
+        ]
+      ]
+    },
+    {
+      "name": "The Tree That Grew III",
+      "game_name": "The Tree That Grew III",
+      "source": "https://mapleclassic.wiki/wiki/The_Tree_That_Grew_III",
+      "monsters": [
+        [
+          "Stump",
+          5,
+          10
+        ],
+        [
+          "Dark Stump",
+          11,
+          21
+        ],
+        [
+          "Green Mushroom",
+          14,
+          26
+        ]
+      ]
+    },
+    {
+      "name": "Dungeon, Southern Forest I",
+      "game_name": "Dungeon, Southern Forest I",
+      "source": "https://mapleclassic.wiki/wiki/Dungeon,_Southern_Forest_I",
+      "monsters": [
+        [
+          "Slime",
+          6,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "Dungeon, Southern Forest II",
+      "game_name": "Dungeon, Southern Forest II",
+      "source": "https://mapleclassic.wiki/wiki/Dungeon,_Southern_Forest_II",
+      "monsters": [
+        [
+          "Green Mushroom",
+          14,
+          26
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "The Swamp of Despair II",
+      "game_name": "The Swamp of Despair II",
+      "source": "https://mapleclassic.wiki/wiki/The_Swamp_of_Despair_II",
+      "monsters": [
+        [
+          "Ligator",
+          31,
+          58
+        ],
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ],
+        [
+          "Jr. Necki",
+          21,
+          39
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "The Tree That Grew II",
+      "game_name": "The Tree That Grew II",
+      "source": "https://mapleclassic.wiki/wiki/The_Tree_That_Grew_II",
+      "monsters": [
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Stump",
+          5,
+          10
+        ],
+        [
+          "Dark Stump",
+          11,
+          21
+        ]
+      ]
+    },
+    {
+      "name": "Tree Dungeon, Forest Up North I",
+      "game_name": "Tree Dungeon, Forest Up North I",
+      "source": "https://mapleclassic.wiki/wiki/Tree_Dungeon,_Forest_Up_North_I",
+      "monsters": [
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ]
+      ]
+    },
+    {
+      "name": "Beach Hunting Ground",
+      "game_name": "Beach Hunting Ground",
+      "source": "https://mapleclassic.wiki/wiki/Beach_Hunting_Ground",
+      "monsters": [
+        [
+          "Blue Snail",
+          2,
+          4
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Ribbon Pig",
+          10,
+          19
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ],
+        [
+          "Orange Mushroom",
+          8,
+          15
+        ],
+        [
+          "Shroom",
+          3,
+          6
+        ],
+        [
+          "Snail",
+          1,
+          2
+        ],
+        [
+          "Pig",
+          7,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "Henesys Hunting Ground II",
+      "game_name": "Henesys Hunting Ground II",
+      "source": "https://mapleclassic.wiki/wiki/Henesys_Hunting_Ground_II",
+      "monsters": [
+        [
+          "Stump",
+          5,
+          10
+        ],
+        [
+          "Orange Mushroom",
+          8,
+          15
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ],
+        [
+          "Shroom",
+          3,
+          6
+        ],
+        [
+          "Green Mushroom",
+          14,
+          26
+        ],
+        [
+          "Blue Snail",
+          2,
+          4
+        ]
+      ]
+    },
+    {
+      "name": "Henesys Hunting Ground III",
+      "game_name": "Henesys Hunting Ground III",
+      "source": "https://mapleclassic.wiki/wiki/Henesys_Hunting_Ground_III",
+      "monsters": [
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Green Mushroom",
+          14,
+          26
+        ],
+        [
+          "Orange Mushroom",
+          8,
+          15
+        ],
+        [
+          "Stump",
+          5,
+          10
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ],
+        [
+          "Blue Snail",
+          2,
+          4
+        ]
+      ]
+    },
+    {
+      "name": "East Rocky Mountain III",
+      "game_name": "East Rocky Mountain III",
+      "source": "https://mapleclassic.wiki/wiki/East_Rocky_Mountain_III",
+      "monsters": [
+        [
+          "Dark Stump",
+          11,
+          21
+        ],
+        [
+          "Axe Stump",
+          17,
+          32
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ],
+        [
+          "Stump",
+          5,
+          10
+        ]
+      ]
+    },
+    {
+      "name": "Tree Dungeon, Forest Up North II",
+      "game_name": "Tree Dungeon, Forest Up North II",
+      "source": "https://mapleclassic.wiki/wiki/Tree_Dungeon,_Forest_Up_North_II",
+      "monsters": [
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ],
+        [
+          "Green Mushroom",
+          14,
+          26
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "Northern Top of Construction Site",
+      "game_name": "Northern Top of Construction Site",
+      "source": "https://mapleclassic.wiki/wiki/Northern_Top_of_Construction_Site",
+      "monsters": [
+        [
+          "Octopus",
+          12,
+          23
+        ],
+        [
+          "Orange Mushroom",
+          8,
+          15
+        ],
+        [
+          "Blue Mushroom",
+          19,
+          35
+        ]
+      ]
+    },
+    {
+      "name": "Tree Dungeon, Forest Up North III",
+      "game_name": "Tree Dungeon, Forest Up North III",
+      "source": "https://mapleclassic.wiki/wiki/Tree_Dungeon,_Forest_Up_North_III",
+      "monsters": [
+        [
+          "Green Mushroom",
+          14,
+          26
+        ],
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "Dungeon, Southern Forest III",
+      "game_name": "Dungeon, Southern Forest III",
+      "source": "https://mapleclassic.wiki/wiki/Dungeon,_Southern_Forest_III",
+      "monsters": [
+        [
+          "Green Mushroom",
+          14,
+          26
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "Tree Dungeon, Forest Up North IV",
+      "game_name": "Tree Dungeon, Forest Up North IV",
+      "source": "https://mapleclassic.wiki/wiki/Tree_Dungeon,_Forest_Up_North_IV",
+      "monsters": [
+        [
+          "Green Mushroom",
+          14,
+          26
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "Dungeon, Southern Forest IV",
+      "game_name": "Dungeon, Southern Forest IV",
+      "source": "https://mapleclassic.wiki/wiki/Dungeon,_Southern_Forest_IV",
+      "monsters": [
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ],
+        [
+          "Green Mushroom",
+          14,
+          26
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Blue Mushroom",
+          19,
+          35
+        ]
+      ]
+    },
+    {
+      "name": "Tree Dungeon, Forest Up North V",
+      "game_name": "Tree Dungeon, Forest Up North V",
+      "source": "https://mapleclassic.wiki/wiki/Tree_Dungeon,_Forest_Up_North_V",
+      "monsters": [
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Green Mushroom",
+          14,
+          26
+        ]
+      ]
+    },
+    {
+      "name": "Deep Valley I",
+      "game_name": "Deep Valley I",
+      "source": "https://mapleclassic.wiki/wiki/Deep_Valley_I",
+      "monsters": [
+        [
+          "Red Snail",
+          4,
+          8
+        ],
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ],
+        [
+          "Dark Stump",
+          11,
+          21
+        ],
+        [
+          "Wild Boar",
+          25,
+          46
+        ],
+        [
+          "Fire Boar",
+          32,
+          60
+        ],
+        [
+          "Axe Stump",
+          17,
+          32
+        ],
+        [
+          "Blue Snail",
+          2,
+          4
+        ]
+      ]
+    },
+    {
+      "name": "Deep Valley II",
+      "game_name": "Deep Valley II",
+      "source": "https://mapleclassic.wiki/wiki/Deep_Valley_II",
+      "monsters": [
+        [
+          "Axe Stump",
+          17,
+          32
+        ],
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ],
+        [
+          "Dark Stump",
+          11,
+          21
+        ],
+        [
+          "Fire Boar",
+          32,
+          60
+        ],
+        [
+          "Wild Boar",
+          25,
+          46
+        ]
+      ]
+    },
+    {
+      "name": "East Rocky Mountain IV",
+      "game_name": "East Rocky Mountain IV",
+      "source": "https://mapleclassic.wiki/wiki/East_Rocky_Mountain_IV",
+      "monsters": [
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ],
+        [
+          "Dark Stump",
+          11,
+          21
+        ],
+        [
+          "Snail",
+          1,
+          2
+        ],
+        [
+          "Axe Stump",
+          17,
+          32
+        ]
+      ]
+    },
+    {
+      "name": "East Rocky Mountain V",
+      "game_name": "East Rocky Mountain V",
+      "source": "https://mapleclassic.wiki/wiki/East_Rocky_Mountain_V",
+      "monsters": [
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ],
+        [
+          "Dark Stump",
+          11,
+          21
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ],
+        [
+          "Fire Boar",
+          32,
+          60
+        ]
+      ]
+    },
+    {
+      "name": "Parched Land",
+      "game_name": "Parched Land",
+      "source": "https://mapleclassic.wiki/wiki/Parched_Land",
+      "monsters": [
+        [
+          "Axe Stump",
+          17,
+          32
+        ],
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ],
+        [
+          "Jr. Boogie 1",
+          35,
+          69
+        ],
+        [
+          "Jr. Boogie 2",
+          35,
+          69
+        ],
+        [
+          "Stumpy",
+          35,
+          276
+        ]
+      ]
+    },
+    {
+      "name": "Tree Dungeon, Forest Up North VI",
+      "game_name": "Tree Dungeon, Forest Up North VI",
+      "source": "https://mapleclassic.wiki/wiki/Tree_Dungeon,_Forest_Up_North_VI",
+      "monsters": [
+        [
+          "Curse Eye",
+          33,
+          63
+        ],
+        [
+          "Fairy 3",
+          29,
+          54
+        ]
+      ]
+    },
+    {
+      "name": "Deep Valley III",
+      "game_name": "Deep Valley III",
+      "source": "https://mapleclassic.wiki/wiki/Deep_Valley_III",
+      "monsters": [
+        [
+          "Axe Stump",
+          17,
+          32
+        ],
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ],
+        [
+          "Dark Stump",
+          11,
+          21
+        ],
+        [
+          "Fire Boar",
+          32,
+          60
+        ],
+        [
+          "Wild Boar",
+          25,
+          46
+        ]
+      ]
+    },
+    {
+      "name": "Excavation Site I",
+      "game_name": "Excavation Site I",
+      "source": "https://mapleclassic.wiki/wiki/Excavation_Site_I",
+      "monsters": [
+        [
+          "Ghost Stump",
+          19,
+          35
+        ],
+        [
+          "Wooden Mask",
+          23,
+          43
+        ]
+      ]
+    },
+    {
+      "name": "Excavation Site II",
+      "game_name": "Excavation Site II",
+      "source": "https://mapleclassic.wiki/wiki/Excavation_Site_II",
+      "monsters": [
+        [
+          "Wooden Mask",
+          23,
+          43
+        ],
+        [
+          "Rocky Mask",
+          24,
+          45
+        ],
+        [
+          "Ghost Stump",
+          19,
+          35
+        ]
+      ]
+    },
+    {
+      "name": "Henesys Dungeon Entrance",
+      "game_name": "Henesys Dungeon Entrance",
+      "source": "https://mapleclassic.wiki/wiki/Henesys_Dungeon_Entrance",
+      "monsters": [
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Green Mushroom",
+          14,
+          26
+        ],
+        [
+          "Blue Mushroom",
+          19,
+          35
+        ],
+        [
+          "Lupin",
+          37,
+          75
+        ],
+        [
+          "Iron Hog",
+          28,
+          52
+        ],
+        [
+          "Stone Golem",
+          56,
+          175
+        ]
+      ]
+    },
+    {
+      "name": "The Blue Mushroom Forest",
+      "game_name": "The Blue Mushroom Forest",
+      "source": "https://mapleclassic.wiki/wiki/The_Blue_Mushroom_Forest",
+      "monsters": [
+        [
+          "Blue Mushroom",
+          19,
+          35
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Blue Snail",
+          2,
+          4
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ]
+      ]
+    },
+    {
+      "name": "The Breathing Rock",
+      "game_name": "The Breathing Rock",
+      "source": "https://mapleclassic.wiki/wiki/The_Breathing_Rock",
+      "monsters": [
+        [
+          "Blue Mushroom",
+          19,
+          35
+        ],
+        [
+          "Lupin",
+          37,
+          75
+        ],
+        [
+          "Fairy 4",
+          29,
+          54
+        ],
+        [
+          "Stone Golem",
+          56,
+          175
+        ],
+        [
+          "Stone Golem",
+          56,
+          175
+        ],
+        [
+          "Stone Golem",
+          56,
+          175
+        ]
+      ]
+    },
+    {
+      "name": "The Road to the Dungeon",
+      "game_name": "The Road to the Dungeon",
+      "source": "https://mapleclassic.wiki/wiki/The_Road_to_the_Dungeon",
+      "monsters": [
+        [
+          "Blue Mushroom",
+          19,
+          35
+        ],
+        [
+          "Shroom",
+          3,
+          6
+        ],
+        [
+          "Ribbon Pig",
+          10,
+          19
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Blue Snail",
+          2,
+          4
+        ],
+        [
+          "Iron Hog",
+          28,
+          52
+        ],
+        [
+          "Orange Mushroom",
+          8,
+          15
+        ],
+        [
+          "Pig",
+          7,
+          13
+        ],
+        [
+          "Red Snail",
+          4,
+          8
+        ]
+      ]
+    },
+    {
+      "name": "Dangerous Steam",
+      "game_name": "Dangerous Steam",
+      "source": "https://mapleclassic.wiki/wiki/Dangerous_Steam",
+      "monsters": [
+        [
+          "Stirge",
+          20,
+          37
+        ],
+        [
+          "Zombie Mushroom",
+          24,
+          45
+        ],
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ]
+      ]
+    },
+    {
+      "name": "Dark Cave",
+      "game_name": "Dark Cave",
+      "source": "https://mapleclassic.wiki/wiki/Dark_Cave",
+      "monsters": [
+        [
+          "Stirge",
+          20,
+          37
+        ],
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ],
+        [
+          "Zombie Mushroom",
+          24,
+          45
+        ]
+      ]
+    },
+    {
+      "name": "Transfer Area",
+      "game_name": "Transfer Area",
+      "source": "https://mapleclassic.wiki/wiki/Transfer_Area",
+      "monsters": [
+        [
+          "Stirge",
+          20,
+          37
+        ]
+      ]
+    },
+    {
+      "name": "Monkey Swamp I",
+      "game_name": "Monkey Swamp I",
+      "source": "https://mapleclassic.wiki/wiki/Monkey_Swamp_I",
+      "monsters": [
+        [
+          "Lupin",
+          37,
+          75
+        ],
+        [
+          "Jr. Necki",
+          21,
+          39
+        ]
+      ]
+    },
+    {
+      "name": "Monkey Swamp II",
+      "game_name": "Monkey Swamp II",
+      "source": "https://mapleclassic.wiki/wiki/Monkey_Swamp_II",
+      "monsters": [
+        [
+          "Zombie Lupin",
+          41,
+          89
+        ],
+        [
+          "Lupin",
+          37,
+          75
+        ],
+        [
+          "Jr. Necki",
+          21,
+          39
+        ]
+      ]
+    },
+    {
+      "name": "Monkey Swamp III",
+      "game_name": "Monkey Swamp III",
+      "source": "https://mapleclassic.wiki/wiki/Monkey_Swamp_III",
+      "monsters": [
+        [
+          "Zombie Lupin",
+          41,
+          89
+        ],
+        [
+          "Jr. Necki",
+          21,
+          39
+        ]
+      ]
+    },
+    {
+      "name": "The Murky Swamp I",
+      "game_name": "The Murky Swamp I",
+      "source": "https://mapleclassic.wiki/wiki/The_Murky_Swamp_I",
+      "monsters": [
+        [
+          "Ligator",
+          31,
+          58
+        ],
+        [
+          "Jr. Necki",
+          21,
+          39
+        ]
+      ]
+    },
+    {
+      "name": "The Murky Swamp II",
+      "game_name": "The Murky Swamp II",
+      "source": "https://mapleclassic.wiki/wiki/The_Murky_Swamp_II",
+      "monsters": [
+        [
+          "Ligator",
+          31,
+          58
+        ],
+        [
+          "Jr. Necki",
+          21,
+          39
+        ]
+      ]
+    },
+    {
+      "name": "The Swamp of Despair I",
+      "game_name": "The Swamp of Despair I",
+      "source": "https://mapleclassic.wiki/wiki/The_Swamp_of_Despair_I",
+      "monsters": [
+        [
+          "Ligator",
+          31,
+          58
+        ],
+        [
+          "Jr. Necki",
+          21,
+          39
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ]
+      ]
+    },
+    {
+      "name": "The Swamp of Despair III",
+      "game_name": "The Swamp of Despair III",
+      "source": "https://mapleclassic.wiki/wiki/The_Swamp_of_Despair_III",
+      "monsters": [
+        [
+          "Ligator",
+          31,
+          58
+        ],
+        [
+          "Jr. Necki",
+          21,
+          39
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "Ant Tunnel I",
+      "game_name": "Ant Tunnel I",
+      "source": "https://mapleclassic.wiki/wiki/Ant_Tunnel_I",
+      "monsters": [
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ],
+        [
+          "Zombie Mushroom",
+          24,
+          45
+        ]
+      ]
+    },
+    {
+      "name": "Ant Tunnel II",
+      "game_name": "Ant Tunnel II",
+      "source": "https://mapleclassic.wiki/wiki/Ant_Tunnel_II",
+      "monsters": [
+        [
+          "Zombie Mushroom",
+          24,
+          45
+        ],
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ]
+      ]
+    },
+    {
+      "name": "Ant Tunnel III",
+      "game_name": "Ant Tunnel III",
+      "source": "https://mapleclassic.wiki/wiki/Ant_Tunnel_III",
+      "monsters": [
+        [
+          "Zombie Mushroom",
+          24,
+          45
+        ],
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ]
+      ]
+    },
+    {
+      "name": "Ant Tunnel IV",
+      "game_name": "Ant Tunnel IV",
+      "source": "https://mapleclassic.wiki/wiki/Ant_Tunnel_IV",
+      "monsters": [
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ],
+        [
+          "Zombie Mushroom",
+          24,
+          45
+        ]
+      ]
+    },
+    {
+      "name": "Ant Tunnel Park",
+      "game_name": "Ant Tunnel Park",
+      "source": "https://mapleclassic.wiki/wiki/Ant_Tunnel_Park",
+      "monsters": [
+        [
+          "Evil Eye",
+          27,
+          50
+        ],
+        [
+          "Zombie Mushroom",
+          24,
+          45
+        ],
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ]
+      ]
+    },
+    {
+      "name": "Damp Forest",
+      "game_name": "Damp Forest",
+      "source": "https://mapleclassic.wiki/wiki/Damp_Forest",
+      "monsters": [
+        [
+          "Octopus",
+          12,
+          23
+        ],
+        [
+          "Jr. Necki",
+          21,
+          39
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "Damp Tree-Forest",
+      "game_name": "Damp Tree-Forest",
+      "source": "https://mapleclassic.wiki/wiki/Damp_Tree-Forest",
+      "monsters": [
+        [
+          "Octopus",
+          12,
+          23
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Jr. Necki",
+          21,
+          39
+        ],
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ]
+      ]
+    },
+    {
+      "name": "Deep Ant Tunnel I",
+      "game_name": "Deep Ant Tunnel I",
+      "source": "https://mapleclassic.wiki/wiki/Deep_Ant_Tunnel_I",
+      "monsters": [
+        [
+          "Zombie Mushroom",
+          24,
+          45
+        ],
+        [
+          "Evil Eye",
+          27,
+          50
+        ],
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ],
+        [
+          "Jr. Boogie 2",
+          35,
+          69
+        ]
+      ]
+    },
+    {
+      "name": "Deep Ant Tunnel II",
+      "game_name": "Deep Ant Tunnel II",
+      "source": "https://mapleclassic.wiki/wiki/Deep_Ant_Tunnel_II",
+      "monsters": [
+        [
+          "Evil Eye",
+          27,
+          50
+        ],
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ],
+        [
+          "Zombie Mushroom",
+          24,
+          45
+        ]
+      ]
+    },
+    {
+      "name": "Perion Dungeon Entrance",
+      "game_name": "Perion Dungeon Entrance",
+      "source": "https://mapleclassic.wiki/wiki/Perion_Dungeon_Entrance",
+      "monsters": [
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ],
+        [
+          "Wild Boar",
+          25,
+          46
+        ],
+        [
+          "Dark Stump",
+          11,
+          21
+        ],
+        [
+          "Fire Boar",
+          32,
+          60
+        ]
+      ]
+    },
+    {
+      "name": "Tree Dungeon, Forest Up North VII",
+      "game_name": "Tree Dungeon, Forest Up North VII",
+      "source": "https://mapleclassic.wiki/wiki/Tree_Dungeon,_Forest_Up_North_VII",
+      "monsters": [
+        [
+          "Curse Eye",
+          33,
+          63
+        ],
+        [
+          "Cold Eye",
+          40,
+          85
+        ],
+        [
+          "Fairy 3",
+          29,
+          54
+        ]
+      ]
+    },
+    {
+      "name": "East Rocky Mountain VI",
+      "game_name": "East Rocky Mountain VI",
+      "source": "https://mapleclassic.wiki/wiki/East_Rocky_Mountain_VI",
+      "monsters": [
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ],
+        [
+          "Fire Boar",
+          32,
+          60
+        ],
+        [
+          "Dark Stump",
+          11,
+          21
+        ],
+        [
+          "Axe Stump",
+          17,
+          32
+        ],
+        [
+          "Lupin",
+          37,
+          75
+        ]
+      ]
+    },
+    {
+      "name": "Excavation Site III",
+      "game_name": "Excavation Site III",
+      "source": "https://mapleclassic.wiki/wiki/Excavation_Site_III",
+      "monsters": [
+        [
+          "Rocky Mask",
+          24,
+          45
+        ],
+        [
+          "Wooden Mask",
+          23,
+          43
+        ]
+      ]
+    },
+    {
+      "name": "Land of Wild Boar",
+      "game_name": "Land of Wild Boar",
+      "source": "https://mapleclassic.wiki/wiki/Land_of_Wild_Boar",
+      "monsters": [
+        [
+          "Wild Boar",
+          25,
+          46
+        ],
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ],
+        [
+          "Jr. Boogie 1",
+          35,
+          69
+        ],
+        [
+          "Jr. Boogie 2",
+          35,
+          69
+        ]
+      ]
+    },
+    {
+      "name": "The Land of Wild Boar II",
+      "game_name": "The Land of Wild Boar II",
+      "source": "https://mapleclassic.wiki/wiki/The_Land_of_Wild_Boar_II",
+      "monsters": [
+        [
+          "Wild Boar",
+          25,
+          46
+        ],
+        [
+          "Axe Stump",
+          17,
+          32
+        ],
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ],
+        [
+          "Dark Stump",
+          11,
+          21
+        ]
+      ]
+    },
+    {
+      "name": "The Grave of Mushmom",
+      "game_name": "The Grave of Mushmom",
+      "source": "https://mapleclassic.wiki/wiki/The_Grave_of_Mushmom",
+      "monsters": [
+        [
+          "Zombie Mushroom",
+          24,
+          45
+        ],
+        [
+          "Jr. Boogie 2",
+          35,
+          69
+        ],
+        [
+          "Zombie Mushmom",
+          55,
+          668
+        ]
+      ]
+    },
+    {
+      "name": "Dangerous Valley",
+      "game_name": "Dangerous Valley",
+      "source": "https://mapleclassic.wiki/wiki/Dangerous_Valley",
+      "monsters": [
+        [
+          "Fire Boar",
+          32,
+          60
+        ],
+        [
+          "Copper Drake",
+          45,
+          107
+        ]
+      ]
+    },
+    {
+      "name": "East Rocky Mountain VII",
+      "game_name": "East Rocky Mountain VII",
+      "source": "https://mapleclassic.wiki/wiki/East_Rocky_Mountain_VII",
+      "monsters": [
+        [
+          "Copper Drake",
+          45,
+          107
+        ],
+        [
+          "Fire Boar",
+          32,
+          60
+        ],
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ]
+      ]
+    },
+    {
+      "name": "The Burnt Land I",
+      "game_name": "The Burnt Land I",
+      "source": "https://mapleclassic.wiki/wiki/The_Burnt_Land_I",
+      "monsters": [
+        [
+          "Fire Boar",
+          32,
+          60
+        ],
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ]
+      ]
+    },
+    {
+      "name": "Hunting Ground in the Deep Forest I",
+      "game_name": "Hunting Ground in the Deep Forest I",
+      "source": "https://mapleclassic.wiki/wiki/Hunting_Ground_in_the_Deep_Forest_I",
+      "monsters": [
+        [
+          "Curse Eye",
+          33,
+          63
+        ],
+        [
+          "Jr. Necki",
+          21,
+          39
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Green Mushroom",
+          14,
+          26
+        ],
+        [
+          "Octopus",
+          12,
+          23
+        ],
+        [
+          "Jr. Boogie 1",
+          35,
+          69
+        ],
+        [
+          "Snail",
+          1,
+          2
+        ]
+      ]
+    },
+    {
+      "name": "Swampy Land in a Deep Forest",
+      "game_name": "Swampy Land in a Deep Forest",
+      "source": "https://mapleclassic.wiki/wiki/Swampy_Land_in_a_Deep_Forest",
+      "monsters": [
+        [
+          "Green Mushroom",
+          14,
+          26
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ],
+        [
+          "Dark Stump",
+          11,
+          21
+        ],
+        [
+          "Jr. Necki",
+          21,
+          39
+        ],
+        [
+          "Octopus",
+          12,
+          23
+        ]
+      ]
+    },
+    {
+      "name": "The Cave of Evil Eye I",
+      "game_name": "The Cave of Evil Eye I",
+      "source": "https://mapleclassic.wiki/wiki/The_Cave_of_Evil_Eye_I",
+      "monsters": [
+        [
+          "Evil Eye",
+          27,
+          50
+        ],
+        [
+          "Jr. Boogie 2",
+          35,
+          69
+        ]
+      ]
+    },
+    {
+      "name": "The Cave of Evil Eye II",
+      "game_name": "The Cave of Evil Eye II",
+      "source": "https://mapleclassic.wiki/wiki/The_Cave_of_Evil_Eye_II",
+      "monsters": [
+        [
+          "Evil Eye",
+          27,
+          50
+        ],
+        [
+          "Jr. Boogie 2",
+          35,
+          69
+        ]
+      ]
+    },
+    {
+      "name": "The Cave of Evil Eye III",
+      "game_name": "The Cave of Evil Eye III",
+      "source": "https://mapleclassic.wiki/wiki/The_Cave_of_Evil_Eye_III",
+      "monsters": [
+        [
+          "Evil Eye",
+          27,
+          50
+        ],
+        [
+          "Jr. Boogie 2",
+          35,
+          69
+        ]
+      ]
+    },
+    {
+      "name": "The Cave of Evil Eye IV",
+      "game_name": "The Cave of Evil Eye IV",
+      "source": "https://mapleclassic.wiki/wiki/The_Cave_of_Evil_Eye_IV",
+      "monsters": [
+        [
+          "Evil Eye",
+          27,
+          50
+        ],
+        [
+          "Jr. Boogie 2",
+          35,
+          69
+        ]
+      ]
+    },
+    {
+      "name": "The Burnt Land III",
+      "game_name": "The Burnt Land III",
+      "source": "https://mapleclassic.wiki/wiki/The_Burnt_Land_III",
+      "monsters": [
+        [
+          "Fire Boar",
+          32,
+          60
+        ],
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ]
+      ]
+    },
+    {
+      "name": "The Burnt Land IV",
+      "game_name": "The Burnt Land IV",
+      "source": "https://mapleclassic.wiki/wiki/The_Burnt_Land_IV",
+      "monsters": [
+        [
+          "Fire Boar",
+          32,
+          60
+        ],
+        [
+          "Lupin",
+          37,
+          75
+        ],
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ]
+      ]
+    },
+    {
+      "name": "Dangerous Valley II",
+      "game_name": "Dangerous Valley II",
+      "source": "https://mapleclassic.wiki/wiki/Dangerous_Valley_II",
+      "monsters": [
+        [
+          "Fire Boar",
+          32,
+          60
+        ],
+        [
+          "Red Drake",
+          60,
+          211
+        ],
+        [
+          "Red Drake",
+          60,
+          211
+        ],
+        [
+          "Copper Drake",
+          45,
+          107
+        ],
+        [
+          "Red Drake",
+          60,
+          211
+        ],
+        [
+          "Red Drake",
+          60,
+          211
+        ],
+        [
+          "Red Drake",
+          60,
+          211
+        ]
+      ]
+    },
+    {
+      "name": "The Burnt Land II",
+      "game_name": "The Burnt Land II",
+      "source": "https://mapleclassic.wiki/wiki/The_Burnt_Land_II",
+      "monsters": [
+        [
+          "Fire Boar",
+          32,
+          60
+        ],
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ]
+      ]
+    },
+    {
+      "name": "Hunting Ground in the Deep Forest II",
+      "game_name": "Hunting Ground in the Deep Forest II",
+      "source": "https://mapleclassic.wiki/wiki/Hunting_Ground_in_the_Deep_Forest_II",
+      "monsters": [
+        [
+          "Curse Eye",
+          33,
+          63
+        ],
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ],
+        [
+          "Lupin",
+          37,
+          75
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Snail",
+          1,
+          2
+        ]
+      ]
+    },
+    {
+      "name": "Tree Dungeon, Forest Up North IX",
+      "game_name": "Tree Dungeon, Forest Up North IX",
+      "source": "https://mapleclassic.wiki/wiki/Tree_Dungeon,_Forest_Up_North_IX",
+      "monsters": [
+        [
+          "Curse Eye",
+          33,
+          63
+        ]
+      ]
+    },
+    {
+      "name": "Ant Tunnel For Bowman",
+      "game_name": "Ant Tunnel For Bowman",
+      "source": "https://mapleclassic.wiki/wiki/Ant_Tunnel_For_Bowman",
+      "monsters": [
+        [
+          "Evil Eye",
+          30,
+          56
+        ],
+        [
+          "Zombie Mushroom",
+          30,
+          56
+        ]
+      ]
+    },
+    {
+      "name": "Drake Hunting Ground",
+      "game_name": "Drake Hunting Ground",
+      "source": "https://mapleclassic.wiki/wiki/Drake_Hunting_Ground",
+      "monsters": [
+        [
+          "Drake",
+          50,
+          133
+        ],
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ],
+        [
+          "Jr. Boogie 2",
+          35,
+          69
+        ]
+      ]
+    },
+    {
+      "name": "A Look-Out Shed Around the Beach",
+      "game_name": "A Look-Out Shed Around the Beach",
+      "source": "https://mapleclassic.wiki/wiki/A_Look-Out_Shed_Around_the_Beach",
+      "monsters": [
+        [
+          "Lorang",
+          38,
+          78
+        ],
+        [
+          "Lupin",
+          37,
+          75
+        ],
+        [
+          "Lupin",
+          37,
+          75
+        ]
+      ]
+    },
+    {
+      "name": "Downstairs at the Forest",
+      "game_name": "Downstairs at the Forest",
+      "source": "https://mapleclassic.wiki/wiki/Downstairs_at_the_Forest",
+      "monsters": [
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ],
+        [
+          "Green Mushroom",
+          14,
+          26
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Lupin",
+          37,
+          75
+        ]
+      ]
+    },
+    {
+      "name": "Lorang Lorang",
+      "game_name": "Lorang Lorang",
+      "source": "https://mapleclassic.wiki/wiki/Lorang_Lorang",
+      "monsters": [
+        [
+          "Lorang",
+          38,
+          78
+        ],
+        [
+          "Lupin",
+          37,
+          75
+        ]
+      ]
+    },
+    {
+      "name": "Monkey Forest I",
+      "game_name": "Monkey Forest I",
+      "source": "https://mapleclassic.wiki/wiki/Monkey_Forest_I",
+      "monsters": [
+        [
+          "Lupin",
+          37,
+          75
+        ],
+        [
+          "Green Mushroom",
+          14,
+          26
+        ]
+      ]
+    },
+    {
+      "name": "Monkey Forest II",
+      "game_name": "Monkey Forest II",
+      "source": "https://mapleclassic.wiki/wiki/Monkey_Forest_II",
+      "monsters": [
+        [
+          "Zombie Lupin",
+          41,
+          89
+        ],
+        [
+          "Lupin",
+          37,
+          75
+        ]
+      ]
+    },
+    {
+      "name": "Sleepy Dungeon I",
+      "game_name": "Sleepy Dungeon I",
+      "source": "https://mapleclassic.wiki/wiki/Sleepy_Dungeon_I",
+      "monsters": [
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ],
+        [
+          "Green Mushroom",
+          14,
+          26
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Curse Eye",
+          33,
+          63
+        ],
+        [
+          "Lupin",
+          37,
+          75
+        ],
+        [
+          "Octopus",
+          12,
+          23
+        ],
+        [
+          "Jr. Necki",
+          21,
+          39
+        ]
+      ]
+    },
+    {
+      "name": "Tree Dungeon, Monkey Forest I",
+      "game_name": "Tree Dungeon, Monkey Forest I",
+      "source": "https://mapleclassic.wiki/wiki/Tree_Dungeon,_Monkey_Forest_I",
+      "monsters": [
+        [
+          "Zombie Lupin",
+          41,
+          89
+        ],
+        [
+          "Curse Eye",
+          33,
+          63
+        ]
+      ]
+    },
+    {
+      "name": "Clang and Lorang",
+      "game_name": "Clang and Lorang",
+      "source": "https://mapleclassic.wiki/wiki/Clang_and_Lorang",
+      "monsters": [
+        [
+          "Clang",
+          49,
+          127
+        ],
+        [
+          "Lorang",
+          38,
+          78
+        ],
+        [
+          "Tortie",
+          46,
+          111
+        ]
+      ]
+    },
+    {
+      "name": "Lorang and Clang",
+      "game_name": "Lorang and Clang",
+      "source": "https://mapleclassic.wiki/wiki/Lorang_and_Clang",
+      "monsters": [
+        [
+          "Clang",
+          49,
+          127
+        ],
+        [
+          "Lorang",
+          38,
+          78
+        ]
+      ]
+    },
+    {
+      "name": "Lorang Lorang Lorang",
+      "game_name": "Lorang Lorang Lorang",
+      "source": "https://mapleclassic.wiki/wiki/Lorang_Lorang_Lorang",
+      "monsters": [
+        [
+          "Lorang",
+          38,
+          78
+        ],
+        [
+          "Tortie",
+          46,
+          111
+        ]
+      ]
+    },
+    {
+      "name": "Another Path",
+      "game_name": "Another Path",
+      "source": "https://mapleclassic.wiki/wiki/Another_Path",
+      "monsters": [
+        [
+          "Cold Eye",
+          40,
+          85
+        ]
+      ]
+    },
+    {
+      "name": "Sanctuary Entrance I",
+      "game_name": "Sanctuary Entrance I",
+      "source": "https://mapleclassic.wiki/wiki/Sanctuary_Entrance_I",
+      "monsters": [
+        [
+          "Cold Eye",
+          40,
+          85
+        ],
+        [
+          "Tauromacis",
+          70,
+          337
+        ]
+      ]
+    },
+    {
+      "name": "Sanctuary Entrance II",
+      "game_name": "Sanctuary Entrance II",
+      "source": "https://mapleclassic.wiki/wiki/Sanctuary_Entrance_II",
+      "monsters": [
+        [
+          "Cold Eye",
+          40,
+          85
+        ],
+        [
+          "Tauromacis",
+          70,
+          337
+        ],
+        [
+          "Tauromacis",
+          70,
+          337
+        ]
+      ]
+    },
+    {
+      "name": "Sanctuary Entrance III",
+      "game_name": "Sanctuary Entrance III",
+      "source": "https://mapleclassic.wiki/wiki/Sanctuary_Entrance_III",
+      "monsters": [
+        [
+          "Cold Eye",
+          40,
+          85
+        ],
+        [
+          "Taurospear",
+          75,
+          429
+        ],
+        [
+          "Tauromacis",
+          70,
+          337
+        ],
+        [
+          "Taurospear",
+          75,
+          429
+        ]
+      ]
+    },
+    {
+      "name": "Sanctuary Entrance IV",
+      "game_name": "Sanctuary Entrance IV",
+      "source": "https://mapleclassic.wiki/wiki/Sanctuary_Entrance_IV",
+      "monsters": [
+        [
+          "Cold Eye",
+          40,
+          85
+        ],
+        [
+          "Cold Eye",
+          40,
+          85
+        ],
+        [
+          "Tauromacis",
+          70,
+          337
+        ],
+        [
+          "Taurospear",
+          75,
+          429
+        ],
+        [
+          "Taurospear",
+          75,
+          429
+        ],
+        [
+          "Taurospear",
+          75,
+          429
+        ]
+      ]
+    },
+    {
+      "name": "Sleepy Dungeon III",
+      "game_name": "Sleepy Dungeon III",
+      "source": "https://mapleclassic.wiki/wiki/Sleepy_Dungeon_III",
+      "monsters": [
+        [
+          "Curse Eye",
+          33,
+          63
+        ],
+        [
+          "Lupin",
+          37,
+          75
+        ],
+        [
+          "Dark Stone Golem",
+          58,
+          192
+        ],
+        [
+          "Jr. Necki",
+          21,
+          39
+        ],
+        [
+          "Jr. Boogie 1",
+          35,
+          69
+        ]
+      ]
+    },
+    {
+      "name": "Sleepy Dungeon II",
+      "game_name": "Sleepy Dungeon II",
+      "source": "https://mapleclassic.wiki/wiki/Sleepy_Dungeon_II",
+      "monsters": [
+        [
+          "Lupin",
+          37,
+          75
+        ],
+        [
+          "Horny Mushroom",
+          22,
+          41
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ],
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ],
+        [
+          "Green Mushroom",
+          14,
+          26
+        ],
+        [
+          "Jr. Necki",
+          21,
+          39
+        ],
+        [
+          "Curse Eye",
+          33,
+          63
+        ]
+      ]
+    },
+    {
+      "name": "The Forest of Evil I",
+      "game_name": "The Forest of Evil I",
+      "source": "https://mapleclassic.wiki/wiki/The_Forest_of_Evil_I",
+      "monsters": [
+        [
+          "Malady",
+          55,
+          167
+        ],
+        [
+          "Zombie Lupin",
+          41,
+          89
+        ]
+      ]
+    },
+    {
+      "name": "The Forest of Evil II",
+      "game_name": "The Forest of Evil II",
+      "source": "https://mapleclassic.wiki/wiki/The_Forest_of_Evil_II",
+      "monsters": [
+        [
+          "Zombie Lupin",
+          41,
+          89
+        ],
+        [
+          "Malady",
+          55,
+          167
+        ],
+        [
+          "Malady",
+          55,
+          167
+        ]
+      ]
+    },
+    {
+      "name": "Tree Dungeon, Monkey Forest II",
+      "game_name": "Tree Dungeon, Monkey Forest II",
+      "source": "https://mapleclassic.wiki/wiki/Tree_Dungeon,_Monkey_Forest_II",
+      "monsters": [
+        [
+          "Zombie Lupin",
+          41,
+          89
+        ],
+        [
+          "Curse Eye",
+          33,
+          63
+        ]
+      ]
+    },
+    {
+      "name": "Remains (Tomb) I",
+      "game_name": "Remains (Tomb) I",
+      "source": "https://mapleclassic.wiki/wiki/Remains_(Tomb)_I",
+      "monsters": [
+        [
+          "Skeledog",
+          44,
+          102
+        ],
+        [
+          "Mummydog",
+          47,
+          117
+        ]
+      ]
+    },
+    {
+      "name": "Remains (Tomb) II",
+      "game_name": "Remains (Tomb) II",
+      "source": "https://mapleclassic.wiki/wiki/Remains_(Tomb)_II",
+      "monsters": [
+        [
+          "Skeledog",
+          44,
+          102
+        ],
+        [
+          "Mummydog",
+          47,
+          117
+        ],
+        [
+          "Skeleton Soldier",
+          57,
+          183
+        ]
+      ]
+    },
+    {
+      "name": "Remains (Tomb) III",
+      "game_name": "Remains (Tomb) III",
+      "source": "https://mapleclassic.wiki/wiki/Remains_(Tomb)_III",
+      "monsters": [
+        [
+          "Mummydog",
+          47,
+          117
+        ],
+        [
+          "Skeledog",
+          44,
+          102
+        ],
+        [
+          "Skeleton Soldier",
+          57,
+          183
+        ]
+      ]
+    },
+    {
+      "name": "The Burnt Land V",
+      "game_name": "The Burnt Land V",
+      "source": "https://mapleclassic.wiki/wiki/The_Burnt_Land_V",
+      "monsters": [
+        [
+          "Fire Boar",
+          32,
+          60
+        ],
+        [
+          "Lupin",
+          37,
+          75
+        ],
+        [
+          "Dark Axe Stump",
+          23,
+          43
+        ]
+      ]
+    },
+    {
+      "name": "The Tunnel That Lost Light I",
+      "game_name": "The Tunnel That Lost Light I",
+      "source": "https://mapleclassic.wiki/wiki/The_Tunnel_That_Lost_Light_I",
+      "monsters": [
+        [
+          "Cold Eye",
+          40,
+          85
+        ],
+        [
+          "Drake",
+          50,
+          133
+        ]
+      ]
+    },
+    {
+      "name": "Hot Sand",
+      "game_name": "Hot Sand",
+      "source": "https://mapleclassic.wiki/wiki/Hot_Sand",
+      "monsters": [
+        [
+          "Tortie",
+          46,
+          111
+        ],
+        [
+          "Clang",
+          49,
+          127
+        ]
+      ]
+    },
+    {
+      "name": "Cabin of the Forsaken",
+      "game_name": "Cabin of the Forsaken",
+      "source": "https://mapleclassic.wiki/wiki/Cabin_of_the_Forsaken",
+      "monsters": [
+        [
+          "Shade",
+          48,
+          488
+        ]
+      ]
+    },
+    {
+      "name": "The Tunnel That Lost Light II",
+      "game_name": "The Tunnel That Lost Light II",
+      "source": "https://mapleclassic.wiki/wiki/The_Tunnel_That_Lost_Light_II",
+      "monsters": [
+        [
+          "Cold Eye",
+          40,
+          85
+        ],
+        [
+          "Drake",
+          50,
+          133
+        ],
+        [
+          "Wild Kargo",
+          62,
+          231
+        ]
+      ]
+    },
+    {
+      "name": "Sleepy Dungeon IV",
+      "game_name": "Sleepy Dungeon IV",
+      "source": "https://mapleclassic.wiki/wiki/Sleepy_Dungeon_IV",
+      "monsters": [
+        [
+          "Curse Eye",
+          33,
+          63
+        ],
+        [
+          "Dark Stone Golem",
+          58,
+          192
+        ],
+        [
+          "Jr. Boogie 1",
+          35,
+          69
+        ],
+        [
+          "Jr. Boogie 2",
+          35,
+          69
+        ],
+        [
+          "Jr. Necki",
+          21,
+          39
+        ]
+      ]
+    },
+    {
+      "name": "Sleepy Dungeon V",
+      "game_name": "Sleepy Dungeon V",
+      "source": "https://mapleclassic.wiki/wiki/Sleepy_Dungeon_V",
+      "monsters": [
+        [
+          "Curse Eye",
+          33,
+          63
+        ],
+        [
+          "Lupin",
+          37,
+          75
+        ],
+        [
+          "Dark Stone Golem",
+          58,
+          192
+        ],
+        [
+          "Jr. Necki",
+          21,
+          39
+        ],
+        [
+          "Jr. Boogie 1",
+          35,
+          69
+        ],
+        [
+          "Jr. Boogie 2",
+          35,
+          69
+        ],
+        [
+          "Slime",
+          6,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "Camp 1",
+      "game_name": "Camp 1",
+      "source": "https://mapleclassic.wiki/wiki/Camp_1",
+      "monsters": [
+        [
+          "Skeleton Soldier",
+          57,
+          183
+        ],
+        [
+          "Officer Skeleton",
+          63,
+          242
+        ]
+      ]
+    },
+    {
+      "name": "Camp 2",
+      "game_name": "Camp 2",
+      "source": "https://mapleclassic.wiki/wiki/Camp_2",
+      "monsters": [
+        [
+          "Skeleton Soldier",
+          57,
+          183
+        ],
+        [
+          "Officer Skeleton",
+          63,
+          242
+        ]
+      ]
+    },
+    {
+      "name": "Camp 3",
+      "game_name": "Camp 3",
+      "source": "https://mapleclassic.wiki/wiki/Camp_3",
+      "monsters": [
+        [
+          "Officer Skeleton",
+          63,
+          242
+        ],
+        [
+          "Skeleton Soldier",
+          57,
+          183
+        ]
+      ]
+    },
+    {
+      "name": "Remains (Cliff)",
+      "game_name": "Remains (Cliff)",
+      "source": "https://mapleclassic.wiki/wiki/Remains_(Cliff)",
+      "monsters": [
+        [
+          "Commander Skeleton",
+          73,
+          390
+        ],
+        [
+          "Officer Skeleton",
+          63,
+          242
+        ]
+      ]
+    },
+    {
+      "name": "Remains (Tomb) IV",
+      "game_name": "Remains (Tomb) IV",
+      "source": "https://mapleclassic.wiki/wiki/Remains_(Tomb)_IV",
+      "monsters": [
+        [
+          "Officer Skeleton",
+          63,
+          242
+        ],
+        [
+          "Commander Skeleton",
+          73,
+          390
+        ]
+      ]
+    },
+    {
+      "name": "The Cursed Sanctuary",
+      "game_name": "The Cursed Sanctuary",
+      "source": "https://mapleclassic.wiki/wiki/The_Cursed_Sanctuary",
+      "monsters": [
+        [
+          "Jr. Balrog",
+          80,
+          2188
+        ]
+      ]
+    }
+  ]
+}

@@ -20,7 +20,7 @@ from sidebar_ui import build_interface, update_dashboard
 
 CONFIG = bootstrap.ROOT / 'settings.json'
 OUTPUT = bootstrap.ROOT / 'sessions'
-VERSION = '0.21'
+VERSION = '0.22'
 
 
 class App:

@@ -105,7 +105,9 @@ class RealScreenshotTests(unittest.TestCase):
         found=[row for row in lines if row['said']==('exp',35) and row['score']>=.8]
         self.assertTrue(found,lines)
         self.assertEqual(found[0]['color'],'white')
-        profile=Catalog().profile()
+        # This fixture is from The Road to the Dungeon. Ghost Stump now also
+        # gives 35 EXP, so a global profile cannot identify it as Blue Mushroom.
+        profile=Catalog().profile('The Road to the Dungeon')
         session=CounterSession(profile)
         reader=RapidReader()
         frames=[Image.new('RGB',image.size),image,image,image]

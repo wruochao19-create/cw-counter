@@ -1,4 +1,4 @@
-# CW Counter 0.21
+# CW Counter 0.22
 
 Windows 上的 MapleStory Classic World 经验效率与候选击杀统计工具。读取可见画面，自动确认地图、定位经验提示与底部经验条；支持置顶、圆角侧栏、小窗模式、主题和透明度。普通运行离线完成，默认不保存截图。
 
@@ -28,6 +28,16 @@ py -3.12 setup_windows.py
 ```
 
 安装阶段联网；doctor 只测试本地模型、资料库和空闲 UI，不读取实际游戏画面。安装包是源码包，不含 Python 或虚拟环境；OCR 模型已包含，不会在首次打怪时下载。
+
+## 0.22：地图 / 怪物覆盖核对
+
+2026-11-07 对照公开练级地图目录132个条目，逐页读取其中131个怪物表，另对照开服怪物列表和更新记录。新增发掘遗址8种普通怪（Ghost Stump、Wooden Mask、Rocky Mask、Skeledog、Mummydog、Skeleton Soldier、Officer Skeleton、Commander Skeleton）及 Stumpy；补齐12张实际地图（Parched Land、Excavation Site I–III、Remains (Tomb) I–IV、Camp 1–3、Remains (Cliff)）。Parched Land 也补入两种树妖和两种 Jr. Boogie。
+
+清理空地图名称后，2条仅有空地图的 Rotten Mushroom / Rotten Mushmom 不再被错误视为可定位出生的有效怪。有效记录为76种变体、197个地图名称；新增9种、移除2条无位置记录，因此总数不是简单加9。补充记录的 `supplement:*` 是应用内部稳定标识，不冒充客户端ID。原始快照保持不变。0.22 完整153项回归通过，doctor通过。
+
+核对快照在 `assets/catalog_reference.json`，含来源与日期；运行 `.venv/Scripts/python.exe scripts/audit_catalog.py` 检查这份范围内的缺项。Wiki 的 Mushroom Garden 区域括号和 Bowman 二转怪物注释经过明确规范化，游戏中的同名 Mushroom Garden 仍合并候选。
+
+范围限制：132个目录条目并非全服务器地图。Subway Ticketing Booth 页面没有怪物表；没有凭猜测填入。Fairy 1 无常规出生位置；Orange Slime 为限时城镇活动怪，未硬填常驻地图；Primrose Hill 的 Flyeye / Goblin Fire 有组队副本变体，未合并到普通怪。未开放 Ossyria、Forgotten Hollow、无位置召唤怪和零经验测试怪不当作正常练级遗漏补入。因此不能声称所有地图/活动怪完整。
 
 ## 0.21：补齐 Murky Swamp 新地图名称
 
@@ -81,7 +91,7 @@ py -3.12 setup_windows.py
 .\.venv\Scripts\python.exe scripts/package_source.py
 ```
 
-输出 `dist/cw-counter-0.21-source.zip` 和 SHA256。打包使用文件允许列表，排除个人设置、会话、诊断、开发报告、缓存和虚拟环境。资产及第三方来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。GitHub Actions 在 Windows/Python3.12 执行安装、doctor 和回归测试。
+输出 `dist/cw-counter-0.22-source.zip` 和 SHA256。打包使用文件允许列表，排除个人设置、会话、诊断、开发报告、缓存和虚拟环境。资产及第三方来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。GitHub Actions 在 Windows/Python3.12 执行安装、doctor 和回归测试。
 
 验证边界：同机全新解压目录、全新虚拟环境的安装验证可以排除依赖原电脑项目缓存；不能替代另一台不同硬件、分辨率下的真实游戏验证。
 
