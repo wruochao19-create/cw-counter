@@ -1,0 +1,1512 @@
+{
+  "source": {
+    "author": "OSMS Data Explorer by @ohmi",
+    "origin": "https://osmsdataexplorer.com/data/current/monsters.json",
+    "mirror": "https://jcsoutherland.github.io/maple-exp-tracker/data/osms/monsters.json",
+    "mirror_last_modified": "Mon, 02 Nov 2026 16:07:09 GMT",
+    "fetched_at": "2026-11-05T21:02:56.716502+00:00",
+    "raw_sha256": "bb588fd341cc9db7599bcc597227e4fb69f783e478e816d1fe2d1f9f8c796a4f",
+    "note": "Public reference snapshot, not a complete or authoritative live-server list. No images/code copied."
+  },
+  "monsters": [
+    {
+      "id": 1,
+      "name": "Tutorial Jr. Sentinel",
+      "level": 1,
+      "exp": 1,
+      "boss": false,
+      "maps": [
+        "East Entrance to Mushroom Town"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Snail",
+      "level": 1,
+      "exp": 2,
+      "boss": false,
+      "maps": [
+        "Snail Hunting Ground I",
+        "Snail Hunting Ground II",
+        "Snail Hunting Ground III",
+        "The Field West of Amherst",
+        "In a Small Forest",
+        "Dangerous Forest",
+        "Mushroom Garden",
+        "Snail Garden",
+        "Hunting Ground Middle of the Forest I",
+        "Hunting Ground Middle of the Forest II",
+        "Snail Field of Flowers",
+        "The Field East of Amherst",
+        "Tomato Field",
+        "Thicket Around the Beach I",
+        "Thicket Around the Beach II",
+        "Thicket Around the Beach III",
+        "3-Way Road-Split",
+        "Beach Hunting Ground",
+        "Forest West of Henesys",
+        "The Forest East of Henesys",
+        "The Forest of Wisdom",
+        "The Forest South of Ellinia",
+        "The Field Up North of Ellinia",
+        "The Forest North of Ellinia",
+        "L Forest II",
+        "L Forest III",
+        "Kerning City Middle Forest III",
+        "West Domain of Perion",
+        "Perion Street Corner",
+        "East Rocky Mountain IV",
+        "Rocky Road I",
+        "Rocky Road II",
+        "East Domain of Perion",
+        "Hunting Ground in the Deep Forest I",
+        "Hunting Ground in the Deep Forest II",
+        "Deep Forest",
+        "Drake's Meal Table"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Blue Snail",
+      "level": 2,
+      "exp": 4,
+      "boss": false,
+      "maps": [
+        "Snail Hunting Ground II",
+        "Snail Hunting Ground III",
+        "A Split Road",
+        "The Field West of Amherst",
+        "In a Small Forest",
+        "Dangerous Forest",
+        "Snail Garden",
+        "Hunting Ground Middle of the Forest I",
+        "Hunting Ground Middle of the Forest II",
+        "Snail Field of Flowers",
+        "The Field East of Amherst",
+        "Tomato Field",
+        "Right Around Lith Harbor",
+        "Thicket Around the Beach I",
+        "Thicket Around the Beach III",
+        "3-Way Road-Split",
+        "The Pig Beach",
+        "Beach Hunting Ground",
+        "Henesys Hunting Ground I",
+        "Henesys Hunting Ground II",
+        "Henesys Hunting Ground III",
+        "A Hill West of Henesys",
+        "Forest West of Henesys",
+        "The Hill East of Henesys",
+        "The Forest East of Henesys",
+        "The Blue Mushroom Forest",
+        "The Road to the Dungeon",
+        "Kerning City Construction Site",
+        "L Forest I",
+        "L Forest II",
+        "L Forest III",
+        "Kerning City Middle Forest I",
+        "Kerning City Middle Forest II",
+        "Kerning City Middle Forest III",
+        "Sunset Sky",
+        "West Street Corner of Perion",
+        "West Domain of Perion",
+        "Perion Street Corner",
+        "East Rocky Mountain I",
+        "East Domain of Perion",
+        "Deep Valley I"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Shroom",
+      "level": 3,
+      "exp": 6,
+      "boss": false,
+      "maps": [
+        "A Split Road",
+        "The Field West of Amherst",
+        "In a Small Forest",
+        "Mushroom Garden",
+        "Hunting Ground Middle of the Forest I",
+        "Hunting Ground Middle of the Forest II",
+        "Beach Hunting Ground",
+        "Henesys Hunting Ground I",
+        "Henesys Hunting Ground II",
+        "Mushroom Garden",
+        "The Hill East of Henesys",
+        "The Forest East of Henesys",
+        "The Road to the Dungeon",
+        "L Forest I",
+        "L Forest II",
+        "L Forest III",
+        "Kerning City Middle Forest I",
+        "Kerning City Middle Forest II"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Red Snail",
+      "level": 4,
+      "exp": 8,
+      "boss": false,
+      "maps": [
+        "Snail Hunting Ground III",
+        "A Split Road",
+        "The Field West of Amherst",
+        "In a Small Forest",
+        "Dangerous Forest",
+        "Snail Garden",
+        "Hunting Ground Middle of the Forest I",
+        "Hunting Ground Middle of the Forest II",
+        "Snail Field of Flowers",
+        "The Field East of Amherst",
+        "Tomato Field",
+        "Right Around Lith Harbor",
+        "Thicket Around the Beach I",
+        "Thicket Around the Beach III",
+        "3-Way Road-Split",
+        "The Pig Beach",
+        "Beach Hunting Ground",
+        "Henesys Hunting Ground I",
+        "Henesys Hunting Ground II",
+        "Henesys Hunting Ground III",
+        "A Hill West of Henesys",
+        "Mushroom Garden",
+        "Forest West of Henesys",
+        "The Hill East of Henesys",
+        "The Forest East of Henesys",
+        "The Blue Mushroom Forest",
+        "The Road to the Dungeon",
+        "L Forest I",
+        "L Forest II",
+        "L Forest III",
+        "Kerning City Middle Forest I",
+        "Kerning City Middle Forest II",
+        "Kerning City Middle Forest III",
+        "Construction Site North of Kerning City",
+        "West Rocky Mountain I",
+        "West Rocky Mountain II",
+        "West Rocky Mountain III",
+        "West Domain of Perion",
+        "Perion Street Corner",
+        "East Rocky Mountain I",
+        "East Rocky Mountain II",
+        "East Rocky Mountain III",
+        "East Rocky Mountain V",
+        "Rocky Road I",
+        "Rocky Road II",
+        "Rocky Road III",
+        "East Domain of Perion",
+        "Deep Valley I"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Stump",
+      "level": 5,
+      "exp": 10,
+      "boss": false,
+      "maps": [
+        "Thicket Around the Beach I",
+        "Thicket Around the Beach III",
+        "Henesys Hunting Ground I",
+        "Henesys Hunting Ground II",
+        "Henesys Hunting Ground III",
+        "A Hill West of Henesys",
+        "Forest West of Henesys",
+        "The Field South of Ellinia",
+        "The Forest South of Ellinia",
+        "The Field Up North of Ellinia",
+        "The Tree That Grew I",
+        "The Tree That Grew II",
+        "The Tree That Grew III",
+        "The Forest North of Ellinia",
+        "Kerning City Construction Site",
+        "L Forest I",
+        "L Forest II",
+        "L Forest III",
+        "Sunset Sky",
+        "West Street Corner of Perion",
+        "West Rocky Mountain I",
+        "West Rocky Mountain II",
+        "West Rocky Mountain III",
+        "West Domain of Perion",
+        "Perion Street Corner",
+        "Over the Wall",
+        "East Rocky Mountain I",
+        "East Rocky Mountain II",
+        "East Rocky Mountain III",
+        "Rocky Road I",
+        "Rocky Road II",
+        "Rocky Road III",
+        "East Domain of Perion",
+        "Deep Forest"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Slime",
+      "level": 6,
+      "exp": 12,
+      "boss": false,
+      "maps": [
+        "Right Around Lith Harbor",
+        "Thicket Around the Beach I",
+        "Thicket Around the Beach II",
+        "3-Way Road-Split",
+        "Beach Hunting Ground",
+        "Henesys Hunting Ground I",
+        "Henesys Hunting Ground II",
+        "Henesys Hunting Ground III",
+        "A Hill West of Henesys",
+        "Forest West of Henesys",
+        "The Hill East of Henesys",
+        "The Forest East of Henesys",
+        "The Blue Mushroom Forest",
+        "The Road to the Dungeon",
+        "Henesys Dungeon Entrance",
+        "The Field South of Ellinia",
+        "The Forest of Wisdom",
+        "Downstairs at the Forest",
+        "The Forest South of Ellinia",
+        "Dungeon, Southern Forest I",
+        "Dungeon, Southern Forest II",
+        "Dungeon, Southern Forest III",
+        "Dungeon, Southern Forest IV",
+        "The Field Up North of Ellinia",
+        "The Tree That Grew I",
+        "The Tree That Grew II",
+        "The Forest North of Ellinia",
+        "Tree Dungeon, Forest Up North I",
+        "Tree Dungeon, Forest Up North II",
+        "Tree Dungeon, Forest Up North III",
+        "Tree Dungeon, Forest Up North IV",
+        "Tree Dungeon, Forest Up North V",
+        "L Forest I",
+        "L Forest II",
+        "L Forest III",
+        "Kerning City Middle Forest I",
+        "Kerning City Middle Forest II",
+        "Kerning City Middle Forest III",
+        "The Swamp of Despair I",
+        "The Swamp of Despair II",
+        "The Swamp of Despair III",
+        "Dangerous Croko I",
+        "Dangerous Croko II",
+        "Swampy Land in a Deep Forest",
+        "Hunting Ground in the Deep Forest I",
+        "Hunting Ground in the Deep Forest II",
+        "Deep Forest",
+        "Damp Tree-Forest",
+        "Damp Forest",
+        "Sleepy Dungeon I",
+        "Sleepy Dungeon II",
+        "Sleepy Dungeon V"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Pig",
+      "level": 7,
+      "exp": 13,
+      "boss": false,
+      "maps": [
+        "Thicket Around the Beach II",
+        "3-Way Road-Split",
+        "The Pig Beach",
+        "Beach Hunting Ground",
+        "A Hill West of Henesys",
+        "Forest West of Henesys",
+        "The Hill East of Henesys",
+        "The Rain-Forest East of Henesys",
+        "The Forest East of Henesys",
+        "The Road to the Dungeon",
+        "L Forest I",
+        "L Forest II",
+        "L Forest III",
+        "Kerning City Middle Forest I",
+        "Kerning City Middle Forest II",
+        "Kerning City Middle Forest III"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Orange Mushroom",
+      "level": 8,
+      "exp": 15,
+      "boss": false,
+      "maps": [
+        "The Field West of Amherst",
+        "In a Small Forest",
+        "Dangerous Forest",
+        "Mushroom Garden",
+        "Hunting Ground Middle of the Forest II",
+        "Snail Field of Flowers",
+        "The Field East of Amherst",
+        "Tomato Field",
+        "Thicket Around the Beach II",
+        "Thicket Around the Beach III",
+        "3-Way Road-Split",
+        "Beach Hunting Ground",
+        "An Empty House",
+        "Henesys Hunting Ground I",
+        "Henesys Hunting Ground II",
+        "Henesys Hunting Ground III",
+        "Mushroom Garden",
+        "Forest West of Henesys",
+        "The Hill East of Henesys",
+        "The Forest East of Henesys",
+        "The Road to the Dungeon",
+        "Kerning City Construction Site",
+        "Caution Falling Down",
+        "L Forest I",
+        "L Forest II",
+        "Kerning City Middle Forest I",
+        "Kerning City Middle Forest II",
+        "Kerning City Middle Forest III",
+        "Sunset Sky",
+        "Construction Site North of Kerning City",
+        "Northern Top of Construction Site"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Ribbon Pig",
+      "level": 10,
+      "exp": 19,
+      "boss": false,
+      "maps": [
+        "3-Way Road-Split",
+        "The Pig Beach",
+        "Beach Hunting Ground",
+        "A Hill West of Henesys",
+        "Forest West of Henesys",
+        "The Hill East of Henesys",
+        "The Rain-Forest East of Henesys",
+        "The Forest East of Henesys",
+        "The Road to the Dungeon",
+        "L Forest I",
+        "L Forest II",
+        "L Forest III",
+        "Kerning City Middle Forest I",
+        "Kerning City Middle Forest II",
+        "Kerning City Middle Forest III"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Dark Stump",
+      "level": 11,
+      "exp": 21,
+      "boss": false,
+      "maps": [
+        "The Field South of Ellinia",
+        "The Tree That Grew I",
+        "The Tree That Grew II",
+        "The Tree That Grew III",
+        "Sunset Sky",
+        "Construction Site North of Kerning City",
+        "West Street Corner of Perion",
+        "West Rocky Mountain II",
+        "West Rocky Mountain III",
+        "West Domain of Perion",
+        "Perion Street Corner",
+        "Over the Wall",
+        "East Rocky Mountain I",
+        "East Rocky Mountain III",
+        "East Rocky Mountain IV",
+        "East Rocky Mountain V",
+        "East Rocky Mountain VI",
+        "Rocky Road I",
+        "Rocky Road II",
+        "East Domain of Perion",
+        "The Land of Wild Boar II",
+        "Deep Valley I",
+        "Deep Valley II",
+        "Deep Valley III",
+        "Perion Dungeon Entrance",
+        "Swampy Land in a Deep Forest",
+        "Deep Forest"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Octopus",
+      "level": 12,
+      "exp": 23,
+      "boss": false,
+      "maps": [
+        "Kerning City Construction Site",
+        "Caution Falling Down",
+        "Construction Site North of Kerning City",
+        "Northern Top of Construction Site",
+        "Swampy Land in a Deep Forest",
+        "Hunting Ground in the Deep Forest I",
+        "Damp Tree-Forest",
+        "Damp Forest",
+        "Sleepy Dungeon I"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Green Mushroom",
+      "level": 14,
+      "exp": 26,
+      "boss": false,
+      "maps": [
+        "Henesys Hunting Ground I",
+        "Henesys Hunting Ground II",
+        "Henesys Hunting Ground III",
+        "Henesys Dungeon Entrance",
+        "The Field South of Ellinia",
+        "The Forest of Wisdom",
+        "Monkey Forest I",
+        "Downstairs at the Forest",
+        "The Forest South of Ellinia",
+        "Dungeon, Southern Forest II",
+        "Dungeon, Southern Forest III",
+        "Dungeon, Southern Forest IV",
+        "The Tree That Grew III",
+        "Tree Dungeon, Forest Up North II",
+        "Tree Dungeon, Forest Up North III",
+        "Tree Dungeon, Forest Up North IV",
+        "Tree Dungeon, Forest Up North V",
+        "Kerning City Construction Site",
+        "L Forest I",
+        "L Forest II",
+        "L Forest III",
+        "Kerning City Middle Forest II",
+        "Kerning City Middle Forest III",
+        "Sunset Sky",
+        "West Street Corner of Perion",
+        "West Rocky Mountain III",
+        "West Domain of Perion",
+        "Rocky Road I",
+        "East Domain of Perion",
+        "Swampy Land in a Deep Forest",
+        "Hunting Ground in the Deep Forest I",
+        "Deep Forest",
+        "Sleepy Dungeon I",
+        "Sleepy Dungeon II",
+        "1st Accompaniment <Bonus>"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Bubbling",
+      "level": 15,
+      "exp": 28,
+      "boss": false,
+      "maps": [
+        "Line 1 <Area 1>",
+        "B1 <Subway Depot>"
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Axe Stump",
+      "level": 17,
+      "exp": 32,
+      "boss": false,
+      "maps": [
+        "The Forest South of Ellinia",
+        "The Forest North of Ellinia",
+        "Construction Site North of Kerning City",
+        "West Rocky Mountain I",
+        "West Rocky Mountain II",
+        "West Rocky Mountain III",
+        "West Rocky Mountain IV",
+        "Over the Wall",
+        "East Rocky Mountain II",
+        "East Rocky Mountain III",
+        "East Rocky Mountain IV",
+        "East Rocky Mountain VI",
+        "Rocky Road II",
+        "Rocky Road III",
+        "East Domain of Perion",
+        "The Land of Wild Boar II",
+        "Deep Valley I",
+        "Deep Valley II",
+        "Deep Valley III"
+      ]
+    },
+    {
+      "id": 16,
+      "name": "Blue Mushroom",
+      "level": 19,
+      "exp": 35,
+      "boss": false,
+      "maps": [
+        "The Forest East of Henesys",
+        "The Blue Mushroom Forest",
+        "The Road to the Dungeon",
+        "Henesys Dungeon Entrance",
+        "The Breathing Rock",
+        "The Entrance of Golem's Temple",
+        "Golem's Temple I",
+        "Golem's Temple II",
+        "Golem's Temple III",
+        "Golem's Temple IV",
+        "Dungeon, Southern Forest IV",
+        "Caution Falling Down",
+        "L Forest II",
+        "L Forest III",
+        "Construction Site North of Kerning City",
+        "Northern Top of Construction Site"
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Stirge",
+      "level": 20,
+      "exp": 37,
+      "boss": false,
+      "maps": [
+        "Transfer Area",
+        "Line 1 <Area 2>",
+        "Line 1 <Area 3>",
+        "Dark Cave",
+        "Dangerous Steam"
+      ]
+    },
+    {
+      "id": 18,
+      "name": "Jr. Necki",
+      "level": 21,
+      "exp": 39,
+      "boss": false,
+      "maps": [
+        "Line 2 <Area 1>",
+        "Line 2 <Area 2>",
+        "The Swamp of Despair I",
+        "The Swamp of Despair II",
+        "The Swamp of Despair III",
+        "Dangerous Croko I",
+        "Dangerous Croko II",
+        "Monkey Swamp I",
+        "Monkey Swamp II",
+        "Monkey Swamp III",
+        "The Murky Swamp",
+        "Swampy Land in a Deep Forest",
+        "Hunting Ground in the Deep Forest I",
+        "Damp Tree-Forest",
+        "Damp Forest",
+        "Sleepy Dungeon I",
+        "Sleepy Dungeon II",
+        "Sleepy Dungeon III",
+        "Sleepy Dungeon IV",
+        "Sleepy Dungeon V"
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Horny Mushroom",
+      "level": 22,
+      "exp": 41,
+      "boss": false,
+      "maps": [
+        "Downstairs at the Forest",
+        "Dungeon, Southern Forest IV",
+        "Tree Dungeon, Forest Up North I",
+        "Tree Dungeon, Forest Up North II",
+        "Tree Dungeon, Forest Up North III",
+        "Tree Dungeon, Forest Up North V",
+        "The Swamp of Despair I",
+        "The Swamp of Despair II",
+        "Swampy Land in a Deep Forest",
+        "Hunting Ground in the Deep Forest II",
+        "Deep Forest",
+        "Sleepy Dungeon I",
+        "Sleepy Dungeon II",
+        "Ant Tunnel I",
+        "Ant Tunnel II",
+        "Ant Tunnel III",
+        "Ant Tunnel IV",
+        "Dark Cave",
+        "Dangerous Steam",
+        "Deep Ant Tunnel I",
+        "Deep Ant Tunnel II",
+        "Ant Tunnel Park",
+        "Drake Hunting Ground",
+        "1st Accompaniment <Bonus>"
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Dark Axe Stump",
+      "level": 23,
+      "exp": 43,
+      "boss": false,
+      "maps": [
+        "West Rocky Mountain III",
+        "West Rocky Mountain IV",
+        "Land of Wild Boar",
+        "Over the Wall",
+        "East Rocky Mountain IV",
+        "East Rocky Mountain V",
+        "East Rocky Mountain VI",
+        "East Rocky Mountain VII",
+        "Rocky Road II",
+        "Rocky Road III",
+        "East Domain of Perion",
+        "The Land of Wild Boar II",
+        "Deep Valley I",
+        "Deep Valley II",
+        "The Burnt Land I",
+        "The Burnt Land II",
+        "The Burnt Land III",
+        "The Burnt Land IV",
+        "The Burnt Land V",
+        "Deep Valley III",
+        "Perion Dungeon Entrance",
+        "Deep Forest",
+        "Damp Tree-Forest",
+        "Sleepy Dungeon II"
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Zombie Mushroom",
+      "level": 24,
+      "exp": 45,
+      "boss": false,
+      "maps": [
+        "Ant Tunnel I",
+        "Ant Tunnel II",
+        "Ant Tunnel III",
+        "Ant Tunnel IV",
+        "Dark Cave",
+        "Dangerous Steam",
+        "Deep Ant Tunnel I",
+        "Deep Ant Tunnel II",
+        "Ant Tunnel Park",
+        "The Grave of Mushmom",
+        ""
+      ]
+    },
+    {
+      "id": 22,
+      "name": "Wild Boar",
+      "level": 25,
+      "exp": 46,
+      "boss": false,
+      "maps": [
+        "West Rocky Mountain IV",
+        "Land of Wild Boar",
+        "Rocky Road II",
+        "Rocky Road III",
+        "The Land of Wild Boar II",
+        "Deep Valley I",
+        "Deep Valley II",
+        "Deep Valley III",
+        "Perion Dungeon Entrance"
+      ]
+    },
+    {
+      "id": 23,
+      "name": "Evil Eye",
+      "level": 27,
+      "exp": 50,
+      "boss": false,
+      "maps": [
+        "Deep Ant Tunnel I",
+        "Deep Ant Tunnel II",
+        "Ant Tunnel Park",
+        "The Cave of Evil Eye I",
+        "The Cave of Evil Eye II",
+        "The Cave of Evil Eye III",
+        "The Cave of Evil Eye IV"
+      ]
+    },
+    {
+      "id": 24,
+      "name": "Iron Hog",
+      "level": 28,
+      "exp": 52,
+      "boss": false,
+      "maps": [
+        "The Pig Beach",
+        "Pig Park",
+        "Pig Park II",
+        "Someone Else's House",
+        "The Road to the Dungeon",
+        "Henesys Dungeon Entrance",
+        "L Forest I"
+      ]
+    },
+    {
+      "id": 25,
+      "name": "Fairy 1",
+      "level": 29,
+      "exp": 54,
+      "boss": false,
+      "maps": []
+    },
+    {
+      "id": 26,
+      "name": "Fairy 2",
+      "level": 29,
+      "exp": 54,
+      "boss": false,
+      "maps": [
+        "Someone Else's House"
+      ]
+    },
+    {
+      "id": 27,
+      "name": "Fairy 3",
+      "level": 29,
+      "exp": 54,
+      "boss": false,
+      "maps": [
+        "Tree Dungeon, Forest Up North VI",
+        "Tree Dungeon, Forest Up North VII",
+        ""
+      ]
+    },
+    {
+      "id": 28,
+      "name": "Fairy 4",
+      "level": 29,
+      "exp": 54,
+      "boss": false,
+      "maps": [
+        "The Breathing Rock",
+        "The Entrance of Golem's Temple",
+        "Golem's Temple I",
+        "Golem's Temple II",
+        "Golem's Temple III",
+        "Golem's Temple IV"
+      ]
+    },
+    {
+      "id": 29,
+      "name": "Ligator",
+      "level": 31,
+      "exp": 58,
+      "boss": false,
+      "maps": [
+        "The Swamp of Despair I",
+        "The Swamp of Despair II",
+        "The Swamp of Despair III",
+        "Dangerous Croko I",
+        "The Murky Swamp"
+      ]
+    },
+    {
+      "id": 30,
+      "name": "Fire Boar",
+      "level": 32,
+      "exp": 60,
+      "boss": false,
+      "maps": [
+        "East Rocky Mountain V",
+        "East Rocky Mountain VI",
+        "East Rocky Mountain VII",
+        "Deep Valley I",
+        "Dangerous Valley",
+        "Dangerous Valley II",
+        "Deep Valley II",
+        "The Burnt Land I",
+        "The Burnt Land II",
+        "The Burnt Land III",
+        "The Burnt Land IV",
+        "The Burnt Land V",
+        "Deep Valley III",
+        "Perion Dungeon Entrance"
+      ]
+    },
+    {
+      "id": 31,
+      "name": "Curse Eye",
+      "level": 33,
+      "exp": 63,
+      "boss": false,
+      "maps": [
+        "Tree Dungeon, Monkey Forest I",
+        "Tree Dungeon, Monkey Forest II",
+        "Tree Dungeon, Forest Up North VI",
+        "Tree Dungeon, Forest Up North VII",
+        "Tree Dungeon, Forest Up North VIII",
+        "Tree Dungeon, Forest Up North IX",
+        "Hunting Ground in the Deep Forest I",
+        "Hunting Ground in the Deep Forest II",
+        "Sleepy Dungeon I",
+        "Sleepy Dungeon II",
+        "Sleepy Dungeon III",
+        "Sleepy Dungeon IV",
+        "Sleepy Dungeon V"
+      ]
+    },
+    {
+      "id": 32,
+      "name": "Jr. Wraith",
+      "level": 34,
+      "exp": 66,
+      "boss": false,
+      "maps": [
+        "Line 1 <Area 2>",
+        "Line 1 <Area 3>",
+        "Line 2 <Area 1>",
+        "Line 2 <Area 2>",
+        "B2 <Subway Depot>"
+      ]
+    },
+    {
+      "id": 33,
+      "name": "Jr. Boogie 1",
+      "level": 35,
+      "exp": 69,
+      "boss": false,
+      "maps": [
+        "B2 <Subway Depot>",
+        "B3 <Subway Depot>",
+        "Land of Wild Boar",
+        "Hunting Ground in the Deep Forest I",
+        "Sleepy Dungeon III",
+        "Sleepy Dungeon IV",
+        "Sleepy Dungeon V"
+      ]
+    },
+    {
+      "id": 34,
+      "name": "Jr. Boogie 2",
+      "level": 35,
+      "exp": 69,
+      "boss": false,
+      "maps": [
+        "B3 <Subway Depot>",
+        "Land of Wild Boar",
+        "Sleepy Dungeon IV",
+        "Sleepy Dungeon V",
+        "Deep Ant Tunnel I",
+        "The Cave of Evil Eye I",
+        "The Cave of Evil Eye II",
+        "The Cave of Evil Eye III",
+        "The Cave of Evil Eye IV",
+        "Drake Hunting Ground",
+        "The Grave of Mushmom"
+      ]
+    },
+    {
+      "id": 35,
+      "name": "Lupin",
+      "level": 37,
+      "exp": 75,
+      "boss": false,
+      "maps": [
+        "Henesys Dungeon Entrance",
+        "The Breathing Rock",
+        "Golem's Temple I",
+        "Golem's Temple II",
+        "Golem's Temple III",
+        "Monkey Forest I",
+        "Monkey Forest II",
+        "Downstairs at the Forest",
+        "L Forest II",
+        "Monkey Swamp I",
+        "Monkey Swamp II",
+        "West Rocky Mountain IV",
+        "East Rocky Mountain VI",
+        "The Burnt Land IV",
+        "The Burnt Land V",
+        "Hunting Ground in the Deep Forest II",
+        "Sleepy Dungeon I",
+        "Sleepy Dungeon II",
+        "Sleepy Dungeon III",
+        "Sleepy Dungeon V",
+        "A Look-Out Shed Around the Beach",
+        "Lorang Lorang"
+      ]
+    },
+    {
+      "id": 36,
+      "name": "Lorang",
+      "level": 38,
+      "exp": 78,
+      "boss": false,
+      "maps": [
+        "A Look-Out Shed Around the Beach",
+        "Lorang Lorang",
+        "Lorang Lorang Lorang",
+        "Lorang and Clang",
+        "Clang and Lorang"
+      ]
+    },
+    {
+      "id": 37,
+      "name": "Cold Eye",
+      "level": 40,
+      "exp": 85,
+      "boss": false,
+      "maps": [
+        "Tree Dungeon, Forest Up North VII",
+        "The Tunnel That Lost Light I",
+        "The Tunnel That Lost Light II",
+        "Drake's Meal Table",
+        "Wild Kargo's Area",
+        "Another Path",
+        "Sanctuary Entrance I",
+        "Sanctuary Entrance II",
+        "Sanctuary Entrance III",
+        "Sanctuary Entrance IV"
+      ]
+    },
+    {
+      "id": 38,
+      "name": "Zombie Lupin",
+      "level": 41,
+      "exp": 89,
+      "boss": false,
+      "maps": [
+        "Tree Dungeon, Monkey Forest I",
+        "Monkey Forest II",
+        "Tree Dungeon, Monkey Forest II",
+        "The Forest of Evil I",
+        "The Forest of Evil II",
+        "Monkey Swamp II",
+        "Monkey Swamp III"
+      ]
+    },
+    {
+      "id": 40,
+      "name": "Copper Drake",
+      "level": 45,
+      "exp": 107,
+      "boss": false,
+      "maps": [
+        "East Rocky Mountain VII",
+        "Dangerous Valley",
+        "Dangerous Valley II"
+      ]
+    },
+    {
+      "id": 41,
+      "name": "Tortie",
+      "level": 46,
+      "exp": 111,
+      "boss": false,
+      "maps": [
+        "Lorang Lorang Lorang",
+        "Clang and Lorang",
+        "Hot Sand"
+      ]
+    },
+    {
+      "id": 43,
+      "name": "Wraith",
+      "level": 48,
+      "exp": 122,
+      "boss": false,
+      "maps": [
+        "Line 1 <Area 3>",
+        "Line 1 <Area 4>",
+        "Line 2 <Area 2>",
+        "Line 2 <Area 3>",
+        "B3 <Subway Depot>"
+      ]
+    },
+    {
+      "id": 44,
+      "name": "Clang",
+      "level": 49,
+      "exp": 127,
+      "boss": false,
+      "maps": [
+        "Lorang and Clang",
+        "Clang and Lorang",
+        "Hot Sand"
+      ]
+    },
+    {
+      "id": 45,
+      "name": "Drake",
+      "level": 50,
+      "exp": 133,
+      "boss": false,
+      "maps": [
+        "Drake Hunting Ground",
+        "The Tunnel That Lost Light I",
+        "The Tunnel That Lost Light II",
+        "Drake's Meal Table"
+      ]
+    },
+    {
+      "id": 46,
+      "name": "Croco",
+      "level": 52,
+      "exp": 146,
+      "boss": false,
+      "maps": [
+        "Dangerous Croko I",
+        "Dangerous Croko II"
+      ]
+    },
+    {
+      "id": 47,
+      "name": "Malady",
+      "level": 55,
+      "exp": 167,
+      "boss": false,
+      "maps": [
+        "The Forest of Evil I",
+        "The Forest of Evil II"
+      ]
+    },
+    {
+      "id": 48,
+      "name": "Stone Golem",
+      "level": 56,
+      "exp": 175,
+      "boss": false,
+      "maps": [
+        "Henesys Dungeon Entrance",
+        "The Breathing Rock",
+        "The Entrance of Golem's Temple",
+        "Golem's Temple I",
+        "Golem's Temple II",
+        "Golem's Temple III",
+        "Golem's Temple IV"
+      ]
+    },
+    {
+      "id": 49,
+      "name": "Dark Stone Golem",
+      "level": 58,
+      "exp": 192,
+      "boss": false,
+      "maps": [
+        "Sleepy Dungeon III",
+        "Sleepy Dungeon IV",
+        "Sleepy Dungeon V"
+      ]
+    },
+    {
+      "id": 50,
+      "name": "Red Drake",
+      "level": 60,
+      "exp": 211,
+      "boss": false,
+      "maps": [
+        "Dangerous Valley II"
+      ]
+    },
+    {
+      "id": 51,
+      "name": "Wild Kargo",
+      "level": 62,
+      "exp": 231,
+      "boss": false,
+      "maps": [
+        "The Tunnel That Lost Light II",
+        "Drake's Meal Table",
+        "Wild Kargo's Area"
+      ]
+    },
+    {
+      "id": 52,
+      "name": "Tauromacis",
+      "level": 70,
+      "exp": 337,
+      "boss": false,
+      "maps": [
+        "Sanctuary Entrance I",
+        "Sanctuary Entrance II",
+        "Sanctuary Entrance III",
+        "Sanctuary Entrance IV"
+      ]
+    },
+    {
+      "id": 53,
+      "name": "Taurospear",
+      "level": 75,
+      "exp": 429,
+      "boss": false,
+      "maps": [
+        "Sanctuary Entrance III",
+        "Sanctuary Entrance IV"
+      ]
+    },
+    {
+      "id": 54,
+      "name": "Glowshroom",
+      "level": 39,
+      "exp": 82,
+      "boss": false,
+      "maps": []
+    },
+    {
+      "id": 55,
+      "name": "Raffle",
+      "level": 40,
+      "exp": 85,
+      "boss": false,
+      "maps": []
+    },
+    {
+      "id": 56,
+      "name": "Golden Stirge",
+      "level": 42,
+      "exp": 93,
+      "boss": false,
+      "maps": []
+    },
+    {
+      "id": 57,
+      "name": "Aqumander",
+      "level": 43,
+      "exp": 98,
+      "boss": false,
+      "maps": []
+    },
+    {
+      "id": 58,
+      "name": "Echopus",
+      "level": 45,
+      "exp": 107,
+      "boss": false,
+      "maps": []
+    },
+    {
+      "id": 59,
+      "name": "Rafflesia",
+      "level": 47,
+      "exp": 117,
+      "boss": false,
+      "maps": []
+    },
+    {
+      "id": 60,
+      "name": "Duskmander",
+      "level": 50,
+      "exp": 133,
+      "boss": false,
+      "maps": []
+    },
+    {
+      "id": 61,
+      "name": "Myewood",
+      "level": 54,
+      "exp": 160,
+      "boss": false,
+      "maps": []
+    },
+    {
+      "id": 62,
+      "name": "Rotten Mushroom",
+      "level": 56,
+      "exp": 183,
+      "boss": false,
+      "maps": [
+        ""
+      ]
+    },
+    {
+      "id": 63,
+      "name": "Sporewood",
+      "level": 59,
+      "exp": 201,
+      "boss": false,
+      "maps": []
+    },
+    {
+      "id": 90,
+      "name": "Super Jr. Necki",
+      "level": 200,
+      "exp": 0,
+      "boss": false,
+      "maps": [
+        "The Forest of Patience <Step 4>",
+        "B1 <Area 1>",
+        "The Deep Forest of Patience <Step 5>",
+        "Physical Fitness Test <Level 1>",
+        "Physical Fitness Test <Level 4>"
+      ]
+    },
+    {
+      "id": 91,
+      "name": "Super Slime",
+      "level": 200,
+      "exp": 0,
+      "boss": false,
+      "maps": [
+        "The Deep Forest of Patience <Step 5>"
+      ]
+    },
+    {
+      "id": 92,
+      "name": "Super Ribbon Pig",
+      "level": 200,
+      "exp": 0,
+      "boss": false,
+      "maps": [
+        "Utah's Pig Farm"
+      ]
+    },
+    {
+      "id": 93,
+      "name": "Super Stirge",
+      "level": 200,
+      "exp": 0,
+      "boss": false,
+      "maps": [
+        "B1 <Area 2>",
+        "B3 <Area 1>"
+      ]
+    },
+    {
+      "id": 94,
+      "name": "Ultra Jr. Necki 1",
+      "level": 200,
+      "exp": 0,
+      "boss": false,
+      "maps": [
+        "Coconut Harvest",
+        "Coconut Harvest"
+      ]
+    },
+    {
+      "id": 700000,
+      "name": "Mushmom",
+      "level": 40,
+      "exp": 340,
+      "boss": true,
+      "maps": [
+        "Someone Else's House"
+      ]
+    },
+    {
+      "id": 700001,
+      "name": "Jr. Balrog",
+      "level": 80,
+      "exp": 2188,
+      "boss": true,
+      "maps": [
+        "The Cursed Sanctuary"
+      ]
+    },
+    {
+      "id": 700002,
+      "name": "Zombie Mushmom",
+      "level": 55,
+      "exp": 668,
+      "boss": true,
+      "maps": [
+        "The Grave of Mushmom"
+      ]
+    },
+    {
+      "id": 700003,
+      "name": "Rotten Mushmom",
+      "level": 60,
+      "exp": 844,
+      "boss": true,
+      "maps": [
+        ""
+      ]
+    },
+    {
+      "id": 700004,
+      "name": "Mano",
+      "level": 20,
+      "exp": 148,
+      "boss": true,
+      "maps": [
+        "Thicket Around the Beach III"
+      ]
+    },
+    {
+      "id": 700005,
+      "name": "Crimson Balrog",
+      "level": 100,
+      "exp": 6000,
+      "boss": true,
+      "maps": []
+    },
+    {
+      "id": 700006,
+      "name": "Shade",
+      "level": 48,
+      "exp": 488,
+      "boss": true,
+      "maps": [
+        "Cabin of the Forsaken"
+      ]
+    },
+    {
+      "id": 800000,
+      "name": "Ligator",
+      "level": 21,
+      "exp": 68,
+      "boss": false,
+      "maps": [
+        "1st Accompaniment <1st Stage>"
+      ]
+    },
+    {
+      "id": 800001,
+      "name": "Jr. Necki",
+      "level": 25,
+      "exp": 80,
+      "boss": false,
+      "maps": [
+        "1st Accompaniment <Last Stage>"
+      ]
+    },
+    {
+      "id": 800002,
+      "name": "Curse Eye",
+      "level": 29,
+      "exp": 94,
+      "boss": false,
+      "maps": [
+        "1st Accompaniment <Last Stage>"
+      ]
+    },
+    {
+      "id": 800003,
+      "name": "King Slime",
+      "level": 32,
+      "exp": 2400,
+      "boss": true,
+      "maps": [
+        "1st Accompaniment <Last Stage>"
+      ]
+    },
+    {
+      "id": 800010,
+      "name": "Evil Eye",
+      "level": 30,
+      "exp": 56,
+      "boss": false,
+      "maps": [
+        "Ant Tunnel For Bowman"
+      ]
+    },
+    {
+      "id": 800011,
+      "name": "Zombie Mushroom",
+      "level": 30,
+      "exp": 56,
+      "boss": false,
+      "maps": [
+        "Ant Tunnel For Bowman"
+      ]
+    },
+    {
+      "id": 800012,
+      "name": "Curse Eye",
+      "level": 30,
+      "exp": 56,
+      "boss": false,
+      "maps": [
+        "Magician's Tree Dungeon"
+      ]
+    },
+    {
+      "id": 800013,
+      "name": "Horny Mushroom",
+      "level": 30,
+      "exp": 56,
+      "boss": false,
+      "maps": [
+        "Magician's Tree Dungeon"
+      ]
+    },
+    {
+      "id": 800014,
+      "name": "Cold Eye",
+      "level": 30,
+      "exp": 56,
+      "boss": false,
+      "maps": [
+        "Thief's Construction Site"
+      ]
+    },
+    {
+      "id": 800015,
+      "name": "Blue Mushroom",
+      "level": 30,
+      "exp": 56,
+      "boss": false,
+      "maps": [
+        "Thief's Construction Site"
+      ]
+    },
+    {
+      "id": 800016,
+      "name": "Fire Boar",
+      "level": 30,
+      "exp": 56,
+      "boss": false,
+      "maps": [
+        "Warrior's Rocky Mountain"
+      ]
+    },
+    {
+      "id": 800017,
+      "name": "Lupin",
+      "level": 30,
+      "exp": 56,
+      "boss": false,
+      "maps": [
+        "Warrior's Rocky Mountain"
+      ]
+    },
+    {
+      "id": 900000,
+      "name": "Orange Slime",
+      "level": 20,
+      "exp": 64,
+      "boss": false,
+      "maps": []
+    },
+    {
+      "id": 9990000,
+      "name": "Test(Basic)",
+      "level": 30,
+      "exp": 0,
+      "boss": false,
+      "maps": []
+    },
+    {
+      "id": 9990001,
+      "name": "Test(Fire)",
+      "level": 30,
+      "exp": 0,
+      "boss": false,
+      "maps": []
+    },
+    {
+      "id": 9990002,
+      "name": "Test(Poison)",
+      "level": 30,
+      "exp": 0,
+      "boss": false,
+      "maps": []
+    },
+    {
+      "id": 9990003,
+      "name": "Test(Ice)",
+      "level": 30,
+      "exp": 0,
+      "boss": false,
+      "maps": []
+    },
+    {
+      "id": 9990004,
+      "name": "Test(Lightning)",
+      "level": 30,
+      "exp": 0,
+      "boss": false,
+      "maps": []
+    },
+    {
+      "id": 9990005,
+      "name": "Test(Undead)",
+      "level": 30,
+      "exp": 0,
+      "boss": false,
+      "maps": []
+    }
+  ]
+}

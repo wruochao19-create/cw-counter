@@ -1,0 +1,4 @@
+https://github.com/Javipen/maple-exp-overlay
+Commit: 1a25186943a42fccd89eec2e0777c7b41ea5a21f
+Files: msgwatch.py, assets/msg_font.npz, LICENSE
+Local changes: see PATCHES.md

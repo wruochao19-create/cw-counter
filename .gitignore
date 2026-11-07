@@ -1,0 +1,16 @@
+.deps/
+.tmp/
+__pycache__/
+*.pyc
+settings.json
+sessions/
+replays/
+.venv/
+diagnostics/
+reports/
+dist/
+build/
+*.zip
+*.log
+.env
+.env.*

@@ -1,0 +1,13 @@
+name: Windows portability
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          architecture: x64
+      - run: python setup_windows.py
+      - run: .venv\Scripts\python.exe -m unittest discover -s tests -q
