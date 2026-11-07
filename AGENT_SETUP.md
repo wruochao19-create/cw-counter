@@ -32,3 +32,7 @@ Preserve an active session during UI changes. Hiding sections must not reset cou
 - `.venv` was moved from another PC: recreate it with setup. Virtual environments are machine-local; transfer the clean source zip instead.
 
 Build a clean distributable using `.venv\Scripts\python.exe scripts\package_source.py`. `dist` contains a source zip and SHA256; it is not a standalone executable.
+
+## GitHub publication handoff
+
+The user requested a **private** repository named `cw-counter`. The local Git repository is prepared; do not change visibility to public. If GitHub CLI is installed and the user has completed `gh auth login`, verify with `gh auth status`, then run `gh repo create cw-counter --private --source . --remote origin --push` only if no destination remote/repository already exists. Reuse an existing confirmed destination rather than overwrite it. Verify the remote repository's `isPrivate` property and HEAD commit after push. Never ask the user to paste a token into the chat or commit credentials.

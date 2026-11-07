@@ -1,7 +1,6 @@
 """Offline portability check: imports, bundled OCR, and idle UI. No game reads."""
 import bootstrap
 import hashlib
-import json
 import platform
 import sys
 import tempfile
@@ -16,7 +15,7 @@ def main():
     import numpy
     import onnxruntime
     import tkinter as tk
-    import customtkinter
+    from ui_runtime import ctk as customtkinter
     from PIL import Image
     from pixel_ocr import model
     from catalog import Catalog
@@ -24,6 +23,7 @@ def main():
     for name in ('en-rec.onnx','msg_font.npz','monsters.json'):
         path=bootstrap.ROOT/'assets'/name
         if not path.is_file():raise RuntimeError(f'Missing asset: {name}')
+    assert hashlib.sha256((bootstrap.ROOT/'assets/en-rec.onnx').read_bytes()).hexdigest()=='ef7abd8bd3629ae57ea2c28b425c1bd258a871b93fd2fe7c433946ade9b5d9ea'
     print(f'Python {platform.python_version()} x64; ONNX {onnxruntime.__version__}; UI {customtkinter.__version__}')
     assert Catalog().maps
     reader=model()

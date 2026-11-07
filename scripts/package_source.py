@@ -9,12 +9,15 @@ NAMES={'README.md','AGENT_SETUP.md','THIRD_PARTY_NOTICES.md','requirements.txt',
 
 
 def source_files():
-    for path in sorted(ROOT.rglob('*')):
+    candidates=list(ROOT.iterdir())
+    for directory in ('assets','vendor','tests','scripts','.github'):
+        candidates.extend((ROOT/directory).rglob('*'))
+    for path in sorted(candidates):
         relative=path.relative_to(ROOT)
         if not path.is_file() or any(part.startswith('.') and part!='.github' for part in relative.parts[:-1]):continue
         if len(relative.parts)==1 and (path.suffix=='.py' or path.name in NAMES):yield path
         elif relative.parts[0] in ('assets','vendor','tests','scripts','.github'):
-            if '__pycache__' not in relative.parts and path.suffix in ('.py','.md','.txt','.json','.onnx','.npz','.png','.yml') or path.name=='LICENSE.msgwatch':
+            if '__pycache__' not in relative.parts and (path.suffix in ('.py','.md','.txt','.json','.onnx','.npz','.png','.yml') or path.name=='LICENSE.msgwatch'):
                 yield path
 
 
