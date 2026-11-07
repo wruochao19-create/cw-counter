@@ -135,7 +135,7 @@ class FakeWorld:
     def windows(self):
         return ([(self.hwnd,'MapleStory')] if self.exists else [])+self.extras
 
-    def grab(self,hwnd,box):
+    def grab(self,hwnd,box,**kwargs):
         self.grabs+=1
         image=Image.new('RGB',(box[2]-box[0],box[3]-box[1]),
                         'black' if self.map_name=='The Road to the Dungeon' else 'white')
@@ -210,18 +210,27 @@ class RecoveryIntegrationTests(unittest.TestCase):
         self.world.focus=True
         for t in (.1,.4,.9):self.step(t)
 
-    def test_our_overlay_pauses_then_resumes_without_losing_session(self):
+    def test_broad_search_overlap_does_not_pause_map_or_session(self):
         self.begin()
         session=self.ui.session
         before=self.world.grabs
         with patch.object(app.capture,'overlay_occludes',return_value=True):
             self.step(1.2)
-        self.assertEqual(self.world.grabs,before)
-        self.assertIn('面板遮住',self.ui.status.get())
-        self.assertTrue(self.ui.needs_resume)
+        self.assertGreater(self.world.grabs,before)
+        self.assertNotIn('面板遮住',self.ui.status.get())
+        self.assertFalse(self.ui.needs_resume)
         with patch.object(app.capture,'overlay_occludes',return_value=False):
             for t in (1.5,2.,2.5):self.step(t)
         self.assertIs(self.ui.session,session)
+        self.assertTrue(self.ui.was_valid)
+
+    def test_2560_borderless_can_identify_map_before_hud_location_is_known(self):
+        self.world.rect=(0,0,2560,1440)
+        self.ui.start();self.cancel_tick();self.world.focus=True
+        with patch.object(app.capture,'monitor_rectangles',return_value=[(0,0,2560,1440)]), \
+             patch.object(app.capture,'overlay_occludes',return_value=True):
+            for t in (.1,.4,.9):self.step(t)
+        self.assertEqual(self.ui.active_map,self.world.map_name)
         self.assertTrue(self.ui.was_valid)
 
     def test_no_manual_calibration_and_browser_return_continues_same_session(self):
@@ -296,7 +305,7 @@ class RecoveryIntegrationTests(unittest.TestCase):
     def test_focus_change_during_capture_discards_frame_and_then_recovers(self):
         self.begin()
         self.world.specs=[notification()]
-        def switch_during_grab(hwnd,box):
+        def switch_during_grab(hwnd,box,**kwargs):
             result=self.world.grab(hwnd,box)
             self.world.focus=False
             return result

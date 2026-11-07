@@ -20,7 +20,7 @@ from sidebar_ui import build_interface, update_dashboard
 
 CONFIG = bootstrap.ROOT / 'settings.json'
 OUTPUT = bootstrap.ROOT / 'sessions'
-VERSION = '0.19'
+VERSION = '0.20'
 
 
 class App:
@@ -327,7 +327,7 @@ class App:
             self.character_hint.set('名字区不可见，可手填')
             return
         # Startup only; bounded attempts, shared model, never a per-frame task.
-        image=capture.grab_region(self.hwnd,desired)
+        image=capture.grab_region(self.hwnd,desired,mask_overlay=True)
         if not self.view_unchanged(rect):return
         name=monitor.observe(image)
         if name:
@@ -434,13 +434,17 @@ class App:
                 self.reset_hud()
             return
         if now<self.hud_reader.next_read:return
+        if self.hud_reader.box and capture.overlay_occludes(self.hwnd,rect,self.hud_reader.box):
+            self.reset_hud()
+            self.hud_status.set('经验条文字被面板挡住，暂停对账；地图和右侧提示继续读取')
+            return
         box=self.hud_reader.box or hud_search_box(rect[2],rect[3])
         visible=capture.visible_region(rect,box,monitors)
         if visible!=box:
             self.session.exp_progress.break_interval()
             self.exp_ledger.reset();self.hud_status.set('经验条：底部区域不完整可见，暂停对账')
             self.hud_reader.next_read=now+2;return
-        image=capture.grab_region(self.hwnd,box)
+        image=capture.grab_region(self.hwnd,box,mask_overlay=self.hud_reader.box is None)
         if not self.view_unchanged(rect):self.reset_hud();return
         try:
             reading=self.hud_reader.read(image,box,now)
@@ -479,12 +483,6 @@ class App:
         if not self.prepare_geometry(rect,now):return
         expanded=self.auto_region.expand_if_idle(now)
         if expanded:self.change_region(*expanded,'等待提示时扩大自动搜索区域')
-        regions = [self.auto_region.box, self.hud_reader.box or hud_search_box(rect[2], rect[3])]
-        if self.map_monitor is not None: regions.append(title_box(rect[2], rect[3]))
-        if self.character_monitor is not None and not self.character_monitor.done:
-            regions.append(character_box(rect[2], rect[3]))
-        if any(capture.overlay_occludes(self.hwnd, rect, box) for box in regions):
-            self.pause_capture('统计面板遮住识别区域，请移开面板');return
         monitors=capture.monitor_rectangles()
         self.probe_character(rect,monitors)
         if not self.view_unchanged(rect):
@@ -505,7 +503,7 @@ class App:
                 self.map_monitor.invalidate();self.reader.reset()
                 self.was_valid=False;self.last_tick=None
             self.last_header_box=header_box
-            header=capture.grab_region(self.hwnd,header_box)
+            header=capture.grab_region(self.hwnd,header_box,mask_overlay=True)
             if not self.view_unchanged(rect):
                 self.pause_capture('窗口正在移动或切换，等待画面稳定');return
             detected=self.map_monitor.observe(header,time.monotonic())
@@ -513,12 +511,18 @@ class App:
                 if self.hud_sampler:self.reset_hud()
                 if self.was_valid:self.reader.reset()
                 self.was_valid=False;self.last_tick=None
-                detail='地图标题部分在屏幕外' if header_box!=desired else '请保持左上角小地图展开'
+                detail='地图标题部分在屏幕外' if header_box!=desired else '请保持左上角小地图展开且标题文字可见'
                 self.notice('自动恢复中 · 地图确认中，'+detail+'。确认后自动继续。')
                 self.health('waiting_map',rect,started);return
             self.apply_detected_map(detected)
         box=self.auto_region.box
-        image=capture.grab_region(self.hwnd,box)
+        image=capture.grab_region(self.hwnd,box,mask_overlay=True)
+        signature=tuple((l+box[0],t+box[1],r+box[0],b+box[1])
+                        for l,t,r,b in image.info.get('overlay_masks',()))
+        if signature!=getattr(self,'notification_mask',None):
+            if getattr(self,'notification_mask',None) is not None:
+                self.reader.reset();self.was_valid=False;self.last_tick=None
+            self.notification_mask=signature
         if not self.view_unchanged(rect):
             self.pause_capture('窗口正在移动或切换，等待画面稳定');return
         now=time.monotonic()

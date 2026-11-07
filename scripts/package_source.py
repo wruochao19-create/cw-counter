@@ -2,6 +2,7 @@
 from pathlib import Path
 import hashlib
 import zipfile
+import re
 
 ROOT=Path(__file__).resolve().parents[1]
 NAMES={'README.md','AGENT_SETUP.md','THIRD_PARTY_NOTICES.md','requirements.txt','.gitignore',
@@ -23,7 +24,8 @@ def source_files():
 
 def main():
     output=ROOT/'dist';output.mkdir(exist_ok=True)
-    archive=output/'cw-counter-0.19-source.zip'
+    version=re.search(r"^VERSION = '([0-9.]+)'",(ROOT/'app.py').read_text('utf-8'),re.M)[1]
+    archive=output/f'cw-counter-{version}-source.zip'
     with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
         for path in source_files():z.write(path,Path('cw-counter')/path.relative_to(ROOT))
     digest=hashlib.sha256(archive.read_bytes()).hexdigest()

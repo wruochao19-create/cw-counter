@@ -50,6 +50,10 @@ def rectangles_overlap(a, b):
 
 
 def overlay_occludes(hwnd, rect, box):
+    return bool(overlay_regions(hwnd, rect, box))
+
+
+def overlay_regions(hwnd, rect, box):
     """Check our visible windows only, including frame, in native Z order.
 
     Immutable handle snapshots are safe for the HUD worker. No Tk calls here.
@@ -57,24 +61,28 @@ def overlay_occludes(hwnd, rect, box):
     """
     x, y, _, _ = rect
     absolute = (x+box[0], y+box[1], x+box[2], y+box[3])
-    overlaps = set()
+    overlaps = {}
     for handle in _overlay_windows:
         if handle == hwnd or not user32.IsWindowVisible(handle) or user32.IsIconic(handle):
             continue
         bounds = w.RECT()
         if user32.GetWindowRect(handle, ctypes.byref(bounds)):
             if rectangles_overlap(absolute, (bounds.left, bounds.top, bounds.right, bounds.bottom)):
-                overlaps.add(handle)
+                overlaps[handle]=(max(absolute[0],bounds.left)-absolute[0],
+                                  max(absolute[1],bounds.top)-absolute[1],
+                                  min(absolute[2],bounds.right)-absolute[0],
+                                  min(absolute[3],bounds.bottom)-absolute[1])
     if not overlaps:
-        return False
+        return ()
     seen = set()
+    blocked=[]
     above = user32.GetWindow(hwnd, 3)  # GW_HWNDPREV: next window above CW.
     while above and above not in seen and len(seen) < 512:
         if above in overlaps:
-            return True
+            blocked.append(overlaps[above])
         seen.add(above)
         above = user32.GetWindow(above, 3)
-    return bool(above)  # Fail closed if a changing Z order prevented a full check.
+    return tuple(sorted(overlaps.values() if above else blocked))
 
 
 def enable_dpi():
@@ -169,7 +177,7 @@ def visible_region(rect,box,monitors=None):
     return max(intersections,key=lambda area:(area[2]-area[0])*(area[3]-area[1]),default=None)
 
 
-def grab_region(hwnd, relative_box):
+def grab_region(hwnd, relative_box, *, mask_overlay=False):
     from PIL import ImageGrab
     rect = client_rect(hwnd)
     if rect is None:
@@ -178,10 +186,17 @@ def grab_region(hwnd, relative_box):
     left, top, right, bottom = relative_box
     if left < 0 or top < 0 or right > width or bottom > height:
         raise RuntimeError('提示区域超出游戏画面，请重新校准')
-    if overlay_occludes(hwnd, rect, relative_box):
+    masks=overlay_regions(hwnd,rect,relative_box) if mask_overlay else ()
+    if not mask_overlay and overlay_occludes(hwnd, rect, relative_box):
         raise RuntimeError('统计面板遮住识别区域，请将面板移开')
     image = ImageGrab.grab(bbox=(x + left, y + top, x + right, y + bottom), all_screens=True)
-    if overlay_occludes(hwnd, rect, relative_box):
+    if not mask_overlay and overlay_occludes(hwnd, rect, relative_box):
         raise RuntimeError('统计面板遮住识别区域，请将面板移开')
+    if mask_overlay:
+        from PIL import ImageDraw
+        masks=tuple(sorted(set(masks+overlay_regions(hwnd,rect,relative_box))))
+        draw=ImageDraw.Draw(image)
+        for l,t,r,b in masks:draw.rectangle((l,t,r-1,b-1),fill='black')
+        image.info['overlay_masks']=masks
     return image
 

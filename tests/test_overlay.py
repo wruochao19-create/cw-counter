@@ -1,10 +1,21 @@
 import ctypes
 import unittest
 from unittest.mock import patch
+from PIL import Image
 import windows_capture as capture
 
 
 class OverlayTests(unittest.TestCase):
+    def test_exploratory_capture_masks_only_overlay_without_blocking_clear_text(self):
+        with patch.object(capture,'client_rect',return_value=(0,0,1000,800)), \
+             patch.object(capture,'overlay_regions',side_effect=[((0,0,20,20),),((10,0,30,20),)]), \
+             patch('PIL.ImageGrab.grab',return_value=Image.new('RGB',(100,50),'white')):
+            image=capture.grab_region(11,(0,0,100,50),mask_overlay=True)
+        self.assertEqual(image.getpixel((5,5)),(0,0,0))
+        self.assertEqual(image.getpixel((25,5)),(0,0,0))
+        self.assertEqual(image.getpixel((60,5)),(255,255,255))
+        self.assertEqual(len(image.info['overlay_masks']),2)
+
     def check(self, rectangle, above=True, visible=True):
         def bounds(hwnd, output):
             rect=ctypes.cast(output,ctypes.POINTER(capture.w.RECT)).contents
