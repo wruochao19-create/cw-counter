@@ -20,7 +20,7 @@ def main():
     from pixel_ocr import model
     from catalog import Catalog
     import app
-    for name in ('en-rec.onnx','msg_font.npz','monsters.json'):
+    for name in ('en-rec.onnx','msg_font.npz','monsters.json','map_overrides.json'):
         path=bootstrap.ROOT/'assets'/name
         if not path.is_file():raise RuntimeError(f'Missing asset: {name}')
     assert hashlib.sha256((bootstrap.ROOT/'assets/en-rec.onnx').read_bytes()).hexdigest()=='ef7abd8bd3629ae57ea2c28b425c1bd258a871b93fd2fe7c433946ade9b5d9ea'
@@ -28,7 +28,9 @@ def main():
     assert Catalog().maps
     reader=model()
     reader(Image.new('RGB',(320,70),'white'))
-    with tempfile.TemporaryDirectory() as temporary:
+    temp_root=bootstrap.ROOT/'.tmp'
+    temp_root.mkdir(exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=temp_root) as temporary:
         with patch.object(app,'CONFIG',Path(temporary)/'settings.json'), \
              patch.object(app.capture,'enumerate_windows',return_value=[]), \
              patch.object(app.capture,'grab_region',side_effect=AssertionError('Unexpected capture')):

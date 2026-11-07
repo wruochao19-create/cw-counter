@@ -14,6 +14,14 @@ from test_pixel_ocr import line
 
 
 class MapTests(unittest.TestCase):
+    def test_hidden_street_murky_swamp_titles_keep_roman_variants_separate(self):
+        for title in ('The Murky Swamp I','The Murky Swamp II'):
+            lines=[dict(text='Hidden Street',score=.99,box=(0,0,120,15)),
+                   dict(text=title,score=.99,box=(0,16,210,34))]
+            with patch('map_reader.scan',return_value=lines):
+                result=identify_map(Image.new('RGB',(250,80)),Catalog())
+                self.assertEqual(result['name'],title)
+
     def test_candidate_retry_uses_pixels_and_does_not_force_nearest_number(self):
         profile={'Pig':13,'Orange Mushroom':15,'Ribbon Pig':19}
         def detail(value):

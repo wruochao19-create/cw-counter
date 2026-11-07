@@ -11,11 +11,25 @@ CUSTOM = '手动表：实测覆盖'
 
 class Catalog:
     def __init__(self, path=None):
+        bundled = path is None
         path = path or Path(__file__).parent / 'assets' / 'monsters.json'
         data = json.loads(Path(path).read_text('utf-8'))
         self.metadata = data['source']
         # Entries with no recorded location may be unreleased/test content.
         self.records = [m for m in data['monsters'] if m['exp'] > 0 and m['maps']]
+        self.aliases = {}
+        if bundled:
+            corrections=json.loads(Path(path).with_name('map_overrides.json').read_text('utf-8'))
+            self.aliases=corrections['renames']
+            by_id={m['id']:m for m in self.records}
+            for monster in self.records:
+                monster['maps']=[self.aliases.get(place,place) for place in monster['maps']]
+            for location in corrections['additional_locations']:
+                for monster_id in location['monster_ids']:
+                    if monster_id not in by_id:raise ValueError(f'Map correction references missing monster ID {monster_id}')
+                    if location['map'] not in by_id[monster_id]['maps']:
+                        by_id[monster_id]['maps'].append(location['map'])
+            self.metadata={**self.metadata,'map_corrections':corrections['source']}
         self.maps = sorted({place for m in self.records for place in m['maps']})
         names = Counter(m['name'] for m in self.records)
         self.labels = {m['id']: m['name'] if names[m['name']] == 1 else
@@ -25,6 +39,7 @@ class Catalog:
         name = name.strip()
         if not name or name == ALL_MAPS:
             return ''
+        name=next((target for old,target in self.aliases.items() if old.casefold()==name.casefold()),name)
         matches = [place for place in self.maps if place.casefold() == name.casefold()]
         if len(matches) != 1:
             raise ValueError('请从下拉列表选择地图，或选择“全部已记录地图”；可以先输入部分英文筛选。')

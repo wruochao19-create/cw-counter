@@ -7,3 +7,5 @@
 - `tests/data` contains small cropped regression samples supplied during development. Full user screenshots, recordings, session CSVs and diagnostic archives are excluded from the source archive.
 
 This private source package does not grant a new license for third-party game artwork or data.
+
+- `assets/map_overrides.json` contains explicit map-name/location corrections with checked date and references, independently of the older OSMS snapshot. The Murky Swamp I/II references are linked in that file. No map images or descriptions were copied.

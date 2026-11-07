@@ -7,6 +7,14 @@ class CatalogTests(unittest.TestCase):
     def setUp(self):
         self.catalog = Catalog()
 
+    def test_murky_swamp_rename_and_new_map_do_not_change_monster_exp(self):
+        for name in ('The Murky Swamp I','The Murky Swamp II','the murky swamp'):
+            self.assertEqual(self.catalog.profile(name),{self.catalog.labels[18]:39,self.catalog.labels[29]:58})
+        self.assertIn('The Murky Swamp II',self.catalog.maps)
+        self.assertNotIn('The Murky Swamp',self.catalog.maps)
+        self.assertEqual(self.catalog.profile('Cabin of the Forsaken'),{'Shade':488})
+        with self.assertRaises(ValueError):self.catalog.profile('The Murky Swamp III')
+
     def test_ant_tunnel_classifies_both_monsters(self):
         profile = self.catalog.profile('Ant Tunnel I')
         self.assertEqual(set(profile.values()), {41, 45})

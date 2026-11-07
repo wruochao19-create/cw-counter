@@ -1,0 +1,15 @@
+{
+  "source": {
+    "checked_at": "2026-11-06",
+    "note": "Small explicit corrections to the older community snapshot. Map presence and spawn references; EXP remains the existing catalogue value, not inferred from another map.",
+    "references": [
+      "https://mapleclassic.wiki/wiki/The_Murky_Swamp_I",
+      "https://mapleclassic.wiki/wiki/The_Murky_Swamp_II",
+      "https://maplefm.gg/map/the-murky-swamp-ii/"
+    ]
+  },
+  "renames": {"The Murky Swamp": "The Murky Swamp I"},
+  "additional_locations": [
+    {"map": "The Murky Swamp II", "monster_ids": [18, 29]}
+  ]
+}
