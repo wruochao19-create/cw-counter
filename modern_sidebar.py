@@ -3,13 +3,8 @@ import tkinter as tk
 from tkinter import ttk
 from ui_runtime import ctk, cleanup_callbacks
 
-SURFACE = ('#ffffff', '#202630')
-BACK = ('#edf1f7', '#151a22')
-TEXT = ('#263246', '#eef2f8')
-MUTED = ('#68758a', '#a5b0c2')
-LINE = ('#e9edf4', '#343d4b')
-SOFT = ('#f3f6fb', '#2a3341')
-ACCENTS = {'雾蓝': ('#5474c5', '#91aaff'), '松绿': ('#327b70', '#7dc7b8'), '鸢紫': ('#8060ae', '#c1a2ed')}
+from ui_theme import ACCENTS, BACK, LINE, MUTED, SOFT, SURFACE, TEXT, theme_settings
+
 SECTIONS = {'context':'地图与角色', 'eta':'预计升级时间', 'progress':'等级进度',
             'kills':'击杀与经验合计', 'monsters':'怪物击杀列表'}
 
@@ -141,47 +136,6 @@ def build_sidebar(ui, scale, open_settings, toggle_topmost):
     ui.root.bind('<Destroy>',lambda event:cleanup_callbacks(ui.root) if event.widget is ui.root else None,add='+')
 
 
-def add_appearance_settings(ui):
-    container=ttk.Frame(ui.tabs)
-    ui.tabs.insert(1,container,text='外观')
-    page=ctk.CTkFrame(container,fg_color=SURFACE,corner_radius=0)
-    page.pack(fill='both',expand=True,padx=18,pady=18)
-    def title(text):
-        ctk.CTkLabel(page,text=text,font=('Microsoft YaHei UI',14,'bold'),text_color=TEXT).pack(anchor='w',pady=(16,8))
-    title('显示风格')
-    ctk.CTkSegmentedButton(page,values=['浅色','深色'],variable=ui.appearance,
-                           command=lambda _:apply_appearance(ui,persist=True)).pack(fill='x')
-    title('强调色')
-    ctk.CTkSegmentedButton(page,values=list(ACCENTS),variable=ui.accent_name,
-                           command=lambda _:apply_appearance(ui,persist=True)).pack(fill='x')
-    title('窗口不透明度')
-    ui.opacity_slider=ctk.CTkSlider(page,from_=75,to=100,number_of_steps=25,variable=ui.opacity,
-                                    command=lambda _:apply_opacity(ui))
-    ui.opacity_slider.pack(fill='x',pady=8)
-    ctk.CTkLabel(page,textvariable=ui.opacity_label,font=('Microsoft YaHei UI',13),text_color=TEXT).pack(anchor='w')
-    ctk.CTkLabel(page,text='100% 完全不透明；降低后可透出后面的游戏画面。\n透明度会同时作用于背景和文字；设置窗口保持不透明。',
-                  font=('Microsoft YaHei UI',12),text_color=MUTED,justify='left').pack(anchor='w',pady=12)
-    ctk.CTkButton(page,text='恢复默认外观',corner_radius=9,command=lambda:reset_appearance(ui)).pack(anchor='w',pady=16)
-    add_layout_settings(ui)
-    apply_appearance(ui)
-    apply_layout(ui,initial=True)
-
-
-def add_layout_settings(ui):
-    container=ttk.Frame(ui.tabs)
-    ui.tabs.insert(2,container,text='显示内容')
-    page=ctk.CTkFrame(container,fg_color=SURFACE,corner_radius=0)
-    page.pack(fill='both',expand=True,padx=18,pady=18)
-    ctk.CTkLabel(page,text='按需显示，EXP / 小时始终保留',font=('Microsoft YaHei UI',16,'bold'),text_color=TEXT).pack(anchor='w',pady=(12,18))
-    ctk.CTkSwitch(page,text='小窗模式 · 仅看 EXP / 小时',variable=ui.mini_mode,
-                  command=lambda:apply_layout(ui,persist=True)).pack(anchor='w',pady=(0,18))
-    for key,title in SECTIONS.items():
-        ctk.CTkCheckBox(page,text=title,variable=ui.visible_sections[key],text_color=TEXT,
-                        command=lambda:apply_layout(ui,persist=True)).pack(anchor='w',pady=9)
-    ctk.CTkLabel(page,text='小窗临时隐藏上述内容；退出后恢复你的勾选。\n隐藏内容仍继续统计，随时可以重新显示。',
-                  font=('Microsoft YaHei UI',12),text_color=MUTED,justify='left').pack(anchor='w',pady=20)
-
-
 def toggle_mini(ui):
     ui.mini_mode.set(not ui.mini_mode.get())
     apply_layout(ui,persist=True)
@@ -248,12 +202,6 @@ def apply_appearance(ui,persist=False):
     ui.root.configure(background=BACK[i])
     style=ttk.Style(ui.root)
     style.configure('.',background=SURFACE[i],foreground=TEXT[i],font=('Microsoft YaHei UI',10))
-    for name in ('TFrame','TLabel','TCheckbutton','TNotebook'):
-        style.configure(name,background=SURFACE[i],foreground=TEXT[i])
-    style.configure('Muted.TLabel',foreground=MUTED[i])
-    style.configure('TNotebook.Tab',background=SOFT[i],foreground=MUTED[i],borderwidth=0)
-    style.map('TNotebook.Tab',background=[('selected',SURFACE[i]),('active',SOFT[i])],
-               foreground=[('selected',TEXT[i]),('active',TEXT[i])])
     style.layout('Modern.Treeview',[('Treeview.treearea',{'sticky':'nswe'})])
     style.configure('Modern.Treeview',background=SURFACE[i],fieldbackground=SURFACE[i],foreground=TEXT[i],
                      borderwidth=0,relief='flat',font=('Microsoft YaHei UI',10),rowheight=ui.px(33))
@@ -261,9 +209,15 @@ def apply_appearance(ui,persist=False):
                      relief='flat',font=('Microsoft YaHei UI',9),padding=(0,ui.px(6)))
     style.map('Modern.Treeview',background=[('selected',SOFT[i])],foreground=[('selected',TEXT[i])])
     style.map('Modern.Treeview.Heading',background=[('active',SOFT[i])])
-    # Always use the darker accent on filled buttons, keeping white text legible.
-    accent=ACCENTS[ui.accent_name.get()][0]
-    for widget,property_name in ui.accent_controls:widget.configure(**{property_name:accent})
-    for button in (ui.start_button,ui.stop_button):button.configure(hover_color=accent)
+    fill, ink = ACCENTS[ui.accent_name.get()]
+    accent = (fill, ink)[i]
+    tint, hover = theme_settings(ui, style, i, fill, accent)
+    style.map('Modern.Treeview',background=[('selected',tint)],foreground=[('selected',TEXT[i])])
+    for widget, prop in ui.accent_controls:
+        widget.configure(**{prop: fill if prop=='fg_color' else accent})
+    ui.hero_value.configure(text_color=accent)
+    ui.state_badge.configure(fg_color=tint,text_color=accent)
+    for button in (ui.start_button, ui.stop_button):
+        button.configure(hover_color=hover)
     apply_opacity(ui)
     if persist:ui.save_settings()

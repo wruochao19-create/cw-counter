@@ -1,6 +1,6 @@
 # Other-computer agent handoff
 
-This is a Windows screen-only desktop tool, version 0.23. Read README.md first.
+This is a Windows screen-only desktop tool, version 0.24. Read README.md first.
 
 ## Fast setup
 

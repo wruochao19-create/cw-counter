@@ -1,4 +1,4 @@
-# CW Counter 0.23
+# CW Counter 0.24
 
 Windows 上的 MapleStory Classic World 经验效率与候选击杀统计工具。读取可见画面，自动确认地图、定位经验提示与底部经验条；支持置顶、圆角侧栏、小窗模式、主题和透明度。普通运行离线完成，默认不保存截图。
 
@@ -55,7 +55,7 @@ py -3.12 setup_windows.py
 
 ## 第一次使用
 
-1. 点击 **设置 → 连接与设置**，选择 MapleStory 窗口。角色可自动读取，也可手填。
+1. 点击 **设置 → 连接与采集**，选择 MapleStory 窗口。角色可自动读取，也可手填。
 2. 点击 **开始新会话**，切回 CW。保持左上角小地图展开，底部经验条与右侧经验提示可见。无需框选或手动校准。
 3. 切换浏览器时暂停；切回 CW 自动确认并恢复。移动游戏窗口会跟随位置，改变尺寸会重新适配。暂停和重新确认期间不可见的数据不补猜。
 4. 结束时点击 **结束并保存**；CSV 位于 `sessions`。建议首次单人固定地图人工数一小批进行核对。
@@ -95,7 +95,7 @@ py -3.12 setup_windows.py
 .\.venv\Scripts\python.exe scripts/package_source.py
 ```
 
-输出 `dist/cw-counter-0.23-source.zip` 和 SHA256。打包使用文件允许列表，排除个人设置、会话、诊断、开发报告、缓存和虚拟环境。资产及第三方来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。GitHub Actions 在 Windows/Python3.12 执行安装、doctor 和回归测试。
+输出 `dist/cw-counter-0.24-source.zip` 和 SHA256。打包使用文件允许列表，排除个人设置、会话、诊断、开发报告、缓存和虚拟环境。资产及第三方来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。GitHub Actions 在 Windows/Python3.12 执行安装、doctor 和回归测试。
 
 验证边界：同机全新解压目录、全新虚拟环境的安装验证可以排除依赖原电脑项目缓存；不能替代另一台不同硬件、分辨率下的真实游戏验证。
 

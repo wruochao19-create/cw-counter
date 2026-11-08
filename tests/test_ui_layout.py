@@ -1,6 +1,7 @@
 import json
 import tempfile
 import tkinter as tk
+from tkinter import ttk
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -8,6 +9,7 @@ from counter import CounterSession
 import app
 from sidebar_ui import apply_topmost, open_settings, close_settings
 from modern_sidebar import apply_appearance, apply_opacity, reset_appearance, apply_layout, toggle_mini, BACK
+from ui_theme import ACCENTS, TEXT, SOFT, SURFACE
 
 
 class LayoutTests(unittest.TestCase):
@@ -59,6 +61,15 @@ class LayoutTests(unittest.TestCase):
                     apply_appearance(ui,persist=True);root.update()
                     self.assertEqual(root.cget('background'),BACK[1])
                     self.assertEqual(ui.start_button.cget('fg_color'),'#327b70')
+                    style=ttk.Style(root)
+                    self.assertEqual(style.lookup('TCombobox','fieldbackground',('readonly',)),SOFT[1])
+                    self.assertEqual(style.lookup('TCombobox','foreground',('readonly',)),TEXT[1])
+                    self.assertEqual(style.lookup('TCombobox','fieldbackground',('disabled',)),SURFACE[1])
+                    popup=root.tk.call('ttk::combobox::PopdownWindow',ui.windows)
+                    self.assertEqual(root.tk.call(f'{popup}.f.l','cget','-foreground'),TEXT[1])
+                    self.assertEqual(ui.hero_value.cget('text_color'),ACCENTS['松绿'][1])
+                    self.assertEqual(ui.opacity_slider.cget('button_color'),ACCENTS['松绿'][1])
+                    self.assertEqual(ui.monsters.cget('foreground'),TEXT[1])
                     self.assertAlmostEqual(root.attributes('-alpha'),.85,places=2)
                     self.assertAlmostEqual(ui.settings_window.attributes('-alpha'),1,places=2)
                     saved=json.loads(path.read_text('utf-8'))
@@ -68,6 +79,7 @@ class LayoutTests(unittest.TestCase):
                     self.assertFalse(ui.empty_label.winfo_manager())
                     reset_appearance(ui);root.update()
                     self.assertEqual(root.cget('background'),BACK[0])
+                    self.assertEqual(root.tk.call(f'{popup}.f.l','cget','-foreground'),TEXT[0])
                     self.assertAlmostEqual(root.attributes('-alpha'),1,places=2)
                 finally:ui.close()
 
@@ -77,7 +89,7 @@ class LayoutTests(unittest.TestCase):
             with patch.object(app,'CONFIG',path/'settings.json'),patch.object(app.capture,'enumerate_windows',return_value=[]):
                 root=tk.Tk();root.withdraw();ui=app.App(root)
                 try:
-                    self.assertEqual(len(ui.tabs.tabs()),5)
+                    self.assertEqual(len(ui.settings_pages),5)
                     ui.session=CounterSession({f'Monster {i}':i+1 for i in range(40)})
                     ui.update_stats()
                     self.assertEqual(len(ui.table.get_children()),0)
