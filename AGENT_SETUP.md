@@ -35,6 +35,6 @@ Build a clean distributable using `.venv\Scripts\python.exe scripts\package_sour
 
 ## GitHub publication handoff
 
-The user requested a **private** repository named `cw-counter`. The local Git repository is prepared; do not change visibility to public. If GitHub CLI is installed and the user has completed `gh auth login`, verify with `gh auth status`, then run `gh repo create cw-counter --private --source . --remote origin --push` only if no destination remote/repository already exists. Reuse an existing confirmed destination rather than overwrite it. Verify the remote repository's `isPrivate` property and HEAD commit after push. Never ask the user to paste a token into the chat or commit credentials.
+Use the existing public repository https://github.com/wruochao19-create/cw-counter for updates. Verify the remote HEAD and the release download after publishing.
 
 Catalogue checks: run `.venv\Scripts\python.exe scripts\audit_catalog.py`. This compares a dated reference snapshot, not a live API. Preserve supplemental records and `catalog_reference.json`; do not assign fabricated game IDs or turn unplaced/event/PQ variants into normal world spawns.
