@@ -40,6 +40,12 @@ def identify_map(image,catalog):
             if name not in candidates or score>candidates[name]['match']:
                 candidates[name]=dict(name=name,match=score,ocr_score=line['score'],box=line['box'],raw=line['text'])
     ranked=sorted(candidates.values(),key=lambda row:row['match'],reverse=True)
+    # A fully read title can differ from its neighbour by just one letter
+    # (East/West Rocky Mountain IV). Apply the margin only to fuzzy matches.
+    if ranked and ranked[0]['match']==1:
+        if len(ranked)>1 and ranked[1]['match']==1:
+            return None
+        return ranked[0]
     if not ranked or (len(ranked)>1 and ranked[0]['match']-ranked[1]['match']<.07):
         return None
     return ranked[0]

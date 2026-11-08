@@ -14,6 +14,20 @@ from test_pixel_ocr import line
 
 
 class MapTests(unittest.TestCase):
+    def test_east_west_neighbours_require_a_distinguishable_title(self):
+        image=Image.new('RGB',(640,187))
+        catalog=Catalog()
+        for titles,expected in [
+            (['Victoria Road','West Rocky Mountain IV'],'West Rocky Mountain IV'),
+            (['East Rocky Mountain IV'],'East Rocky Mountain IV'),
+            (['est Rocky Mountain IV'],None),
+            (['East Rocky Mountain IV','West Rocky Mountain IV'],None),
+        ]:
+            with self.subTest(titles=titles), patch('map_reader.scan',return_value=[
+                    dict(text=t,score=.92,box=(10,20,370,45)) for t in titles]):
+                found=identify_map(image,catalog)
+                self.assertEqual(found['name'] if found else None,expected)
+
     def test_excavation_titles_and_angle_brackets_match_without_mixing_variants(self):
         for text,expected in [('Excavation Site II','Excavation Site II'),
                               ('Remains <Tomb> IV','Remains (Tomb) IV'),
