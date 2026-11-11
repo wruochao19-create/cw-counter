@@ -59,6 +59,50 @@ class ProgressTests(unittest.TestCase):
         self.assertLess(waiting['exp_sample_age_seconds'],.1)
         self.assertGreater(waiting['exp_confirmed_age_seconds'],3)
 
+    def test_levelup_recovers_after_low_percent_overlaps_old_capacity(self):
+        p=ExperienceProgress()
+        self.point(p,324232,0,99.99)
+        # Real session pattern: the tiny post-level percentage still admits
+        # the old level's capacity, so it initially looks like an EXP loss.
+        self.point(p,521,1,.15)
+        self.assertEqual(p.current,ExpReading(521,.15))
+        self.point(p,575,2,.16)
+        self.assertEqual(p.reading_status,'level_change_pending')
+        self.point(p,649,3,.18)
+        self.assertEqual(p.current,ExpReading(649,.18))
+        self.assertTrue(p.snapshot()['exp_reading_live'])
+        self.assertEqual(p.gained,74)
+        self.assertGreater(p.capacity_range[0],324260)
+        for t in range(4,36):
+            amount=649+(t-3)*100
+            self.point(p,amount,t,round(amount/356706*100,2))
+        s=p.snapshot()
+        self.assertTrue(s['exp_rate_ready'])
+        self.assertTrue(s['exp_reading_live'])
+        self.assertIsNotNone(s['level_eta_seconds'])
+        self.assertEqual(s['hud_exp_gained'],3274)
+
+    def test_levelup_during_pause_recovers_when_new_percent_is_higher(self):
+        p=self.sixty_seconds()
+        p.break_interval()
+        self.point(p,4000,600,20)
+        self.assertEqual(p.reading_status,'level_change_pending')
+        self.point(p,4020,601,20.1)
+        self.assertEqual(p.current,ExpReading(4020,20.1))
+        self.assertEqual(p.gained,620)
+        self.assertEqual(p.snapshot()['hud_observed_seconds'],61)
+        self.assertTrue(p.snapshot()['exp_reading_live'])
+
+    def test_levelup_at_zero_resumes_after_two_new_stable_endpoints(self):
+        p=self.sixty_seconds()
+        self.point(p,0,61,0)
+        self.point(p,200,62,1)
+        self.point(p,220,63,1.1)
+        self.assertEqual(p.current,ExpReading(220,1.1))
+        self.assertTrue(p.snapshot()['exp_reading_live'])
+        self.assertIsNotNone(p.snapshot()['level_eta_seconds'])
+        self.assertEqual(p.gained,620)
+
     def test_continuous_missing_samples_stay_stale_until_confirmed_recovery(self):
         p=self.baseline();before=p.snapshot()
         for n in range(1,31):

@@ -91,9 +91,12 @@ class ExperienceProgress:
                 # Same-level loss (death), not positive income. The crossing is
                 # not included in the reliable rate denominator either.
                 self._accept(reading,now,capacity,rebase=True);return
-        elif (capacity is not None and capacity[0]>self.capacity_range[1] and
-              reading.percent<self.current.percent):
-            # A percentage wrap plus a larger level capacity is only a proposal.
+        elif capacity is not None and capacity[0]>self.capacity_range[1]:
+            # Near 0%, display rounding can make a new level overlap the old
+            # capacity and get accepted as an EXP loss. Later new-level samples
+            # must still be able to recover, even after their percent has risen
+            # above that accepted sample or a pause hid the percentage wrap.
+            # A larger level capacity is only a proposal.
             # Two copies of the same contradictory read do not prove a level-up.
             # Require a second distinct, stable endpoint in that new capacity;
             # then only its verified post-level increment is retained.

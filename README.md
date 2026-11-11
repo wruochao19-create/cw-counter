@@ -1,4 +1,4 @@
-# CW Counter 0.25
+# CW Counter 0.26
 
 Windows 上的 MapleStory Classic World 经验效率与候选击杀统计工具。读取可见画面，自动确认地图、定位经验提示与底部经验条；支持置顶、圆角侧栏、小窗模式、主题和透明度。普通运行离线完成，默认不保存截图。
 
@@ -28,6 +28,12 @@ py -3.12 setup_windows.py
 ```
 
 安装阶段联网；doctor 只测试本地模型、资料库和空闲 UI，不读取实际游戏画面。安装包是源码包，不含 Python 或虚拟环境；OCR 模型已包含，不会在首次打怪时下载。
+
+## 金币统计与钱包核对
+
+开始会话后，侧栏显示已确认的拾取金币和本图金币／小时，有效用时满一分钟后显示时薪。点击「钱包核对」，切回游戏并打开物品背包，保持金额可见直至浮窗显示起始余额。关包，看到「结束时再打开背包」后照常打怪。结束时停止拾取，等右侧提示滚动完再打开背包；读到两次一致余额后自动出结果。测试期间仅拾取金币，避免交易、买药或存取款。
+
+差额为钱包增量减去区间内首次出现且最终确认的提示金额。数据按地图分别保存。结束并保存后，`sessions/*-events.csv` 包含钱包起止、右侧提示区域的 OCR 文字变化、数字校验、时间和每笔金币决定。`*-summary.csv` 的 `wallet_check` 保存区间合计、差额和未确认笔数。没有读到结束余额的核对标为未完成。默认不保存钱包或提示区截图。
 
 ## 0.23：经验时薪与本图用时
 
@@ -95,7 +101,7 @@ py -3.12 setup_windows.py
 .\.venv\Scripts\python.exe scripts/package_source.py
 ```
 
-输出 `dist/cw-counter-0.25-source.zip` 和 SHA256。打包使用文件允许列表，排除个人设置、会话、诊断、开发报告、缓存和虚拟环境。资产及第三方来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。GitHub Actions 在 Windows/Python3.12 执行安装、doctor 和回归测试。
+输出 `dist/cw-counter-0.26-source.zip` 和 SHA256。打包使用文件允许列表，排除个人设置、会话、诊断、开发报告、缓存和虚拟环境。资产及第三方来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。GitHub Actions 在 Windows/Python3.12 执行安装、doctor 和回归测试。
 
 验证边界：同机全新解压目录、全新虚拟环境的安装验证可以排除依赖原电脑项目缓存；不能替代另一台不同硬件、分辨率下的真实游戏验证。
 

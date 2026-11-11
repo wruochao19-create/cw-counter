@@ -8,6 +8,7 @@ from dataclasses import asdict
 from PIL import Image, ImageTk
 from counter import CounterSession
 from catalog import Catalog, ALL_MAPS, BUILTIN, CUSTOM, settings_profile
+from wallet import WalletCheck, wallet_balance
 from recognition import Calibration
 from pixel_ocr import RapidReader
 from map_reader import MapMonitor,title_box
@@ -21,7 +22,7 @@ from async_reader import AsyncNotificationReader
 
 CONFIG = bootstrap.ROOT / 'settings.json'
 OUTPUT = bootstrap.ROOT / 'sessions'
-VERSION = '0.25'
+VERSION = '0.26'
 
 
 class App:
@@ -75,6 +76,60 @@ class App:
         root.protocol('WM_DELETE_WINDOW', self.close)
         self.refresh_windows()
         root.update_idletasks()
+
+    def arm_wallet(self):
+        if not self.running:
+            self.notice('请先开始新会话，再点击钱包核对。')
+            return
+        checks=self.session.wallet_checks
+        if not checks or checks[-1].phase=='done':
+            checks.append(WalletCheck())
+            self.session.note('wallet_armed','切回游戏，打开背包，保持余额可见')
+        self.update_metrics()
+
+    def probe_wallet(self,rect,monitors):
+        checks=self.session.wallet_checks
+        if not checks:
+            return
+        check=checks[-1]
+        now=time.monotonic()
+        if check.phase=='done' or now<check.next_scan:
+            return
+        check.next_scan=now+1
+        box=capture.visible_region(rect,(0,0,rect[2],rect[3]),monitors)
+        if not box or not self.view_unchanged(rect):
+            return
+        image=capture.grab_region(self.hwnd,box,mask_overlay=True)
+        observed=time.monotonic()
+        visible,amount=wallet_balance(image)
+        if not self.view_unchanged(rect):
+            check.previous=None
+            return
+        scan=(check.phase,visible,amount)
+        if scan!=check.last_scan:
+            self.session._record(type='wallet_scan',source='wallet',observed_at=observed,
+                                 note=json.dumps(dict(phase=check.phase,visible=visible,amount=amount)))
+            check.last_scan=scan
+        marker=check.observe(visible,amount,observed)
+        if marker:
+            self.session._record(type=marker,source='wallet',observed_at=observed,mesos=amount,
+                                 status='confirmed',note='两次钱包余额一致')
+
+    def trace_wallet_frame(self,now,gap):
+        checks=self.session.wallet_checks
+        if not checks:
+            return
+        check=checks[-1]
+        if check.end and now>check.end[0]+4:
+            return
+        rows=[{key:row.get(key) for key in ('text','box','score','said','digit_reads','digit_verified')}
+              for row in getattr(self.reader,'last_lines',[])]
+        state=getattr(self.reader,'last_diagnostics',{})
+        evidence=dict(lines=rows,baseline=state.get('baseline',False),gap=gap)
+        if evidence!=check.last_lines:
+            self.session._record(type='wallet_ocr_frame',source='notification',observed_at=now,
+                                 note=json.dumps(evidence,ensure_ascii=False))
+            check.last_lines=evidence
 
     def arm_diagnostic(self):
         if not self.running:
@@ -499,6 +554,7 @@ class App:
         expanded=self.auto_region.expand_if_idle(now)
         if expanded:self.change_region(*expanded,'等待提示时扩大自动搜索区域')
         monitors=capture.monitor_rectangles()
+        self.probe_wallet(rect,monitors)
         self.probe_character(rect,monitors)
         if not self.view_unchanged(rect):
             self.pause_capture('窗口正在移动或切换，等待画面稳定');return
@@ -560,6 +616,7 @@ class App:
             events,gap=self.reader.read(image,now)
         if not self.view_unchanged(rect):
             self.pause_capture('窗口正在移动或切换，等待画面稳定');return
+        self.trace_wallet_frame(now,gap)
         if self.diagnostic and not self.diagnostic.done:
             hud=self.hud_sampler.snapshot() if self.hud_sampler else None
             self.diagnostic.add(image,now,box,getattr(self.reader,'last_lines',[]),events,hud=hud)
@@ -576,7 +633,10 @@ class App:
             self.session.note('auto_calibration_ready',json.dumps(self.auto_region.settings()))
         for event in events:
             row=self.session.accept(**event)
-            if row:
+            if row and row['type']=='mesos':
+                result='已计入' if row['status']=='counted' else '金额待确认'
+                self.append_log(f"金币 +{row['mesos']} · {result}")
+            elif row:
                 label={'matched_candidate':'已计入','estimated_candidate':'估计计入','uncertain':'待确认，未计入',
                        'uncertain_color':'颜色待确认，未计入'}.get(row['status'],row['status'])
                 reason=f"；{row['note']}" if row['status'].startswith('uncertain') else ''

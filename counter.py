@@ -1,5 +1,6 @@
 """Pure event accounting. No capture, OS hooks or network."""
 import csv
+import json
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
@@ -27,12 +28,14 @@ def parse_monsters(text):
 
 class CounterSession:
     FIELDS = ['time', 'event_id', 'elapsed_s', 'type', 'color', 'exp', 'monster', 'status', 'note',
-              'source', 'observed_at', 'interval_start', 'interval_end']
+              'source', 'observed_at', 'interval_start', 'interval_end', 'mesos']
 
     def __init__(self, monsters=None, character='', map_name=''):
         self.monsters = dict(monsters or {})
         self.character = character
         self.map_name = map_name
+        self.coin_total = 0
+        self.wallet_checks = []
         self.counts = Counter()
         self.estimated_counts=Counter()
         self.estimated_exp=0
@@ -90,7 +93,16 @@ class CounterSession:
         if kind=='exp' and isinstance(amount,int):
             candidates=[name for name,exp in self.monsters.items() if exp==amount]
             if len(candidates)==1:monster=candidates[0]
-        if kind == 'mesos' or kind == 'text':
+        if kind == 'mesos':
+            valid = bool(confident and isinstance(amount, int) and amount > 0)
+            if valid:
+                self.coin_total += amount
+            if observed_at is not None:
+                for check in self.wallet_checks:
+                    check.count_event(observed_at, amount, valid)
+            return record(event_id=event_id, type=kind, mesos=amount, color=color,
+                          status='counted' if valid else 'uncertain', note=note)
+        if kind == 'text':
             return None
         if source=='hud_difference' and interval_start is not None:
             # Match individual HUD increments to hints in the same time interval,
@@ -171,6 +183,17 @@ class CounterSession:
             for name,count in self.estimated_counts.items():writer.writerow(['estimated_monster',self.safe_cell(name),count])
             for key,value in self.exp_progress.snapshot().items():writer.writerow([key,value])
             writer.writerow(['map_active_seconds',round(self.map_clock.seconds,2)])
+            writer.writerow(['pickup_mesos',self.coin_total])
+            writer.writerow(['mesos_per_hour',self.coin_rate()])
+            for check in self.wallet_checks:
+                if check.start:
+                    writer.writerow(['wallet_check', json.dumps(dict(start=check.start, end=check.end,
+                        confirmed_mesos=check.total, uncertain_events=check.uncertain,
+                        difference=check.end[1]-check.start[1]-check.total if check.end else None))])
+
+    def coin_rate(self):
+        seconds = self.map_clock.seconds
+        return round(self.coin_total*3600/seconds) if seconds >= 60 else None
 
     def close(self):
         if self.file:

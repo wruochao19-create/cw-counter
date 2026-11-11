@@ -254,7 +254,7 @@ class NotificationTracker:
         # fixed .8s lifetime, ~1s frames continually threw away their first look.
         retention=min(4,max(3,interval*2))
         old=[t for t in self.tracks if timestamp-t.last_seen<retention]
-        expired=[t for t in self.tracks if timestamp-t.last_seen>=retention and not t.done and t.key[0] in ('exp','bonus')]
+        expired=[t for t in self.tracks if timestamp-t.last_seen>=retention and not t.done and t.key[0] in ('exp','bonus','mesos')]
         if self.baseline:
             self.tracks=[self.make_track(line,timestamp,True) for line in items]
             self.baseline=False
@@ -331,12 +331,12 @@ class NotificationTracker:
                 # Accumulate independent numeric evidence for this tracked hint;
                 # unknown color is missing evidence, not a conflicting color.
                 verified=sum(value==track.key[1] and strong for value,strong,color in track.observations)>=2
-                if same and verified:
+                if verified and (same or track.key[0]=='mesos'):
                     self.sequence+=1
                     events.append(dict(event_id=f'{self.generation}-{self.sequence}',kind=track.key[0],amount=track.key[1],
                                        observed_at=track.born,
                                        color=resolved_color,confident=verified,
-                                       note='同条提示两帧数字/地图验证通过，已知颜色一致' if verified else '数字校验失败或当前地图无此经验；不计为击杀'))
+                                       note='两帧金币金额一致' if track.key[0]=='mesos' else '同条提示两帧数字/地图验证通过，已知颜色一致'))
                     track.done=True
             updated.append(track)
         for j,track in enumerate(old):
@@ -349,6 +349,8 @@ class NotificationTracker:
 
     def uncertain_event(self,track,note):
         self.sequence+=1;track.done=True
+        if track.key[0]=='mesos':
+            note='金币提示结束时，未取得两帧一致金额'
         votes=[v for v in track.candidate_votes if v is not None]
         known={color for value,strong,color in track.observations if color in ('white','yellow')}
         strong_values={v for v,strong,color in track.observations if strong}
@@ -374,7 +376,7 @@ class NotificationTracker:
 
     def finish(self):
         return [self.uncertain_event(t,'会话结束时提示尚未确认，不计为击杀')
-                for t in self.tracks if not t.done and t.key[0] in ('exp','bonus')]
+                for t in self.tracks if not t.done and t.key[0] in ('exp','bonus','mesos')]
 
     @staticmethod
     def compatible(track,line,timestamp):

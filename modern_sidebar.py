@@ -6,7 +6,7 @@ from ui_runtime import ctk, cleanup_callbacks
 from ui_theme import ACCENTS, BACK, LINE, MUTED, SOFT, SURFACE, TEXT, theme_settings
 
 SECTIONS = {'context':'地图与角色', 'eta':'预计升级时间', 'progress':'等级进度',
-            'kills':'击杀与经验合计', 'monsters':'怪物击杀列表'}
+            'coins':'金币收入', 'kills':'击杀与经验合计', 'monsters':'怪物击杀列表'}
 
 
 def build_sidebar(ui, scale, open_settings, toggle_topmost):
@@ -96,6 +96,14 @@ def build_sidebar(ui, scale, open_settings, toggle_topmost):
     label(totals,variable=ui.gain_display,size=14,bold=True).pack(side='right')
     label(totals,'经验  ',size=12,color=MUTED).pack(side='right')
     ui.section_widgets['kills']=[totals]
+    coins=frame(body)
+    coins.grid(row=10,column=0,sticky='ew',pady=(0,6))
+    label(coins,variable=ui.coin_display,size=12).pack(side='left')
+    ctk.CTkButton(coins,text='钱包核对',width=60,height=24,fg_color=SOFT,
+                  hover_color=LINE,text_color=TEXT,command=ui.arm_wallet).pack(side='right')
+    hint=label(body,variable=ui.wallet_hint,size=10,color=MUTED)
+    hint.grid(row=11,column=0,sticky='w')
+    ui.section_widgets['coins']=[coins,hint]
 
     # Keep the mature Treeview model/keyboard behavior; remove its bevels and chrome.
     ui.list_frame=frame(ui.surface)

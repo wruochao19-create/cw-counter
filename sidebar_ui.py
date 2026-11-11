@@ -36,6 +36,8 @@ def build_interface(ui):
     ui.gain_display = tk.StringVar(value='+0')
     ui.estimate_display = tk.StringVar(value='仅显示已击杀的怪物')
     ui.status = tk.StringVar(value='点击开始，切回 CW 后自动识别。')
+    ui.coin_display = tk.StringVar()
+    ui.wallet_hint = tk.StringVar()
     ui.stats = tk.StringVar()
     ui.exp_summary = tk.StringVar()
     ui.exp_detail = tk.StringVar()
@@ -92,6 +94,22 @@ def update_dashboard(ui,now=None):
            'paused':'读取暂停','waiting':'等待读数','live':'有效读数均值'}[quality]
     ui.rate_note.set('底部经验条 · '+state)
     seconds = int(s.map_clock.seconds)
+    coin_rate=s.coin_rate()
+    speed=f'{coin_rate:,}' if coin_rate is not None else '—'
+    ui.coin_display.set(f'金币／小时 {speed}　·　已拾取 {s.coin_total:,}')
+    if s.wallet_checks:
+        check=s.wallet_checks[-1]
+        if check.end:
+            total, uncertain=check.total, check.uncertain
+            delta=check.end[1]-check.start[1]
+            ui.wallet_hint.set(f'钱包 {delta:+,} · 提示 {total:,} · 差 {delta-total:+,} · 待确认 {uncertain} 笔')
+        elif check.start:
+            action='关包开始刷怪' if check.phase=='close' else '结束时再打开背包'
+            ui.wallet_hint.set(f'起始 {check.start[1]:,} · {action}')
+        else:
+            ui.wallet_hint.set('切回游戏，打开背包并保持余额可见')
+    else:
+        ui.wallet_hint.set('')
     ui.time_display.set(f'{seconds//60:02d}:{seconds%60:02d}')
     percent = progress['current_hud_percent']
     ui.percent_display.set(f'{percent:.2f}%' if percent is not None else '—')
