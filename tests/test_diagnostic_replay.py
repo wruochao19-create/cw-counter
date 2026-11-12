@@ -90,11 +90,13 @@ class NewRecordingTests(unittest.TestCase):
         self.assertEqual(counter.unresolved,0)
         self.assertEqual(sum(counter.estimated_counts.values()),0)
 
-    def test_43_scrolls_as_3_without_duplicate_and_fire_boar_stays_estimated(self):
+    def test_43_scrolls_as_3_without_duplicate_and_fast_rows_confirm_fire_boar(self):
         # Visible births at frames 4,7,16: 43,21,60. No second 43.
         counter=self.replay('20261106-001425-922630')
         self.assertEqual(dict(counter.counts),{'Dark Axe Stump':1,'Dark Stump':1,'Fire Boar [Lv32, ID30]':1})
-        self.assertEqual(counter.personal_exp,64)
-        self.assertEqual(counter.estimated_exp,60)
-        self.assertEqual(dict(counter.estimated_counts),{'Fire Boar [Lv32, ID30]':1})
+        # Tight row crops now read +60 in both frames 17 and 18, with
+        # weakest-digit scores .918 and .846. Its one kill is confirmed.
+        self.assertEqual(counter.personal_exp,124)
+        self.assertEqual(counter.estimated_exp,0)
+        self.assertEqual(sum(counter.estimated_counts.values()),0)
         self.assertEqual(counter.unresolved,0)

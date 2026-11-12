@@ -37,6 +37,7 @@ def build_interface(ui):
     ui.estimate_display = tk.StringVar(value='仅显示已击杀的怪物')
     ui.status = tk.StringVar(value='点击开始，切回 CW 后自动识别。')
     ui.coin_display = tk.StringVar()
+    ui.notification_coin_display = tk.StringVar()
     ui.wallet_hint = tk.StringVar()
     ui.stats = tk.StringVar()
     ui.exp_summary = tk.StringVar()
@@ -78,7 +79,8 @@ def apply_topmost(ui, persist=False):
 
 def update_dashboard(ui,now=None):
     s = ui.session
-    progress = s.exp_progress.snapshot(now=now)
+    manual=getattr(ui,'manual_paused',False)
+    progress = s.exp_progress.snapshot(now=None if manual else now)
     quality='paused' if ui.running and ui.needs_resume else progress['exp_reading_status']
     rate, eta = progress['exp_per_hour'], progress['level_eta_seconds']
     ui.rate_display.set(f'{rate:,.0f}' if rate is not None else '—')
@@ -92,23 +94,30 @@ def update_dashboard(ui,now=None):
     state={'stale':'读数过期，保留上次均值','rejected':'数字冲突，正在校验',
            'level_change_pending':'正在确认升级','confirming':'正在验证数字',
            'paused':'读取暂停','waiting':'等待读数','live':'有效读数均值'}[quality]
-    ui.rate_note.set('底部经验条 · '+state)
+    ui.rate_note.set('底部经验条 · '+('手动暂停' if manual else state))
+    if ui.running and not manual and progress['current_hud_exp'] is None:
+        ui.rate_note.set(ui.hud_status.get())
     seconds = int(s.map_clock.seconds)
-    coin_rate=s.coin_rate()
-    speed=f'{coin_rate:,}' if coin_rate is not None else '—'
-    ui.coin_display.set(f'金币／小时 {speed}　·　已拾取 {s.coin_total:,}')
-    if s.wallet_checks:
-        check=s.wallet_checks[-1]
-        if check.end:
-            total, uncertain=check.total, check.uncertain
-            delta=check.end[1]-check.start[1]
-            ui.wallet_hint.set(f'钱包 {delta:+,} · 提示 {total:,} · 差 {delta-total:+,} · 待确认 {uncertain} 笔')
-        elif check.start:
-            action='关包开始刷怪' if check.phase=='close' else '结束时再打开背包'
-            ui.wallet_hint.set(f'起始 {check.start[1]:,} · {action}')
+    check=s.wallet_checks[-1] if s.wallet_checks else None
+    if check and hasattr(check,'snapshot'):
+        money=check.snapshot(now if ui.running else None)
+        wallet_speed=money['wallet_per_hour']
+        hint_speed=money['notification_per_hour']
+        ui.coin_display.set('物品栏／小时 '+(f'{wallet_speed:,}' if wallet_speed is not None else '—'))
+        ui.notification_coin_display.set('右下角／小时 '+(f'{hint_speed:,}' if hint_speed is not None else '—'))
+        if money['wallet_gain'] is not None:
+            mark=' · 手动暂停' if manual else '' if money['live'] or not ui.running else ' · 钱包读取暂停'
+            ui.wallet_hint.set(f"余额净增 {money['wallet_gain']:+,} · 提示 {money['notification_gain']:,}"
+                               f" · 差额 {money['difference']:+,} · 待确认 {money['uncertain']} 笔"+mark)
         else:
-            ui.wallet_hint.set('切回游戏，打开背包并保持余额可见')
+            rate=s.coin_rate()
+            speed=f'{rate:,}' if rate is not None else '—'
+            ui.notification_coin_display.set(f'右下角／小时 {speed} · 累计 {s.coin_total:,}')
+            ui.wallet_hint.set('物品栏余额尚未确认；右下角先显示会话统计，余额确认后对齐区间')
     else:
+        rate=s.coin_rate()
+        ui.coin_display.set('右下角／小时 '+(f'{rate:,}' if rate is not None else '—'))
+        ui.notification_coin_display.set(f'已确认提示金币 {s.coin_total:,}')
         ui.wallet_hint.set('')
     ui.time_display.set(f'{seconds//60:02d}:{seconds%60:02d}')
     percent = progress['current_hud_percent']
@@ -120,7 +129,9 @@ def update_dashboard(ui,now=None):
     ui.estimate_display.set(f'含估计 {sum(s.estimated_counts.values())} 只 · 切窗自动暂停')
     if sum(s.counts.values()):ui.empty_label.place_forget()
     else:ui.empty_label.place(relx=.5,rely=.55,anchor='center')
-    if ui.running:
+    if manual:
+        ui.state_text.set('手动暂停')
+    elif ui.running:
         ui.state_text.set('已暂停' if ui.needs_resume else '读数过期' if quality=='stale' else
                           '校验中' if quality in ('rejected','level_change_pending') else
                           '统计中' if getattr(ui,'map_clock_active',ui.was_valid) else '识别中')

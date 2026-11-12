@@ -144,9 +144,10 @@ class IdleAndCacheTests(unittest.TestCase):
             self.assertTrue(reader.last_diagnostics['ocr_cache_hit'])
             changed=picture.copy();changed.putpixel((0,0),(0,0,0))
             reader.read(changed,1.2)
-            self.assertEqual(scan.call_count,3)
+            self.assertEqual(scan.call_count,2)
+            self.assertEqual(reader.last_diagnostics['ocr_mode'],'strips')
             reader.reset();reader.read(picture,1.4)
-            self.assertEqual(scan.call_count,4)
+            self.assertEqual(scan.call_count,3)
 
     def test_text_contrast_distinguishes_scene_lighting_from_new_text(self):
         def image(foreground,background):

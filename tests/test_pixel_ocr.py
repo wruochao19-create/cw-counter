@@ -67,6 +67,13 @@ class TrackingTests(unittest.TestCase):
         self.assertEqual(parse_notification('Youreceiveu ExPG35'),('exp',35))
         self.assertEqual(parse_notification('Bonus EXP for PARTY (+7)'),('bonus',7))
         self.assertEqual(parse_notification('You have gained mesos (+1,234)'),('mesos',1234))
+        for unit in ('nesos','rnesos','mes0s','meses','meso','mesoss'):
+            prefix='You have gained '+unit
+            text=prefix+' (+32)'
+            self.assertEqual(parse_notification(text),('mesos',32))
+            self.assertEqual(number_evidence(text,[.99]*len(text)),(32,.99))
+            self.assertIsNone(parse_notification(prefix+' (+3Z)'))
+        self.assertIsNone(parse_notification('You have spent mesos (+32)'))
         for text in ('You received EXP (+3S)','You received EXP (-35)','HP 35','You received EXP (+1,2)'):
             self.assertIsNone(parse_notification(text))
 

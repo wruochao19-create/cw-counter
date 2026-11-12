@@ -33,3 +33,18 @@ Ground truth: job Assassin, character AncPenguin. Only this small HUD region is 
 `codex-clipboard-dc8faec3-0372-4b06-b333-30ac0aebd14c.png`.
 Ground truth: EXP 26,617 [11.07%]. Real pixels test local OCR, two-input
 agreement, automatic field discovery and a 2560px-wide bottom-bar search.
+
+
+`coin-23-a.png` and `coin-23-b.png` are cropped from frames 6 and 7
+of the user diagnostic `20261106-112200-057925`, rectangle (145,305,510,338).
+Both show the same +23 mesos pickup. They verify the fast row OCR against
+real outlined game-font pixels without retaining the full game screen.
+
+
+`user-wallet-real.png` is a small balance-only crop from the user's visible
+inventory on 2026-11-11. Ground truth is 627,949 mesos. It reproduces OCR
+reading MESOS as MESO and the thousands comma as a dot.
+`user-hud-native.png` is the numeric HUD field discovered through the
+application's normal visible-desktop capture and reader on the same date.
+Ground truth is EXP 210,233 [58.90%]. The integration test places it in a
+window with its blank left edge off-screen and verifies dashboard updates.

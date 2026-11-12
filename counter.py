@@ -186,6 +186,9 @@ class CounterSession:
             writer.writerow(['pickup_mesos',self.coin_total])
             writer.writerow(['mesos_per_hour',self.coin_rate()])
             for check in self.wallet_checks:
+                if hasattr(check,'snapshot'):
+                    writer.writerow(['wallet_live_check',json.dumps(check.snapshot())])
+                    continue
                 if check.start:
                     writer.writerow(['wallet_check', json.dumps(dict(start=check.start, end=check.end,
                         confirmed_mesos=check.total, uncertain_events=check.uncertain,
@@ -196,6 +199,8 @@ class CounterSession:
         return round(self.coin_total*3600/seconds) if seconds >= 60 else None
 
     def close(self):
+        for check in self.wallet_checks:
+            if hasattr(check,'finish'):check.finish()
         if self.file:
             self.file.close()
             self.file = self.writer = None

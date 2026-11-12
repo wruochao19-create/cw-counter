@@ -213,6 +213,111 @@ class RecoveryIntegrationTests(unittest.TestCase):
         self.world.focus=True
         for t in (.1,.4,.9):self.step(t)
 
+    def test_clipped_blank_hud_edge_still_updates_dashboard_from_real_exp_pixels(self):
+        from unittest.mock import Mock
+        from hud_exp import HudReader,ExpReading
+        self.begin()
+        self.world.rect=(-46,0,1000,700)
+        self.ui.last_geometry=self.world.rect
+        self.ui.reset_hud()
+        canvas=Image.new('RGB',(1000,700),'black')
+        fixture=Path(__file__).parent/'data/user-hud-native.png'
+        canvas.paste(Image.open(fixture).convert('RGB'),(500,650))
+        sampler=Mock(rect=self.world.rect)
+        sampler.drain.return_value=([],0)
+        self.world.now=1
+        with patch.object(app.capture,'grab_region',side_effect=lambda h,b,**kw:canvas.crop(b)), \
+             patch.object(app,'HudSampler',return_value=sampler):
+            self.ui.probe_hud(self.world.rect,[(0,0,1920,1080)])
+        self.assertEqual(self.ui.hud_sample_count,1)
+        self.assertEqual(self.ui.hud_reader.box[0]>46,True)
+        sampler.box=self.ui.hud_reader.box
+        sampler.start.assert_called_once()
+        sampler.drain.return_value=([(1.2,ExpReading(210233,58.90),1,False,True)],0)
+        self.world.now=1.2
+        self.ui.probe_hud(self.world.rect,[(0,0,1920,1080)])
+        self.ui.update_metrics()
+        self.assertEqual(self.ui.percent_display.get(),'58.90%')
+        for index in range(1,62):
+            amount=210233+37*index
+            reading=ExpReading(amount,round(amount/356932*100,2))
+            now=1.2+index*.5
+            sampler.drain.return_value=([(now,reading,1,False,True),
+                                        (now+.1,reading,1,False,True)],0)
+            self.world.now=now+.1
+            self.ui.probe_hud(self.world.rect,[(0,0,1920,1080)])
+        self.ui.session.coin_total=123
+        self.ui.session.map_clock.seconds=60
+        self.ui.update_metrics()
+        self.assertEqual(self.ui.gain_display.get(),'+2,257')
+        self.assertNotEqual(self.ui.rate_display.get(),'—')
+        self.assertNotEqual(self.ui.eta_display.get(),'等待读数确认')
+        self.assertEqual(self.ui.time_display.get(),'01:00')
+        self.assertIn('7,380',self.ui.notification_coin_display.get())
+        # The exact EXP digits still must remain fully visible after discovery.
+        self.ui.hud_sampler=None
+        self.ui.hud_reader=HudReader()
+        self.ui.hud_reader.box=(0,650,80,680)
+        self.world.now+=1
+        with patch.object(app.capture,'overlay_occludes',return_value=False), \
+             patch.object(app.capture,'grab_region') as grab:
+            self.ui.probe_hud(self.world.rect,[(0,0,1920,1080)])
+            grab.assert_not_called()
+        self.assertIn('不完整',self.ui.hud_status.get())
+
+
+    def test_manual_pause_freezes_map_clocks_and_capture_until_continue(self):
+        self.begin()
+        self.world.specs=[notification()]
+        self.step(1.2);self.step(1.5)
+        session=self.ui.session
+        self.world.now=1.6
+        self.ui.pause_button.invoke()
+        self.assertTrue(self.ui.manual_paused)
+        self.assertEqual(self.ui.pause_button.cget('text'),'继续')
+        frozen=(self.world.grabs,session.active_seconds,session.map_clock.seconds)
+        self.world.map_name='Deep Valley II'
+        for t in (2,10,30):
+            self.step(t)
+            self.ui.metrics_tick()
+            self.ui.apply_detected_map(self.world.map_name)
+        self.assertIs(self.ui.session,session)
+        self.assertEqual((self.world.grabs,session.active_seconds,session.map_clock.seconds),frozen)
+        self.assertEqual(self.ui.active_map,'The Road to the Dungeon')
+        self.assertEqual(self.ui.state_text.get(),'手动暂停')
+        self.assertIsNone(self.ui.tick_job)
+        self.assertIsNone(self.ui.metric_job)
+        # Return from shopping to the same map. Old visible messages establish
+        # a fresh baseline, then only a genuinely new row adds another kill.
+        self.world.map_name='The Road to the Dungeon'
+        self.world.now=31
+        self.ui.pause_button.invoke()
+        self.cancel_tick()
+        for t in (31.4,31.9,32.2):self.step(t)
+        self.assertFalse(self.ui.manual_paused)
+        self.assertIs(self.ui.session,session)
+        self.assertEqual(sum(session.counts.values()),1)
+        self.world.specs=[notification(),notification(y=520)]
+        self.step(32.5);self.step(32.8)
+        self.assertEqual(sum(session.counts.values()),2)
+        self.assertLess(session.active_seconds-frozen[1],3)
+
+    def test_manually_paused_session_can_end_and_save_original_map(self):
+        self.begin()
+        session=self.ui.session
+        self.world.now=1
+        self.ui.pause_button.invoke()
+        self.world.map_name='Deep Valley II'
+        self.world.now=50
+        self.ui.stop()
+        self.assertFalse(self.ui.running)
+        self.assertFalse(self.ui.manual_paused)
+        summary=session.path.with_name(session.path.name.replace('-events.csv','-summary.csv'))
+        self.assertTrue(summary.exists())
+        self.assertIn('The Road to the Dungeon',summary.read_text(encoding='utf-8-sig'))
+        self.assertIsNone(self.ui.tick_job)
+        self.assertIsNone(self.ui.metric_job)
+
     def test_broad_search_overlap_does_not_pause_map_or_session(self):
         self.begin()
         session=self.ui.session

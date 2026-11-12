@@ -99,11 +99,15 @@ def build_sidebar(ui, scale, open_settings, toggle_topmost):
     coins=frame(body)
     coins.grid(row=10,column=0,sticky='ew',pady=(0,6))
     label(coins,variable=ui.coin_display,size=12).pack(side='left')
-    ctk.CTkButton(coins,text='钱包核对',width=60,height=24,fg_color=SOFT,
+    ctk.CTkButton(coins,text='重新对照',width=60,height=24,fg_color=SOFT,
                   hover_color=LINE,text_color=TEXT,command=ui.arm_wallet).pack(side='right')
     hint=label(body,variable=ui.wallet_hint,size=10,color=MUTED)
     hint.grid(row=11,column=0,sticky='w')
-    ui.section_widgets['coins']=[coins,hint]
+    secondary=label(body,variable=ui.notification_coin_display,size=12)
+    secondary.grid(row=11,column=0,sticky='w',pady=(0,4))
+    hint.grid_configure(row=12)
+    hint.configure(wraplength=330)
+    ui.section_widgets['coins']=[coins,secondary,hint]
 
     # Keep the mature Treeview model/keyboard behavior; remove its bevels and chrome.
     ui.list_frame=frame(ui.surface)
@@ -127,13 +131,20 @@ def build_sidebar(ui, scale, open_settings, toggle_topmost):
     foot.columnconfigure(0,weight=1)
     ui.estimate_label=label(foot,variable=ui.estimate_display,size=10,color=MUTED)
     ui.estimate_label.grid(row=0,column=0,sticky='w',pady=(0,6))
-    controls=frame(foot);controls.grid(row=1,column=0,sticky='ew');controls.columnconfigure(0,weight=1)
+    controls=frame(foot);controls.grid(row=1,column=0,sticky='ew')
+    controls.columnconfigure(0,weight=1);controls.columnconfigure(1,weight=2)
     for attr,text,command in [('start_button','开始新会话',ui.start),('stop_button','结束并保存',ui.stop)]:
         button=ctk.CTkButton(controls,text=text,height=40,corner_radius=10,font=font(13,True),
                              fg_color=ACCENTS[ui.accent_name.get()][0],hover_color='#405b9d',text_color='white',command=command)
-        button.grid(row=0,column=0,sticky='ew');setattr(ui,attr,button)
+        button.grid(row=0,column=0 if attr=='start_button' else 1,
+                    columnspan=2 if attr=='start_button' else 1,sticky='ew')
+        setattr(ui,attr,button)
         ui.accent_controls.append((button,'fg_color'))
     ui.stop_button.grid_remove();ui.stop_button.configure(state='disabled')
+    ui.pause_button=ctk.CTkButton(controls,text='暂停',height=40,corner_radius=10,font=font(13,True),
+                                 fg_color=SOFT,hover_color=LINE,text_color=TEXT,command=ui.toggle_pause)
+    ui.pause_button.grid(row=0,column=0,sticky='ew',padx=(0,8))
+    ui.pause_button.grid_remove()
     ui.status_label=label(foot,variable=ui.status,size=10,color=MUTED,justify='left')
     ui.status_label.grid(row=2,column=0,sticky='ew',pady=(10,0))
     def resize(event):

@@ -24,9 +24,21 @@ def model():
 
 
 def notification_parts(s):
-    for match in re.finditer(r'exp|ep|xp|mesos',s):
+    # OCR can split the m into rn or confuse one currency letter. Match the
+    # fixed sentence and unit together, keeping the amount outside this match.
+    boundary=re.search(r'[\(\[\{+]',s)
+    if boundary:
+        end=boundary.start()
+        for length in range(4,8):
+            start=end-length
+            if start<=0:continue
+            unit=s[start:end]
+            if (unit.isalnum() and SequenceMatcher(None,unit,'mesos').ratio()>=.7 and
+                    SequenceMatcher(None,s[:start],'youhavegained').ratio()>=.8):
+                return 'mesos',end,s[end:]
+    for match in re.finditer(r'exp|ep|xp|rnesos|mesos|nesos',s):
         marker=match.group();prefix=s[:match.start()];start=match.end()
-        if marker=='mesos' and SequenceMatcher(None,prefix,'youhavegained').ratio()>=.8:
+        if marker in ('mesos','rnesos','nesos') and SequenceMatcher(None,prefix,'youhavegained').ratio()>=.8:
             return 'mesos',start,s[start:]
         if marker=='exp' and prefix.endswith('bonus') and s[start:].startswith('forparty'):
             return 'bonus',start+8,s[start+8:]
@@ -119,7 +131,10 @@ def verify_numbers(bgr,raw_lines,lines,first_reads=None):
         verified=(all(amount==expected and score>=.7 for amount,score in evidence)
                   and all(complete_number(result[0]) for result in (first,second)))
         lines[index].update(digit_verified=verified,digit_reads=[amount for amount,score in evidence],
-                            digit_min_score=min(score for amount,score in evidence))
+                            digit_min_score=min(score for amount,score in evidence),
+                            digit_scores=[score for amount,score in evidence],
+                            digit_texts=[result[0] for result in (first,second)],
+                            digit_complete=[complete_number(result[0]) for result in (first,second)])
 
 
 def apply_map_constraint(lines,profile):
@@ -408,6 +423,75 @@ class NotificationTracker:
                      candidate_votes=[line['said'][1] if line.get('candidate_verified') else None])
 
 
+class NotificationStrips:
+    """Locate outlined text rows near the learned right edge, without a detector."""
+    def __init__(self):
+        self.height=None
+        self.right=None
+
+    def learn(self,lines):
+        hints=[line for line in lines if line.get('said') and line['score']>=.8]
+        if hints:
+            self.height=float(np.median([r['box'][3]-r['box'][1] for r in hints]))
+            self.right=max(r['box'][2] for r in hints)
+
+    def boxes(self,image):
+        if self.height is None:return []
+        rgb=np.asarray(image.convert('RGB'))
+        light=np.minimum(rgb[:,:,0],rgb[:,:,1])
+        shade=cv2.erode(light,np.ones((3,3),np.uint8))
+        # White/yellow letter cores with a dark outline. Scenery can also pass,
+        # so OCR still has to identify a complete system notification.
+        high=rgb.max(axis=2).astype(np.int16)
+        low=rgb.min(axis=2).astype(np.int16)
+        white=high-low<high*.15
+        yellow=(rgb[:,:,1]>.85*rgb[:,:,0])&(rgb[:,:,2]<.4*rgb[:,:,0])
+        glyph=((light.astype(np.int16)-shade.astype(np.int16))>45)&(light>125)&(white|yellow)
+        right=min(image.width,round(self.right+4))
+        tail=max(0,right-round(self.height*1.7))
+        present=(glyph[:,tail:right].sum(axis=1)>=3).astype(np.uint8)
+        present=cv2.morphologyEx(present[:,None],cv2.MORPH_CLOSE,np.ones((3,1),np.uint8))[:,0]
+        edges=np.diff(np.pad(present,(1,1)).astype(np.int16))
+        boxes=[]
+        for top,bottom in zip(np.flatnonzero(edges==1),np.flatnonzero(edges==-1)):
+            if not self.height*.35<=bottom-top<=self.height*1.6:continue
+            columns=np.flatnonzero(glyph[top:bottom,:right].sum(axis=0)>0)
+            if not len(columns) or columns[-1]<right-self.height*.6:continue
+            gaps=np.flatnonzero(np.diff(columns)>self.height*.8)
+            left=int(columns[gaps[-1]+1] if len(gaps) else columns[0])
+            boxes.append((max(0,left-3),max(0,int(top)-3),right,min(image.height,int(bottom)+3)))
+        return boxes[-16:]
+
+    def read(self,image,profile):
+        boxes=self.boxes(image)
+        if not boxes:return []
+        crops=[]
+        for box in boxes:
+            crop=image.crop(box)
+            crop=crop.resize((max(1,round(crop.width*40/crop.height)),40),Image.Resampling.BICUBIC)
+            bgr=np.asarray(crop)[:,:,::-1].copy()
+            crops.extend((bgr,cv2.convertScaleAbs(bgr,alpha=1.2,beta=-15)))
+        details,_=model().text_rec(crops,return_word_box=True)
+        lines=[]
+        for index,box in enumerate(boxes):
+            pair=details[index*2:index*2+2]
+            text,score=pair[0][:2]
+            said=parse_notification(text)
+            if not said:continue
+            evidence=[number_evidence(r[0],r[2][4]) for r in pair]
+            complete=[complete_number(r[0]) for r in pair]
+            verified=all(value==said[1] and strength>=.7 for value,strength in evidence) and all(complete)
+            color=text_color(image,box)
+            brightness,contrast=text_metrics(image,box,color)
+            lines.append(dict(text=text,score=float(score),box=box,said=said,color=color,
+                              brightness=brightness,contrast=contrast,digit_verified=verified,
+                              digit_reads=[v for v,s in evidence],digit_scores=[s for v,s in evidence],
+                              digit_min_score=min(s for v,s in evidence),digit_complete=complete,
+                              digit_texts=[r[0] for r in pair]))
+        apply_map_constraint(lines,profile)
+        return sorted(lines,key=lambda line:line['box'][1],reverse=True)
+
+
 class RapidReader:
     def __init__(self,profile=None):
         model()
@@ -416,6 +500,9 @@ class RapidReader:
         self.last_lines=[]
         self.last_diagnostics={}
         self.frame_key=None
+        self.strips=NotificationStrips()
+        self.last_search=float('-inf')
+        self.last_text=float('-inf')
 
     def set_profile(self,profile):
         self.profile=dict(profile)
@@ -426,6 +513,9 @@ class RapidReader:
         self.last_lines=[]
         self.last_diagnostics={}
         self.frame_key=None
+        self.strips=NotificationStrips()
+        self.last_search=float('-inf')
+        self.last_text=float('-inf')
 
     def rebase(self,old_box,new_box):
         # Crop movement changes line coordinates, not message identity.
@@ -433,16 +523,29 @@ class RapidReader:
         for track in self.tracker.tracks:
             track.center+=shift
         self.frame_key=None
+        self.strips=NotificationStrips()
+        self.last_search=float('-inf')
 
     def read(self,image,timestamp):
         baseline=self.tracker.baseline
         frame_key=(image.size,image.mode,hashlib.sha256(image.tobytes()).digest())
         cached=frame_key==getattr(self,'frame_key',None)
+        mode='cached'
         if not cached:
-            self.last_lines=scan(image,self.profile)
+            search=(self.strips.height is None or timestamp-self.last_search>=4 or
+                    timestamp-self.last_text>1 and timestamp-self.last_search>=1)
+            if search:
+                self.last_lines=scan(image,self.profile)
+                self.strips.learn(self.last_lines)
+                self.last_search=timestamp
+                mode='detector'
+            else:
+                self.last_lines=self.strips.read(image,self.profile)
+                mode='strips'
+            if any(row.get('said') for row in self.last_lines):self.last_text=timestamp
             self.frame_key=frame_key
         events,gap=self.tracker.update(self.last_lines,timestamp)
-        self.last_diagnostics=dict(baseline=bool(baseline or gap),ocr_cache_hit=cached,
+        self.last_diagnostics=dict(baseline=bool(baseline or gap),ocr_cache_hit=cached,ocr_mode=mode,
             pending_tracks=sum(not track.done for track in self.tracker.tracks),
             completed_tracks=sum(track.done for track in self.tracker.tracks),
             confirmed_events=sum(event['confident'] for event in events),

@@ -8,7 +8,7 @@ from dataclasses import asdict
 from PIL import Image, ImageTk
 from counter import CounterSession
 from catalog import Catalog, ALL_MAPS, BUILTIN, CUSTOM, settings_profile
-from wallet import WalletCheck, wallet_balance
+from wallet import LiveWalletCheck, wallet_balance
 from recognition import Calibration
 from pixel_ocr import RapidReader
 from map_reader import MapMonitor,title_box
@@ -22,7 +22,7 @@ from async_reader import AsyncNotificationReader
 
 CONFIG = bootstrap.ROOT / 'settings.json'
 OUTPUT = bootstrap.ROOT / 'sessions'
-VERSION = '0.26'
+VERSION = '0.29'
 
 
 class App:
@@ -33,6 +33,7 @@ class App:
         self.map_clock_active=False
         root.title(f'CW Counter · {VERSION}')
         self.running = False
+        self.manual_paused = False
         self.diagnostic=None
         self.tick_job = None
         self.session = CounterSession()
@@ -79,12 +80,14 @@ class App:
 
     def arm_wallet(self):
         if not self.running:
-            self.notice('请先开始新会话，再点击钱包核对。')
+            self.notice('请先开始新会话，再重新对照金币。')
             return
         checks=self.session.wallet_checks
-        if not checks or checks[-1].phase=='done':
-            checks.append(WalletCheck())
-            self.session.note('wallet_armed','切回游戏，打开背包，保持余额可见')
+        if checks and hasattr(checks[-1],'finish'):
+            checks[-1].finish()
+        checks.append(LiveWalletCheck())
+        self.wallet_box=None
+        self.session.note('wallet_armed','持续测试：保持物品栏和右侧提示可见，30秒后显示两路时薪')
         self.update_metrics()
 
     def probe_wallet(self,rect,monitors):
@@ -95,25 +98,34 @@ class App:
         now=time.monotonic()
         if check.phase=='done' or now<check.next_scan:
             return
-        check.next_scan=now+1
-        box=capture.visible_region(rect,(0,0,rect[2],rect[3]),monitors)
+        check.next_scan=now+.35
+        if getattr(self,'wallet_geometry',None)!=rect:
+            self.wallet_box=None
+            self.wallet_geometry=rect
+        desired=getattr(self,'wallet_box',None) or (0,0,rect[2],rect[3])
+        box=capture.visible_region(rect,desired,monitors)
         if not box or not self.view_unchanged(rect):
             return
         image=capture.grab_region(self.hwnd,box,mask_overlay=True)
         observed=time.monotonic()
-        visible,amount=wallet_balance(image)
+        details={}
+        visible,amount=wallet_balance(image,details)
+        located=details.get('box')
+        self.wallet_box=tuple(value+box[index%2] for index,value in enumerate(located)) if located else None
         if not self.view_unchanged(rect):
             check.previous=None
             return
         scan=(check.phase,visible,amount)
         if scan!=check.last_scan:
             self.session._record(type='wallet_scan',source='wallet',observed_at=observed,
-                                 note=json.dumps(dict(phase=check.phase,visible=visible,amount=amount)))
+                                 note=json.dumps(dict(phase=check.phase,visible=visible,amount=amount,
+                                                     evidence=details)))
             check.last_scan=scan
         marker=check.observe(visible,amount,observed)
         if marker:
-            self.session._record(type=marker,source='wallet',observed_at=observed,mesos=amount,
-                                 status='confirmed',note='两次钱包余额一致')
+            self.session._record(type=marker,source='wallet',observed_at=observed,
+                                 mesos=check.current[1],status='confirmed',
+                                 note=json.dumps(check.snapshot(observed),ensure_ascii=False))
 
     def trace_wallet_frame(self,now,gap):
         checks=self.session.wallet_checks
@@ -122,7 +134,9 @@ class App:
         check=checks[-1]
         if check.end and now>check.end[0]+4:
             return
-        rows=[{key:row.get(key) for key in ('text','box','score','said','digit_reads','digit_verified')}
+        rows=[{key:row.get(key) for key in ('text','box','score','said','color','digit_reads',
+                                          'digit_verified','digit_min_score','digit_scores',
+                                          'digit_texts','digit_complete')}
               for row in getattr(self.reader,'last_lines',[])]
         state=getattr(self.reader,'last_diagnostics',{})
         evidence=dict(lines=rows,baseline=state.get('baseline',False),gap=gap)
@@ -242,9 +256,9 @@ class App:
 
     def set_controls(self, running):
         if running:
-            self.start_button.grid_remove();self.stop_button.grid()
+            self.start_button.grid_remove();self.stop_button.grid();self.pause_button.grid()
         else:
-            self.stop_button.grid_remove();self.start_button.grid()
+            self.stop_button.grid_remove();self.pause_button.grid_remove();self.start_button.grid()
         for widget in (self.start_button,):
             widget.configure(state='disabled' if running else 'normal')
         self.windows.configure(state='readonly')
@@ -255,6 +269,28 @@ class App:
         self.multiplier_entry.configure(state='disabled' if running else 'normal')
         self.auto_map_button.configure(state='disabled' if running else 'normal')
         self.stop_button.configure(state='normal' if running else 'disabled')
+        self.pause_button.configure(state='normal' if running else 'disabled',text='暂停')
+
+    def toggle_pause(self):
+        if not self.running:return
+        if not self.manual_paused:
+            self.manual_paused=True
+            for name in ('tick_job','metric_job'):
+                job=getattr(self,name,None)
+                if job is not None:self.root.after_cancel(job)
+                setattr(self,name,None)
+            self.pause_capture('用户手动暂停')
+            self.close_diagnostic()
+            self.session.note('manual_pause','保留本图统计，等待用户继续')
+            self.pause_button.configure(text='继续')
+            self.update_metrics()
+            return
+        self.manual_paused=False
+        self.pause_button.configure(text='暂停')
+        self.session.note('manual_resume','重新确认当前地图，重新建立经验与钱包基线')
+        self.notice('正在继续 · 切回 CW，确认地图后恢复统计。')
+        self.tick()
+        self.metrics_tick()
 
     def start(self):
         try:
@@ -266,6 +302,8 @@ class App:
             self.session.close()
             self.session = CounterSession(monsters, self.character.get(), '等待读图确认' if automated else self.map_name.get())
             self.session.open_log(OUTPUT)
+            self.session.wallet_checks.append(LiveWalletCheck())
+            self.wallet_box=None
             self.session.note('app_version', VERSION)
             self.session.note('reference', f'模式={self.mode.get()}; 倍率={self.multiplier.get()}; 来源={self.catalog.metadata}')
             self.session.note('reader', 'RapidOCR 1.4.4 / English PP-OCRv3 / CPU; 两帧+双路数字一致; 数字最低分>=0.7；整行低于0.8时要求数字>=0.85；分数不是正确率')
@@ -287,6 +325,7 @@ class App:
             self.error_streak=0
             self.health_window=dict(frames=0,total_ms=0,max_ms=0,cache_hits=0,exp_ocr_runs=0)
             self.running = True
+            self.manual_paused = False
             self.was_valid = False
             self.last_tick = None
             self.last_status = ''
@@ -308,6 +347,7 @@ class App:
             self.last_status = text
 
     def apply_detected_map(self,map_name):
+        if getattr(self,'manual_paused',False):return
         if map_name==self.active_map:
             return
         profile=self.catalog.profile(map_name,self.multiplier.get())
@@ -319,6 +359,8 @@ class App:
             self.session.close()
             self.session=CounterSession(profile,self.character.get(),map_name)
             self.session.open_log(OUTPUT)
+            self.session.wallet_checks.append(LiveWalletCheck())
+            self.wallet_box=None
             self.session.note('app_version', VERSION)
         else:
             self.session.monsters=dict(profile)
@@ -349,8 +391,13 @@ class App:
         self.was_valid=False
         self.last_tick=None
         self.last_frame=None
-        self.preview.configure(image='',text='已暂停；切回 CW 并保持提示可见后自动恢复。')
-        self.notice('已暂停 · '+reason+'；条件恢复后自动继续，无需手动校准。')
+        for check in self.session.wallet_checks:
+            if hasattr(check,'break_interval'):check.break_interval()
+        manual=getattr(self,'manual_paused',False)
+        self.preview.configure(image='',text='手动暂停中，点击继续后恢复。' if manual else
+                               '已暂停；切回 CW 并保持提示可见后自动恢复。')
+        self.notice('手动暂停 · 点击继续后恢复统计。' if manual else
+                    '已暂停 · '+reason+'；条件恢复后自动继续，无需手动校准。')
         self.update_stats()
 
     def prepare_geometry(self,rect,now):
@@ -428,6 +475,7 @@ class App:
             ocr_lines=len(lines),notifications=sum(bool(row.get('said')) for row in lines),
             verified=sum(bool(row.get('digit_verified')) and row.get('map_verified',True) for row in lines),
             emitted=events,tracking=getattr(self.reader,'last_diagnostics',{}),
+            hud_status=self.hud_status.get(),hud_box=self.hud_reader.box,
             sample_lines=[dict(text=row['text'],score=round(row['score'],3),
                                said=row.get('said'),color=row.get('color'),
                                digit_reads=row.get('digit_reads'),digit_min_score=row.get('digit_min_score'),
@@ -509,10 +557,15 @@ class App:
             return
         box=self.hud_reader.box or hud_search_box(rect[2],rect[3])
         visible=capture.visible_region(rect,box,monitors)
-        if visible!=box:
+        if (visible is None or (self.hud_reader.box is not None and visible!=box) or
+                visible[2]-visible[0]<100 or visible[3]-visible[1]<20):
             self.session.exp_progress.break_interval()
             self.exp_ledger.reset();self.hud_status.set('经验条：底部区域不完整可见，暂停对账')
             self.hud_reader.next_read=now+2;return
+        # Discovery scans a broad bottom strip. A clipped blank edge must not
+        # block a fully visible EXP field elsewhere in that strip. Once located,
+        # the exact numeric field still has to be entirely visible.
+        box=visible
         image=capture.grab_region(self.hwnd,box,mask_overlay=self.hud_reader.box is None)
         if not self.view_unchanged(rect):self.reset_hud();return
         try:
@@ -541,6 +594,7 @@ class App:
             self.hud_log_at=now;self.hud_log_reading=reading
 
     def capture_step(self,started):
+        if getattr(self,'manual_paused',False):return
         if not capture.window_exists(self.hwnd):
             if not self.try_reconnect():
                 self.pause_capture('游戏窗口已关闭，等待重新连接');return
@@ -664,7 +718,7 @@ class App:
 
     def tick(self):
         self.tick_job=None
-        if not self.running:return
+        if not self.running or getattr(self,'manual_paused',False):return
         began=time.monotonic()
         try:
             if not isinstance(self.reader,AsyncNotificationReader) or not self.reader.busy:
@@ -676,14 +730,14 @@ class App:
                 self.session.note('capture_error',str(exc))
             self.pause_capture('读取暂时失败：'+str(exc))
         if self.running:
-            period=75 if self.async_ocr and self.map_clock_active and not self.needs_resume else 300
+            period=40 if self.async_ocr and self.map_clock_active and not self.needs_resume else 300
             delay=max(25,int(period-(time.monotonic()-began)*1000))
             if self.error_streak:delay=max(delay,min(2000,300*2**min(self.error_streak,3)))
             self.tick_job=self.root.after(delay,self.tick)
 
     def metrics_tick(self):
         self.metric_job=None
-        if not self.running:return
+        if not self.running or getattr(self,'manual_paused',False):return
         now=time.monotonic()
         try:
             rect=capture.client_rect(self.hwnd)
@@ -741,6 +795,7 @@ class App:
             self.tick_job = None
         if self.running:
             self.running = False
+            self.manual_paused = False
             if self.reader and hasattr(self.reader,'finish'):
                 for event in self.reader.finish():self.session.accept(**event)
             self.session.note('session_end', '用户结束或采集异常；未确定事件未强行分类')
