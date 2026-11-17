@@ -48,3 +48,9 @@ reading MESOS as MESO and the thousands comma as a dot.
 application's normal visible-desktop capture and reader on the same date.
 Ground truth is EXP 210,233 [58.90%]. The integration test places it in a
 window with its blank left edge off-screen and verifies dashboard updates.
+
+`user-map-west-iv.png` is the title-only crop (0,0,381,128) of the supplied
+`codex-clipboard-7f92e652-d1f8-43ce-a42c-ed4303345d8e.png`.
+Ground truth is West Rocky Mountain IV. Map tests reassemble its original
+I/V glyphs into synthetic V/VI/VII titles and resize them. These variants
+test real font pixels and model inference, but are not recordings of those maps.

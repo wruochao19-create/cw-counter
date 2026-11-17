@@ -6,14 +6,136 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch,Mock
 from PIL import Image
+import numpy as np
 from catalog import Catalog
 from counter import CounterSession
-from map_reader import MapMonitor,identify_map,title_box
+from map_reader import MapMonitor,identify_map,title_box,glyph_mask,verify_title
 from pixel_ocr import apply_map_constraint,retry_with_map,NotificationTracker,RapidReader
 from test_pixel_ocr import line
 
 
 class MapTests(unittest.TestCase):
+    @staticmethod
+    def roman_title(numeral):
+        # Derived test image: reassemble actual I/V glyphs from the supplied IV
+        # screenshot. These are synthetic variants, not captured V/VI/VII maps.
+        with Image.open(Path(__file__).parent/'data/user-map-west-iv.png') as original:
+            image=original.convert('RGB')
+        result=Image.new('RGB',(420,128),image.getpixel((330,83)))
+        result.paste(image.crop((0,0,338,128)))
+        x=342
+        for char in numeral:
+            glyph=image.crop((340,82,349,113) if char=='I' else (349,82,366,113))
+            result.paste(glyph,(x,82));x+=glyph.width
+        return result
+
+    def test_real_font_v_and_vi_at_six_scales(self):
+        catalog=SimpleNamespace(maps=['West Rocky Mountain '+s for s in ('IV','V','VI','VII')])
+        for numeral in ('V','VI'):
+            original=self.roman_title(numeral)
+            for scale in (.5,.75,1,1.25,1.5,2):
+                image=original.resize((round(original.width*scale),round(original.height*scale)),Image.Resampling.BICUBIC)
+                with self.subTest(numeral=numeral,scale=scale):
+                    found=identify_map(image,catalog)
+                    self.assertIsNotNone(found)
+                    self.assertEqual(found['name'],'West Rocky Mountain '+numeral)
+
+    def test_clipped_detector_box_is_repaired_using_actual_pixels(self):
+        image=self.roman_title('VI')
+        catalog=SimpleNamespace(maps=['West Rocky Mountain V','West Rocky Mountain VI'])
+        # Detector omitted the final I. A name-only test would accept V.
+        with patch('map_reader.scan',return_value=[dict(text='West Rocky Mountain V',score=.99,box=(99,85,359,109))]):
+            self.assertEqual(identify_map(image,catalog)['name'],'West Rocky Mountain VI')
+
+    def test_numbered_map_can_return_to_its_unnumbered_neighbour(self):
+        image=Image.new('RGB',(200,50))
+        found=dict(name='Pig Park',raw='Pig Park',box=(5,5,100,30))
+        catalog=SimpleNamespace(maps=['Pig Park','Pig Park II'])
+        reading=('Pig Park',.99,[None,None,None,None,[.99]*8])
+        with patch('map_reader.model') as model:
+            model.return_value.text_rec.return_value=([reading]*3,0)
+            result=verify_title(image,found,catalog)
+        self.assertEqual(result['name'],'Pig Park')
+        self.assertTrue(result['verified'])
+
+    def test_actual_font_vii_at_native_size_and_upscaled(self):
+        catalog=SimpleNamespace(maps=['West Rocky Mountain '+s for s in ('V','VI','VII')])
+        for scale in (1,1.25,2):
+            original=self.roman_title('VII')
+            image=original.resize((round(original.width*scale),round(original.height*scale)),Image.Resampling.BICUBIC)
+            self.assertEqual(identify_map(image,catalog)['name'],'West Rocky Mountain VII')
+
+    def test_background_colour_changes_cannot_accept_two_wrong_reads(self):
+        original=self.roman_title('VI')
+        box=(99,85,370,110)
+        recognizer=Mock(return_value=dict(name='East Rocky Mountain VI',box=box,verified=True))
+        monitor=MapMonitor(Catalog(),recognizer)
+        monitor.observe(original,0);monitor.observe(original,.5)
+        ref_box=monitor.box
+        for n in range(1,25):
+            array=np.asarray(original).copy()
+            # Change blue background by enough to bypass the 0.30 RGB gate.
+            mask=~glyph_mask(original).astype(bool)
+            array[mask]=np.clip(array[mask].astype(int)+[0,0,(n%3)*12],0,255)
+            recognizer.return_value=dict(name='East Rocky Mountain V',box=box,verified=True)
+            self.assertEqual(monitor.observe(Image.fromarray(array),.5+n*.5),'East Rocky Mountain VI')
+        self.assertEqual(monitor.box,ref_box)
+
+    def test_unverified_or_brief_neighbour_reads_do_not_commit_a_switch(self):
+        image=self.roman_title('VI')
+        recognizer=Mock(return_value=dict(name='East Rocky Mountain VI',box=(99,85,370,110),verified=True))
+        monitor=MapMonitor(Catalog(),recognizer)
+        monitor.observe(image,0);monitor.observe(image,.5)
+        other=self.roman_title('V')
+        recognizer.return_value=dict(name='East Rocky Mountain V',box=(99,85,363,110))
+        for t in (1,1.5,2,2.5,3):self.assertIsNone(monitor.observe(other,t))
+        self.assertEqual(monitor.trusted,'East Rocky Mountain VI')
+        recognizer.return_value['verified']=True
+        for t in (3.5,4,4.5):self.assertIsNone(monitor.observe(other,t))
+        self.assertEqual(monitor.observe(other,5),'East Rocky Mountain V')
+
+    def test_title_fits_common_resolutions_at_multiple_ui_scales(self):
+        for width,height in ((800,600),(1280,720),(1920,1080),(2560,1440),(3840,2160)):
+            box=title_box(width,height)
+            self.assertLessEqual(box[2],width)
+            self.assertLessEqual(box[3],height)
+            for scale in (1,1.25,1.5,2):
+                if width>=1280 or scale==1:
+                    self.assertGreaterEqual(box[2],380*scale)
+                    self.assertGreaterEqual(box[3],110*scale)
+
+    def test_v_vi_real_ocr_in_full_capture_regions_including_2560_borderless(self):
+        catalog=SimpleNamespace(maps=['West Rocky Mountain V','West Rocky Mountain VI'])
+        cases=[(800,600,1),(1280,720,1),(1920,1080,1),(3840,2160,2)]
+        cases.extend((2560,1440,scale) for scale in (.5,1,1.25,1.5,2))
+        for width,height,scale in cases:
+            for numeral in ('V','VI'):
+                sample=self.roman_title(numeral)
+                sample=sample.resize((round(sample.width*scale),round(sample.height*scale)),Image.Resampling.BICUBIC)
+                box=title_box(width,height)
+                captured=Image.new('RGB',(box[2],box[3]),(80,100,70))
+                captured.paste(sample)
+                with self.subTest(client=(width,height),scale=scale,numeral=numeral):
+                    found=identify_map(captured,catalog)
+                    self.assertIsNotNone(found)
+                    self.assertEqual(found['name'],'West Rocky Mountain '+numeral)
+
+    def test_map_diagnostic_records_waiting_frames_with_shared_size_and_time_limits(self):
+        from diagnostics import DiagnosticRecorder
+        image=self.roman_title('VI')
+        with tempfile.TemporaryDirectory() as directory:
+            recorder=DiagnosticRecorder(directory,max_bytes=100000,duration=20)
+            recorder.add_map(image,1,dict(result=None))
+            self.assertTrue((recorder.path/'map-000.png').exists())
+            self.assertTrue((recorder.path/'maps.jsonl').exists())
+            recorder.add_map(image,21,dict(result=None))
+            self.assertTrue(recorder.done)
+            self.assertEqual(recorder.map_frames,1)
+            capped=DiagnosticRecorder(directory,max_bytes=1)
+            capped.add_map(image,1,{})
+            self.assertTrue(capped.done)
+            self.assertIsNone(capped.path)
+
     def test_east_west_neighbours_require_a_distinguishable_title(self):
         image=Image.new('RGB',(640,187))
         catalog=Catalog()
@@ -25,7 +147,7 @@ class MapTests(unittest.TestCase):
         ]:
             with self.subTest(titles=titles), patch('map_reader.scan',return_value=[
                     dict(text=t,score=.92,box=(10,20,370,45)) for t in titles]):
-                found=identify_map(image,catalog)
+                found=identify_map(image,catalog,verify=False)
                 self.assertEqual(found['name'] if found else None,expected)
 
     def test_excavation_titles_and_angle_brackets_match_without_mixing_variants(self):
@@ -33,7 +155,7 @@ class MapTests(unittest.TestCase):
                               ('Remains <Tomb> IV','Remains (Tomb) IV'),
                               ('Remains <Cliff>','Remains (Cliff)'),('Camp 2','Camp 2'),('Camp 4',None)]:
             with patch('map_reader.scan',return_value=[dict(text=text,score=.99,box=(0,0,220,24))]):
-                found=identify_map(Image.new('RGB',(250,40)),Catalog())
+                found=identify_map(Image.new('RGB',(250,40)),Catalog(),verify=False)
                 self.assertEqual(found['name'] if found else None,expected)
 
     def test_hidden_street_murky_swamp_titles_keep_roman_variants_separate(self):
@@ -41,7 +163,7 @@ class MapTests(unittest.TestCase):
             lines=[dict(text='Hidden Street',score=.99,box=(0,0,120,15)),
                    dict(text=title,score=.99,box=(0,16,210,34))]
             with patch('map_reader.scan',return_value=lines):
-                result=identify_map(Image.new('RGB',(250,80)),Catalog())
+                result=identify_map(Image.new('RGB',(250,80)),Catalog(),verify=False)
                 self.assertEqual(result['name'],title)
 
     def test_candidate_retry_uses_pixels_and_does_not_force_nearest_number(self):
@@ -85,7 +207,7 @@ class MapTests(unittest.TestCase):
         for text,expected in [('Test Path I','Test Path I'),('Test Path II','Test Path II'),
                               ('Test Path',None),('Test Path 1',None),('Warning Street',None)]:
             with patch('map_reader.scan',return_value=[dict(text=text,score=.99,box=(1,1,90,15))]):
-                result=identify_map(Image.new('RGB',(100,30)),catalog)
+                result=identify_map(Image.new('RGB',(100,30)),catalog,verify=False)
                 self.assertEqual(result['name'] if result else None,expected)
 
     def test_per_frame_cache_and_immediate_pause_on_title_change(self):
@@ -115,7 +237,7 @@ class MapTests(unittest.TestCase):
     def test_unchanged_vi_title_cannot_switch_to_v_on_periodic_ocr(self):
         image=Image.new('RGB',(220,45),'black')
         image.paste('white',(184,10,188,30))  # The trailing I remains visible.
-        recognizer=Mock(return_value=dict(name='East Rocky Mountain VI',box=(2,2,190,35)))
+        recognizer=Mock(return_value=dict(name='East Rocky Mountain VI',box=(2,2,190,35),verified=True))
         monitor=MapMonitor(Catalog(),recognizer)
         monitor.observe(image,0)
         self.assertEqual(monitor.observe(image,.5),'East Rocky Mountain VI')
@@ -128,7 +250,7 @@ class MapTests(unittest.TestCase):
 
     def test_same_title_is_preserved_after_focus_invalidation_and_failed_read(self):
         image=Image.new('RGB',(220,45),'black')
-        recognizer=Mock(return_value=dict(name='East Rocky Mountain VI',box=(2,2,190,35)))
+        recognizer=Mock(return_value=dict(name='East Rocky Mountain VI',box=(2,2,190,35),verified=True))
         monitor=MapMonitor(Catalog(),recognizer)
         monitor.observe(image,0);monitor.observe(image,.5)
         monitor.invalidate()
@@ -142,28 +264,32 @@ class MapTests(unittest.TestCase):
         vi=Image.new('RGB',(220,45),'black')
         vi.paste('white',(184,10,188,30))
         v=Image.new('RGB',vi.size,'black')
-        recognizer=Mock(return_value=dict(name='East Rocky Mountain VI',box=(2,2,190,35)))
+        recognizer=Mock(return_value=dict(name='East Rocky Mountain VI',box=(2,2,190,35),verified=True))
         monitor=MapMonitor(Catalog(),recognizer)
         monitor.observe(vi,0);monitor.observe(vi,.5)
-        recognizer.return_value=dict(name='East Rocky Mountain V',box=(2,2,182,35))
+        recognizer.return_value=dict(name='East Rocky Mountain V',box=(2,2,182,35),verified=True)
         self.assertIsNone(monitor.observe(v,.7))
         self.assertIsNone(monitor.observe(v,1))
-        self.assertEqual(monitor.observe(v,1.5),'East Rocky Mountain V')
-        recognizer.return_value=dict(name='East Rocky Mountain VI',box=(2,2,190,35))
-        self.assertIsNone(monitor.observe(vi,2))
-        self.assertEqual(monitor.observe(vi,2.5),'East Rocky Mountain VI')
+        self.assertIsNone(monitor.observe(v,1.5))
+        self.assertIsNone(monitor.observe(v,2))
+        self.assertEqual(monitor.observe(v,2.5),'East Rocky Mountain V')
+        recognizer.return_value=dict(name='East Rocky Mountain VI',box=(2,2,190,35),verified=True)
+        for t in (3,3.5,4):self.assertIsNone(monitor.observe(vi,t))
+        self.assertEqual(monitor.observe(vi,4.5),'East Rocky Mountain VI')
 
     def test_changed_title_after_pause_is_not_pinned_to_previous_map(self):
         vi=Image.new('RGB',(220,45),'black')
         vi.paste('white',(184,10,188,30))
         v=Image.new('RGB',vi.size,'black')
-        recognizer=Mock(return_value=dict(name='East Rocky Mountain VI',box=(2,2,190,35)))
+        recognizer=Mock(return_value=dict(name='East Rocky Mountain VI',box=(2,2,190,35),verified=True))
         monitor=MapMonitor(Catalog(),recognizer)
         monitor.observe(vi,0);monitor.observe(vi,.5)
         monitor.invalidate()
-        recognizer.return_value=dict(name='East Rocky Mountain V',box=(2,2,182,35))
+        recognizer.return_value=dict(name='East Rocky Mountain V',box=(2,2,182,35),verified=True)
         self.assertIsNone(monitor.observe(v,10))
-        self.assertEqual(monitor.observe(v,10.5),'East Rocky Mountain V')
+        self.assertIsNone(monitor.observe(v,10.5))
+        self.assertIsNone(monitor.observe(v,11))
+        self.assertEqual(monitor.observe(v,11.5),'East Rocky Mountain V')
 
     def test_map_filter_does_not_round_17_to_an_expected_15(self):
         profile={'Pig':13,'Orange Mushroom':15}
@@ -196,7 +322,7 @@ class MapTests(unittest.TestCase):
         self.assertEqual(sum(session.counts.values()),1)
 
     def test_title_region_remains_inside_client(self):
-        self.assertEqual(title_box(2560,1600),(0,0,640,208))
+        self.assertEqual(title_box(2560,1600),(0,0,1024,288))
         self.assertEqual(title_box(200,50),(0,0,200,50))
 
 

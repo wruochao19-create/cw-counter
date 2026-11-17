@@ -22,7 +22,7 @@ from async_reader import AsyncNotificationReader
 
 CONFIG = bootstrap.ROOT / 'settings.json'
 OUTPUT = bootstrap.ROOT / 'sessions'
-VERSION = '0.30'
+VERSION = '0.31'
 
 
 class App:
@@ -150,7 +150,7 @@ class App:
             self.diagnostic_status.set('请先开始新会话，再点击诊断。');return
         self.diagnostic=DiagnosticRecorder(bootstrap.ROOT/'diagnostics')
         self.diagnostic_button.configure(state='disabled')
-        self.diagnostic_status.set('已准备；切回 CW，正常打怪约20秒。保存提示区和经验条小图。')
+        self.diagnostic_status.set('已准备；切回 CW 约20秒。保存地图标题、提示区和经验条小图。')
 
     def close_diagnostic(self):
         if self.diagnostic:
@@ -625,6 +625,12 @@ class App:
             if not self.view_unchanged(rect):
                 self.pause_capture('窗口正在移动或切换，等待画面稳定');return
             detected=self.map_monitor.observe(header,time.monotonic())
+            if self.map_monitor.last_read:
+                self.session.note('map_ocr_read',json.dumps(self.map_monitor.last_read,ensure_ascii=False))
+                if self.diagnostic and not self.diagnostic.done:
+                    self.diagnostic.add_map(header,time.monotonic(),dict(
+                        client=rect,header_box=header_box,result=self.map_monitor.last_read))
+                    if self.diagnostic.done:self.close_diagnostic()
             if self.map_monitor.disagreement:
                 self.session.note('map_ocr_disagreement',json.dumps(self.map_monitor.disagreement,ensure_ascii=False))
             if detected is None:
@@ -633,7 +639,7 @@ class App:
                 if self.hud_sampler:self.reset_hud()
                 if self.was_valid:self.reader.reset()
                 self.was_valid=False;self.last_tick=None
-                detail='地图标题部分在屏幕外' if header_box!=desired else '请保持左上角小地图展开且标题文字可见'
+                detail='地图标题部分移出屏幕' if header_box!=desired else '请保持左上角小地图展开且标题文字可见'
                 self.notice('自动恢复中 · 地图确认中，'+detail+'。确认后自动继续。')
                 self.health('waiting_map',rect,started);return
             self.apply_detected_map(detected)

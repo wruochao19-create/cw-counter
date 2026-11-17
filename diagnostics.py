@@ -10,6 +10,25 @@ class DiagnosticRecorder:
         self.root=Path(root);self.path=None;self.start=None;self.done=False
         self.max_bytes=max_bytes;self.max_frames=max_frames;self.duration=duration
         self.bytes=0;self.frames=0
+        self.map_frames=0
+
+    def add_map(self,image,now,details):
+        """Only explicit diagnostics save title pixels, including waiting_map."""
+        if self.done:return
+        if self.start is None:self.start=now
+        if now-self.start>=self.duration or self.map_frames>=self.max_frames:
+            self.close();return
+        buffer=io.BytesIO();image.save(buffer,format='PNG');pixels=buffer.getvalue()
+        record=dict(frame=self.map_frames,t=now-self.start,**details)
+        metadata=(json.dumps(record,ensure_ascii=False)+'\n').encode('utf-8')
+        if self.bytes+len(pixels)+len(metadata)>self.max_bytes:
+            self.close();return
+        if self.path is None:
+            self.path=self.root/datetime.now().strftime('%Y%m%d-%H%M%S-%f')
+            self.path.mkdir(parents=True)
+        (self.path/f'map-{self.map_frames:03d}.png').write_bytes(pixels)
+        with (self.path/'maps.jsonl').open('ab') as handle:handle.write(metadata)
+        self.bytes+=len(pixels)+len(metadata);self.map_frames+=1
 
     def add(self,image,now,box,lines,events,hud=None):
         if self.done:return
