@@ -22,7 +22,7 @@ from async_reader import AsyncNotificationReader
 
 CONFIG = bootstrap.ROOT / 'settings.json'
 OUTPUT = bootstrap.ROOT / 'sessions'
-VERSION = '0.29'
+VERSION = '0.30'
 
 
 class App:
@@ -625,6 +625,8 @@ class App:
             if not self.view_unchanged(rect):
                 self.pause_capture('窗口正在移动或切换，等待画面稳定');return
             detected=self.map_monitor.observe(header,time.monotonic())
+            if self.map_monitor.disagreement:
+                self.session.note('map_ocr_disagreement',json.dumps(self.map_monitor.disagreement,ensure_ascii=False))
             if detected is None:
                 self.map_clock_active=False
                 self.session.map_clock.observe(time.monotonic(),False)

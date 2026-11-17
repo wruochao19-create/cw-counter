@@ -59,13 +59,18 @@ class MapMonitor:
         self.hits=0
         self.signature=None
         self.box=None
+        self.trusted=None
+        self.image_size=None
+        self.disagreement=None
         self.last_ocr=-100
         self.ocr_reads=0
 
     def invalidate(self):
         self.confirmed=self.pending=None
         self.hits=0
-        self.signature=self.box=None
+        # A focus/geometry pause requires fresh readable frames, but must not
+        # discard the evidence that this exact title was already confirmed.
+        # A new session creates a new monitor and therefore a fresh reference.
         self.last_ocr=-100
 
     @staticmethod
@@ -73,14 +78,18 @@ class MapMonitor:
         return np.asarray(image.crop(box).convert('RGB').resize((256,32),Image.Resampling.BILINEAR)).astype(np.int16)
 
     def observe(self,image,timestamp):
-        if self.confirmed and self.box:
+        self.disagreement=None
+        unchanged=False
+        if self.trusted and self.box and image.size==self.image_size:
             signature=self.fingerprint(image,self.box)
             difference=np.abs(signature-self.signature)
             # A single Roman numeral may change only a small part of the title.
             changed=float(difference.mean())>1.5 or float((difference.max(axis=2)>18).mean())>.002
-            if not changed and timestamp-self.last_ocr<5:
+            unchanged=not changed
+        if self.confirmed:
+            if unchanged and timestamp-self.last_ocr<5:
                 return self.confirmed
-            if changed:
+            if not unchanged:
                 # Never use the old map after the visible title changes.
                 self.confirmed=None
                 self.pending=None
@@ -94,21 +103,35 @@ class MapMonitor:
             self.confirmed=self.pending=None
             self.hits=0
             return None
-        if self.confirmed==found['name']:
-            self.box=self._box(found['box'],image)
-            self.signature=self.fingerprint(image,self.box)
+        name=found['name']
+        if unchanged:
+            # Periodic OCR can drop a trailing I (VI -> V) even on identical
+            # pixels. Repeated readings of that mistake are not a map change.
+            # Keep the original box too, so a shorter OCR box cannot erase the I
+            # from the image reference used to detect a genuine later change.
+            if name!=self.trusted:
+                self.disagreement=dict(kept_map=self.trusted,ocr_map=name,
+                    raw=found.get('raw',name),ocr_score=found.get('ocr_score'),
+                    reason='unchanged_title')
+            name=self.trusted
+        if self.confirmed==name:
             return self.confirmed
-        if self.pending==found['name']:
+        if self.pending==name:
             self.hits+=1
         else:
-            self.pending=found['name'];self.hits=1
+            self.pending=name;self.hits=1
         if self.hits>=2:
-            self.confirmed=found['name']
-            self.box=self._box(found['box'],image)
-            self.signature=self.fingerprint(image,self.box)
+            self.confirmed=name
+            if not unchanged:
+                self.trusted=name
+                self.box=self._box(found['box'],image)
+                self.signature=self.fingerprint(image,self.box)
+                self.image_size=image.size
         return self.confirmed
 
     @staticmethod
     def _box(box,image):
         left,top,right,bottom=box
-        return (max(0,int(left)-2),max(0,int(top)-2),min(image.width,round(right)+2),min(image.height,round(bottom)+2))
+        # Include detached narrow suffix glyphs just beyond the detector box.
+        padding=max(6,round((bottom-top)*.5))
+        return (max(0,int(left)-2),max(0,int(top)-2),min(image.width,round(right)+padding),min(image.height,round(bottom)+2))

@@ -347,6 +347,30 @@ class RecoveryIntegrationTests(unittest.TestCase):
         self.step(12.)
         self.assertEqual(paused,self.ui.session.map_clock.seconds)
 
+    def test_roman_map_ocr_flips_do_not_restart_exp_session_or_map_timer(self):
+        from hud_exp import ExpReading
+        self.world.map_name='East Rocky Mountain VI'
+        self.begin()
+        session=self.ui.session
+        for now,amount in [(1,10000),(1.2,10000),(2,10020),(2.2,10020)]:
+            session.exp_progress.observe(ExpReading(amount,round(amount/100000*100,2)),now)
+        path=session.path
+        for index in range(1,121):
+            # FakeWorld keeps identical title pixels while OCR loses the I.
+            self.world.map_name='East Rocky Mountain V' if index%4 in (1,2) else 'East Rocky Mountain VI'
+            self.step(2+index*.5)
+            self.assertIs(self.ui.session,session)
+        self.assertEqual(self.ui.active_map,'East Rocky Mountain VI')
+        self.assertEqual(session.path,path)
+        self.assertGreater(session.map_clock.seconds,59)
+        self.assertEqual(session.exp_progress.gained,20)
+        self.assertEqual(len(list(self.path.glob('*-events.csv'))),1)
+        self.assertEqual(len(list(self.path.glob('*-summary.csv'))),0)
+        disagreements=[json.loads(row['note']) for row in session.events if row['type']=='map_ocr_disagreement']
+        self.assertTrue(disagreements)
+        self.assertTrue(all(row['kept_map']=='East Rocky Mountain VI' and
+                            row['ocr_map']=='East Rocky Mountain V' for row in disagreements))
+
     def test_2560_borderless_can_identify_map_before_hud_location_is_known(self):
         self.world.rect=(0,0,2560,1440)
         self.ui.start();self.cancel_tick();self.world.focus=True

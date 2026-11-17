@@ -112,6 +112,59 @@ class MapTests(unittest.TestCase):
         monitor.observe(image,0);self.assertEqual(monitor.observe(image,.5),'A')
         self.assertIsNone(monitor.observe(Image.new('RGB',(100,40),'white'),1))
 
+    def test_unchanged_vi_title_cannot_switch_to_v_on_periodic_ocr(self):
+        image=Image.new('RGB',(220,45),'black')
+        image.paste('white',(184,10,188,30))  # The trailing I remains visible.
+        recognizer=Mock(return_value=dict(name='East Rocky Mountain VI',box=(2,2,190,35)))
+        monitor=MapMonitor(Catalog(),recognizer)
+        monitor.observe(image,0)
+        self.assertEqual(monitor.observe(image,.5),'East Rocky Mountain VI')
+        for n in range(1,121):
+            # Two matching mistakes used to accumulate across the five-second
+            # refreshes and replace the session despite identical title pixels.
+            recognizer.return_value=dict(name='East Rocky Mountain V' if n%4 in (1,2)
+                                         else 'East Rocky Mountain VI',box=(2,2,182,35))
+            self.assertEqual(monitor.observe(image,.5+n*5.1),'East Rocky Mountain VI')
+
+    def test_same_title_is_preserved_after_focus_invalidation_and_failed_read(self):
+        image=Image.new('RGB',(220,45),'black')
+        recognizer=Mock(return_value=dict(name='East Rocky Mountain VI',box=(2,2,190,35)))
+        monitor=MapMonitor(Catalog(),recognizer)
+        monitor.observe(image,0);monitor.observe(image,.5)
+        monitor.invalidate()
+        recognizer.return_value=None
+        self.assertIsNone(monitor.observe(image,1))
+        recognizer.return_value=dict(name='East Rocky Mountain V',box=(2,2,180,35))
+        self.assertIsNone(monitor.observe(image,1.5))
+        self.assertEqual(monitor.observe(image,2),'East Rocky Mountain VI')
+
+    def test_real_trailing_numeral_change_still_switches_maps(self):
+        vi=Image.new('RGB',(220,45),'black')
+        vi.paste('white',(184,10,188,30))
+        v=Image.new('RGB',vi.size,'black')
+        recognizer=Mock(return_value=dict(name='East Rocky Mountain VI',box=(2,2,190,35)))
+        monitor=MapMonitor(Catalog(),recognizer)
+        monitor.observe(vi,0);monitor.observe(vi,.5)
+        recognizer.return_value=dict(name='East Rocky Mountain V',box=(2,2,182,35))
+        self.assertIsNone(monitor.observe(v,.7))
+        self.assertIsNone(monitor.observe(v,1))
+        self.assertEqual(monitor.observe(v,1.5),'East Rocky Mountain V')
+        recognizer.return_value=dict(name='East Rocky Mountain VI',box=(2,2,190,35))
+        self.assertIsNone(monitor.observe(vi,2))
+        self.assertEqual(monitor.observe(vi,2.5),'East Rocky Mountain VI')
+
+    def test_changed_title_after_pause_is_not_pinned_to_previous_map(self):
+        vi=Image.new('RGB',(220,45),'black')
+        vi.paste('white',(184,10,188,30))
+        v=Image.new('RGB',vi.size,'black')
+        recognizer=Mock(return_value=dict(name='East Rocky Mountain VI',box=(2,2,190,35)))
+        monitor=MapMonitor(Catalog(),recognizer)
+        monitor.observe(vi,0);monitor.observe(vi,.5)
+        monitor.invalidate()
+        recognizer.return_value=dict(name='East Rocky Mountain V',box=(2,2,182,35))
+        self.assertIsNone(monitor.observe(v,10))
+        self.assertEqual(monitor.observe(v,10.5),'East Rocky Mountain V')
+
     def test_map_filter_does_not_round_17_to_an_expected_15(self):
         profile={'Pig':13,'Orange Mushroom':15}
         row=line(17)
