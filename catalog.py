@@ -18,9 +18,13 @@ class Catalog:
         # Entries with no recorded location may be unreleased/test content.
         records = data['monsters']
         self.aliases = {}
+        additional_maps=[]
+        self.region_labels=set()
         if bundled:
             corrections=json.loads(Path(path).with_name('map_overrides.json').read_text('utf-8'))
             self.aliases=corrections['renames']
+            additional_maps=corrections.get('additional_maps',[])
+            self.region_labels=set(corrections.get('region_labels',[]))
             for extra in corrections.get('additional_monsters',[]):
                 existing=next((m for m in records if (m['name'],m['level'],m['exp'])==
                                (extra['name'],extra['level'],extra['exp'])),None)
@@ -40,7 +44,7 @@ class Catalog:
                         by_id[monster_id]['maps'].append(location['map'])
             self.metadata={**self.metadata,'map_corrections':corrections['source']}
         self.records = [m for m in records if m['exp'] > 0 and m['maps']]
-        self.maps = sorted({place for m in self.records for place in m['maps']})
+        self.maps = sorted({place for m in self.records for place in m['maps']} | set(additional_maps))
         names = Counter(m['name'] for m in self.records)
         self.labels = {m['id']: m['name'] if names[m['name']] == 1 else
                        f"{m['name']} [Lv{m['level']}, ID{m['id']}]" for m in self.records}

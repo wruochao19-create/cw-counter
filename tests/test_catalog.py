@@ -4,6 +4,16 @@ from counter import CounterSession
 
 
 class CatalogTests(unittest.TestCase):
+    def test_forgotten_hollow_live_profiles_and_empty_town(self):
+        c=Catalog()
+        self.assertEqual(c.profile('Primeval Forest I'),{'Glowshroom':82,'Aqumander':98,'Echopus':107})
+        self.assertEqual(c.profile('Forgotten Entrance I'),{'Raffle':85,'Golden Stirge':93,'Aqumander':98})
+        self.assertIn(844,c.profile("Someone Else's Grave").values())
+        for name in ('Forgotten Hollow','Cave Fairy Store','Cave Fairy Sanctuary','The Faded Threshold','Rotten House','Bygone Days'):
+            self.assertIn(name,c.maps)
+            self.assertEqual(c.profile(name),{})
+        self.assertFalse(any(r['name']=='Darkwood' for r in c.records))
+
     def setUp(self):
         self.catalog = Catalog()
 
@@ -32,7 +42,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(self.catalog.profile('Remains (Cliff)'),{'Commander Skeleton':390,'Officer Skeleton':242})
         self.assertIn(276,self.catalog.profile('Parched Land').values())
         self.assertEqual(set(self.catalog.profile('Parched Land').values()),{32,43,69,276})
-        self.assertNotIn('Glowshroom',self.catalog.profile())
+        self.assertEqual(self.catalog.profile()['Glowshroom'],82)
         self.assertNotIn('Orange Slime',self.catalog.profile())
 
     def test_dated_hunting_map_reference_is_covered(self):

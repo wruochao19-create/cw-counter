@@ -1,4 +1,4 @@
-# CW Counter 0.31
+# CW Counter 0.32
 
 Windows 上的 MapleStory Classic World 经验效率与候选击杀统计工具。读取可见画面，自动确认地图、定位经验提示与底部经验条；支持置顶、圆角侧栏、小窗模式、主题和透明度。普通运行离线完成，默认不保存截图。
 
@@ -28,6 +28,12 @@ py -3.12 setup_windows.py
 ```
 
 安装阶段联网；doctor 只测试本地模型、资料库和空闲 UI，不读取实际游戏画面。安装包是源码包，不含 Python 或虚拟环境；OCR 模型已包含，不会在首次打怪时下载。
+
+## 0.32：Forgotten Hollow 地图库
+
+补齐11月18日开放的 Forgotten Hollow 区域，包含23张有怪地图和6张无怪地图。加入10种普通新怪及 Rotten Mushmom 的实际出生地图，保留同图原有怪物；地图候选经验表随地图自动切换。无怪地图使用空候选表，不沿用上一张地图的怪物。识图同时区分上方 Forgotten Hollow 区域名和下方具体地图名。
+
+怪物位置与经验于2026-11-19核对 [OSMS 原始数据](https://osmsdataexplorer.com/data/current/monsters.json)，区域列表核对 [v2.0 更新说明](https://henesys.gg/updatenotes/november-update)。未开放、无出生位置的强化怪和 Darkwood 未加入正常地图。旧镜像尚未提供新区域位置，不应直接用旧更新脚本覆盖本次补充记录。
 
 ## 0.31：加强 V／VI／VII 地图识别
 

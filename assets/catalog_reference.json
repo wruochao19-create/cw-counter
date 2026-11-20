@@ -4,7 +4,8 @@
     "index": "https://mapleclassic.wiki/wiki/Maps",
     "index_rows_checked": 132,
     "rows_with_monster_tables": 131,
-    "scope": "Hunting maps listed in this index snapshot only; not proof of complete live-server coverage. Facts only, no page prose/images."
+    "scope": "Hunting maps listed in this index snapshot only; not proof of complete live-server coverage. Facts only, no page prose/images.",
+    "forgotten_hollow_checked_at": "2026-11-19"
   },
   "maps": [
     {
@@ -3178,6 +3179,573 @@
           2188
         ]
       ]
+    },
+    {
+      "name": "Another Sanctuary",
+      "game_name": "Another Sanctuary",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Jr. Boogie 1",
+          35,
+          69
+        ],
+        [
+          "Golden Stirge",
+          42,
+          93
+        ],
+        [
+          "Rotten Mushroom",
+          56,
+          183
+        ],
+        [
+          "Sporewood",
+          59,
+          201
+        ]
+      ]
+    },
+    {
+      "name": "Decayed Tunnel I",
+      "game_name": "Decayed Tunnel I",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Evil Eye",
+          27,
+          50
+        ],
+        [
+          "Duskmander",
+          50,
+          133
+        ]
+      ]
+    },
+    {
+      "name": "Decayed Tunnel II",
+      "game_name": "Decayed Tunnel II",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Jr. Boogie 2",
+          35,
+          69
+        ],
+        [
+          "Zombie Lupin",
+          41,
+          89
+        ],
+        [
+          "Golden Stirge",
+          42,
+          93
+        ],
+        [
+          "Rafflesia",
+          47,
+          117
+        ]
+      ]
+    },
+    {
+      "name": "Decayed Tunnel III",
+      "game_name": "Decayed Tunnel III",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Golden Stirge",
+          42,
+          93
+        ],
+        [
+          "Rafflesia",
+          47,
+          117
+        ],
+        [
+          "Myewood",
+          54,
+          160
+        ]
+      ]
+    },
+    {
+      "name": "Dilapidated Tomb",
+      "game_name": "Dilapidated Tomb",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Fairy 2",
+          29,
+          54
+        ],
+        [
+          "Rotten Mushroom",
+          56,
+          183
+        ],
+        [
+          "Sporewood",
+          59,
+          201
+        ]
+      ]
+    },
+    {
+      "name": "Forbidden Entrance",
+      "game_name": "Forbidden Entrance",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Zombie Mushroom",
+          24,
+          45
+        ],
+        [
+          "Golden Stirge",
+          42,
+          93
+        ],
+        [
+          "Rafflesia",
+          47,
+          117
+        ],
+        [
+          "Duskmander",
+          50,
+          133
+        ]
+      ]
+    },
+    {
+      "name": "Forgotten Dungeon Tunnel",
+      "game_name": "Forgotten Dungeon Tunnel",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Curse Eye",
+          33,
+          63
+        ],
+        [
+          "Glowshroom",
+          39,
+          82
+        ],
+        [
+          "Raffle",
+          40,
+          85
+        ]
+      ]
+    },
+    {
+      "name": "Forgotten Entrance I",
+      "game_name": "Forgotten Entrance I",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Raffle",
+          40,
+          85
+        ],
+        [
+          "Golden Stirge",
+          42,
+          93
+        ],
+        [
+          "Aqumander",
+          43,
+          98
+        ]
+      ]
+    },
+    {
+      "name": "Forgotten Entrance II",
+      "game_name": "Forgotten Entrance II",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Lupin",
+          37,
+          75
+        ],
+        [
+          "Glowshroom",
+          39,
+          82
+        ],
+        [
+          "Raffle",
+          40,
+          85
+        ]
+      ]
+    },
+    {
+      "name": "Forgotten Entrance III",
+      "game_name": "Forgotten Entrance III",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Curse Eye",
+          33,
+          63
+        ],
+        [
+          "Glowshroom",
+          39,
+          82
+        ],
+        [
+          "Raffle",
+          40,
+          85
+        ]
+      ]
+    },
+    {
+      "name": "Hanging Gardens of Rot",
+      "game_name": "Hanging Gardens of Rot",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Glowshroom",
+          39,
+          82
+        ],
+        [
+          "Aqumander",
+          43,
+          98
+        ],
+        [
+          "Rafflesia",
+          47,
+          117
+        ]
+      ]
+    },
+    {
+      "name": "Lingering Regret",
+      "game_name": "Lingering Regret",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Fairy 4",
+          29,
+          54
+        ],
+        [
+          "Echopus",
+          45,
+          107
+        ],
+        [
+          "Myewood",
+          54,
+          160
+        ]
+      ]
+    },
+    {
+      "name": "Perilous Descent I",
+      "game_name": "Perilous Descent I",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Zombie Mushroom",
+          24,
+          45
+        ],
+        [
+          "Jr. Boogie 2",
+          35,
+          69
+        ],
+        [
+          "Echopus",
+          45,
+          107
+        ]
+      ]
+    },
+    {
+      "name": "Perilous Descent II",
+      "game_name": "Perilous Descent II",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Zombie Mushroom",
+          24,
+          45
+        ],
+        [
+          "Jr. Boogie 1",
+          35,
+          69
+        ],
+        [
+          "Echopus",
+          45,
+          107
+        ],
+        [
+          "Duskmander",
+          50,
+          133
+        ]
+      ]
+    },
+    {
+      "name": "Perilous Descent III",
+      "game_name": "Perilous Descent III",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Echopus",
+          45,
+          107
+        ],
+        [
+          "Duskmander",
+          50,
+          133
+        ]
+      ]
+    },
+    {
+      "name": "Precipice of Darkness",
+      "game_name": "Precipice of Darkness",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Zombie Lupin",
+          41,
+          89
+        ],
+        [
+          "Duskmander",
+          50,
+          133
+        ],
+        [
+          "Rotten Mushroom",
+          56,
+          183
+        ],
+        [
+          "Zombie Mushroom",
+          30,
+          56
+        ]
+      ]
+    },
+    {
+      "name": "Primeval Forest I",
+      "game_name": "Primeval Forest I",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Glowshroom",
+          39,
+          82
+        ],
+        [
+          "Aqumander",
+          43,
+          98
+        ],
+        [
+          "Echopus",
+          45,
+          107
+        ]
+      ]
+    },
+    {
+      "name": "Primeval Forest II",
+      "game_name": "Primeval Forest II",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Golden Stirge",
+          42,
+          93
+        ],
+        [
+          "Aqumander",
+          43,
+          98
+        ],
+        [
+          "Echopus",
+          45,
+          107
+        ]
+      ]
+    },
+    {
+      "name": "Primeval Forest III",
+      "game_name": "Primeval Forest III",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Raffle",
+          40,
+          85
+        ],
+        [
+          "Aqumander",
+          43,
+          98
+        ]
+      ]
+    },
+    {
+      "name": "Someone Else's Grave",
+      "game_name": "Someone Else's Grave",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Zombie Mushroom",
+          24,
+          45
+        ],
+        [
+          "Fairy 3",
+          29,
+          54
+        ],
+        [
+          "Rotten Mushroom",
+          56,
+          183
+        ],
+        [
+          "Rotten Mushmom",
+          60,
+          844
+        ]
+      ]
+    },
+    {
+      "name": "The End of Fleeting Light",
+      "game_name": "The End of Fleeting Light",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Glowshroom",
+          39,
+          82
+        ],
+        [
+          "Aqumander",
+          43,
+          98
+        ],
+        [
+          "Rafflesia",
+          47,
+          117
+        ],
+        [
+          "Duskmander",
+          50,
+          133
+        ]
+      ]
+    },
+    {
+      "name": "The Faded Canopy",
+      "game_name": "The Faded Canopy",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Glowshroom",
+          39,
+          82
+        ],
+        [
+          "Raffle",
+          40,
+          85
+        ],
+        [
+          "Echopus",
+          45,
+          107
+        ]
+      ]
+    },
+    {
+      "name": "The Valley of Death",
+      "game_name": "The Valley of Death",
+      "source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "monsters": [
+        [
+          "Zombie Mushroom",
+          24,
+          45
+        ],
+        [
+          "Jr. Boogie 1",
+          35,
+          69
+        ],
+        [
+          "Zombie Lupin",
+          41,
+          89
+        ],
+        [
+          "Rafflesia",
+          47,
+          117
+        ]
+      ]
+    },
+    {
+      "name": "Forgotten Hollow",
+      "game_name": "Forgotten Hollow",
+      "source": "https://mapleclassic.wiki/wiki/Forgotten_Hollow",
+      "monsters": []
+    },
+    {
+      "name": "Cave Fairy Sanctuary",
+      "game_name": "Cave Fairy Sanctuary",
+      "source": "https://mapleclassic.wiki/wiki/Cave_Fairy_Sanctuary",
+      "monsters": []
+    },
+    {
+      "name": "Cave Fairy Store",
+      "game_name": "Cave Fairy Store",
+      "source": "https://mapleclassic.wiki/wiki/Cave_Fairy_Store",
+      "monsters": []
+    },
+    {
+      "name": "The Faded Threshold",
+      "game_name": "The Faded Threshold",
+      "source": "https://mapleclassic.wiki/wiki/The_Faded_Threshold",
+      "monsters": []
+    },
+    {
+      "name": "Rotten House",
+      "game_name": "Rotten House",
+      "source": "https://mapleclassic.wiki/wiki/Rotten_House",
+      "monsters": []
+    },
+    {
+      "name": "Bygone Days",
+      "game_name": "Bygone Days",
+      "source": "https://mapleclassic.wiki/wiki/Bygone_Days",
+      "monsters": []
     }
   ]
 }

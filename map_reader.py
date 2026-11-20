@@ -29,7 +29,7 @@ def identify_map(image,catalog,verify=True):
     if verify and (image.width>320 or image.height>100):
         compact=image.crop((0,0,min(320,image.width),min(100,image.height)))
         found=identify_map(compact,catalog,verify=True)
-        if found is not None:return found
+        if found is not None and found['name'] not in getattr(catalog,'region_labels',set()):return found
     lines=scan(image)
     candidates={}
     for line in lines:
@@ -48,6 +48,13 @@ def identify_map(image,catalog,verify=True):
             score=similarity  # OCR score is a separate gate, not a map-name probability.
             if name not in candidates or score>candidates[name]['match']:
                 candidates[name]=dict(name=name,match=score,ocr_score=line['score'],box=line['box'],raw=line['text'])
+    # Forgotten Hollow is both a region heading and its town name. A complete
+    # title below that heading identifies the field, not two conflicting maps.
+    regions=getattr(catalog,'region_labels',set())
+    for name,row in list(candidates.items()):
+        if name in regions and any(other['match']==1 and other['name'] not in regions
+                and other['box'][1]>=row['box'][3] for other in candidates.values()):
+            del candidates[name]
     ranked=sorted(candidates.values(),key=lambda row:row['match'],reverse=True)
     # A fully read title can differ from its neighbour by just one letter
     # (East/West Rocky Mountain IV). Apply the margin only to fuzzy matches.

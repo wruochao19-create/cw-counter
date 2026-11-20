@@ -11,7 +11,16 @@
       "https://mapleclassic.wiki/wiki/Update:21_October_2026_Grand_Launch",
       "https://hubcw.com/cw-update",
       "https://mapleclassic.wiki/wiki/Parched_Land"
-    ]
+    ],
+    "forgotten_hollow_update": {
+      "checked_at": "2026-11-19",
+      "game_version": "2.0.0",
+      "monster_map_source": "https://osmsdataexplorer.com/data/current/monsters.json",
+      "raw_sha256": "7024c982d7a186e4e3bcccca0824900e8c7d4e2a23bf4cd1d24af46cccc9f550",
+      "map_list_source": "https://henesys.gg/updatenotes/november-update",
+      "town_source": "https://mapleclassic.wiki/wiki/Forgotten_Hollow",
+      "note": "Only placed monsters in region 10006000..10006999. No unplaced Darkwood/stronger variants or event rewards inferred."
+    }
   },
   "renames": {
     "The Murky Swamp": "The Murky Swamp I"
@@ -31,6 +40,195 @@
         20,
         33,
         34
+      ]
+    },
+    {
+      "map": "Another Sanctuary",
+      "monster_ids": [
+        33,
+        56,
+        62,
+        63
+      ]
+    },
+    {
+      "map": "Decayed Tunnel I",
+      "monster_ids": [
+        23,
+        60
+      ]
+    },
+    {
+      "map": "Decayed Tunnel II",
+      "monster_ids": [
+        34,
+        38,
+        56,
+        59
+      ]
+    },
+    {
+      "map": "Decayed Tunnel III",
+      "monster_ids": [
+        56,
+        59,
+        61
+      ]
+    },
+    {
+      "map": "Dilapidated Tomb",
+      "monster_ids": [
+        26,
+        62,
+        63
+      ]
+    },
+    {
+      "map": "Forbidden Entrance",
+      "monster_ids": [
+        21,
+        56,
+        59,
+        60
+      ]
+    },
+    {
+      "map": "Forgotten Dungeon Tunnel",
+      "monster_ids": [
+        31,
+        54,
+        55
+      ]
+    },
+    {
+      "map": "Forgotten Entrance I",
+      "monster_ids": [
+        55,
+        56,
+        57
+      ]
+    },
+    {
+      "map": "Forgotten Entrance II",
+      "monster_ids": [
+        35,
+        54,
+        55
+      ]
+    },
+    {
+      "map": "Forgotten Entrance III",
+      "monster_ids": [
+        31,
+        54,
+        55
+      ]
+    },
+    {
+      "map": "Hanging Gardens of Rot",
+      "monster_ids": [
+        54,
+        57,
+        59
+      ]
+    },
+    {
+      "map": "Lingering Regret",
+      "monster_ids": [
+        28,
+        58,
+        61
+      ]
+    },
+    {
+      "map": "Perilous Descent I",
+      "monster_ids": [
+        21,
+        34,
+        58
+      ]
+    },
+    {
+      "map": "Perilous Descent II",
+      "monster_ids": [
+        21,
+        33,
+        58,
+        60
+      ]
+    },
+    {
+      "map": "Perilous Descent III",
+      "monster_ids": [
+        58,
+        60
+      ]
+    },
+    {
+      "map": "Precipice of Darkness",
+      "monster_ids": [
+        38,
+        60,
+        62,
+        800011
+      ]
+    },
+    {
+      "map": "Primeval Forest I",
+      "monster_ids": [
+        54,
+        57,
+        58
+      ]
+    },
+    {
+      "map": "Primeval Forest II",
+      "monster_ids": [
+        56,
+        57,
+        58
+      ]
+    },
+    {
+      "map": "Primeval Forest III",
+      "monster_ids": [
+        55,
+        57
+      ]
+    },
+    {
+      "map": "Someone Else's Grave",
+      "monster_ids": [
+        21,
+        27,
+        62,
+        700003
+      ]
+    },
+    {
+      "map": "The End of Fleeting Light",
+      "monster_ids": [
+        54,
+        57,
+        59,
+        60
+      ]
+    },
+    {
+      "map": "The Faded Canopy",
+      "monster_ids": [
+        54,
+        55,
+        58
+      ]
+    },
+    {
+      "map": "The Valley of Death",
+      "monster_ids": [
+        21,
+        33,
+        38,
+        59
       ]
     }
   ],
@@ -142,5 +340,16 @@
         "Remains (Tomb) IV"
       ]
     }
+  ],
+  "additional_maps": [
+    "Forgotten Hollow",
+    "Cave Fairy Sanctuary",
+    "Cave Fairy Store",
+    "The Faded Threshold",
+    "Rotten House",
+    "Bygone Days"
+  ],
+  "region_labels": [
+    "Forgotten Hollow"
   ]
 }

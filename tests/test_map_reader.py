@@ -15,6 +15,14 @@ from test_pixel_ocr import line
 
 
 class MapTests(unittest.TestCase):
+    def test_forgotten_hollow_region_heading_does_not_conflict_with_field(self):
+        rows=[dict(text='Forgotten Hollow',score=.99,box=(20,15,200,35)),
+              dict(text='Primeval Forest II',score=.99,box=(20,40,230,60))]
+        with patch('map_reader.scan',return_value=rows):
+            self.assertEqual(identify_map(Image.new('RGB',(300,90)),Catalog(),verify=False)['name'],'Primeval Forest II')
+        with patch('map_reader.scan',return_value=rows[:1]):
+            self.assertEqual(identify_map(Image.new('RGB',(300,90)),Catalog(),verify=False)['name'],'Forgotten Hollow')
+
     @staticmethod
     def roman_title(numeral):
         # Derived test image: reassemble actual I/V glyphs from the supplied IV
