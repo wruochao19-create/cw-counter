@@ -9,12 +9,47 @@ from PIL import Image
 import numpy as np
 from catalog import Catalog
 from counter import CounterSession
-from map_reader import MapMonitor,identify_map,title_box,glyph_mask,verify_title
+from map_reader import MapMonitor,identify_map,title_box,glyph_mask,verify_title,vertical_roman
 from pixel_ocr import apply_map_constraint,retry_with_map,NotificationTracker,RapidReader
 from test_pixel_ocr import line
 
 
 class MapTests(unittest.TestCase):
+    def test_user_decayed_tunnel_iii_original_font_across_capture_sizes(self):
+        with Image.open(Path(__file__).parent/'data/user-map-decayed-iii.png') as image:
+            original=image.convert('RGB')
+        for scale in (.75,1,1.25,1.5,2):
+            sample=original.resize((round(original.width*scale),round(original.height*scale)),Image.Resampling.BICUBIC)
+            for size in (sample.size,(1024,260)):
+                canvas=Image.new('RGB',size,(80,100,70));canvas.paste(sample)
+                with self.subTest(scale=scale,size=size):
+                    found=identify_map(canvas,Catalog())
+                    self.assertIsNotNone(found)
+                    self.assertEqual(found['name'],'Decayed Tunnel III')
+                    self.assertEqual(found.get('roman_glyphs'),'III')
+
+    def test_counted_strokes_keep_i_ii_iii_separate_and_reject_v(self):
+        with Image.open(Path(__file__).parent/'data/user-map-decayed-iii.png') as image:
+            original=image.convert('RGB')
+        for count in (1,2,3):
+            image=original.copy()
+            image.paste(original.getpixel((300,90)),(273,77,310,104))
+            for i in range(count):image.paste(original.crop((275,77,279,104)),(275+i*6,77))
+            self.assertEqual(vertical_roman(image.crop((95,77,310,104))),'I'*count)
+            self.assertEqual(identify_map(image,Catalog())['name'],'Decayed Tunnel '+'I'*count)
+        self.assertIsNone(vertical_roman(self.roman_title('V').crop((96,83,380,111))))
+
+    def test_stroke_recovery_abstains_on_confident_conflict_or_clipped_stems(self):
+        with Image.open(Path(__file__).parent/'data/user-map-decayed-iii.png') as image:
+            original=image.convert('RGB')
+        found=dict(name='Decayed Tunnel II',raw='Decayed Tunnel II',box=(99,79,293,102))
+        text='Decayed Tunnel II'
+        reading=(text,.99,[None,None,None,None,[.99]*len(text)])
+        with patch('map_reader.model') as model:
+            model.return_value.text_rec.return_value=([reading]*3,0)
+            self.assertIsNone(verify_title(original,found,Catalog()))
+        self.assertIsNone(vertical_roman(original.crop((95,85,310,104))))
+
     def test_forgotten_hollow_region_heading_does_not_conflict_with_field(self):
         rows=[dict(text='Forgotten Hollow',score=.99,box=(20,15,200,35)),
               dict(text='Primeval Forest II',score=.99,box=(20,40,230,60))]

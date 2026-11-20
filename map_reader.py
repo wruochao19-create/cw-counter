@@ -32,6 +32,7 @@ def identify_map(image,catalog,verify=True):
         if found is not None and found['name'] not in getattr(catalog,'region_labels',set()):return found
     lines=scan(image)
     candidates={}
+    proposals={}
     for line in lines:
         if line['score']<.7:
             continue
@@ -40,6 +41,11 @@ def identify_map(image,catalog,verify=True):
             continue
         for name in catalog.maps:
             canonical=key(name)
+            if verify and variant_suffix(name):
+                stem=title_stem(name)
+                raw=re.sub(r'[^a-z0-9|!]','',line['text'].casefold())
+                if raw.startswith(stem) and re.fullmatch(r'[il1vx|!]+',raw[len(stem):]):
+                    proposals[stem]=dict(name=name,match=0,ocr_score=line['score'],box=line['box'],raw=line['text'])
             if observed!=canonical and variant_suffix(line['text'])!=variant_suffix(name):
                 continue
             similarity=SequenceMatcher(None,observed,canonical).ratio()
@@ -56,6 +62,10 @@ def identify_map(image,catalog,verify=True):
                 and other['box'][1]>=row['box'][3] for other in candidates.values()):
             del candidates[name]
     ranked=sorted(candidates.values(),key=lambda row:row['match'],reverse=True)
+    if not ranked and len(proposals)==1:
+        # Only the family is proposed; the numeral must still be proved from
+        # the padded pixels. Do not guess I/II/III from l, | or ! in OCR text.
+        return verify_title(image,next(iter(proposals.values())),catalog)
     # A fully read title can differ from its neighbour by just one letter
     # (East/West Rocky Mountain IV). Apply the margin only to fuzzy matches.
     if ranked and ranked[0]['match']==1:
@@ -97,6 +107,24 @@ def verify_title(image,found,catalog):
         enlarged=crop.resize((max(1,round(crop.width*scale)),64),interpolation)
         variants.append(np.asarray(enlarged)[:,:,::-1].copy())
     details,_=model().text_rec(variants,return_word_box=True)
+    # The recognizer collapses repeated I glyphs even at high whole-line scores.
+    # For I/II/III only, independently count separated, straight white strokes
+    # after a word gap. V/X, joined/occluded strokes and clipped titles abstain.
+    roman=vertical_roman(crop)
+    if roman:
+        stem=title_stem(found['name'])
+        target=names.get(stem+roman.lower())
+        matching=[]
+        for text,score,chars in details:
+            compact=re.sub(r'[^a-z0-9|!]','',text.casefold())
+            suffix=re.search(r'\b([IVX]+)\W*$',text.upper())
+            if suffix and len(chars[4])==len(text) and min(chars[4][suffix.start(1):suffix.end(1)])>=.85:
+                if suffix.group(1)!=roman:return None
+            if compact.startswith(stem) and re.fullmatch(r'[il1vx|!]+',compact[len(stem):]) and score>=.8:
+                matching.append(text)
+        if target and len(matching)>=2:
+            return dict(found,name=target,verified=True,roman_glyphs=roman,
+                        title_reads=[row[0] for row in details],box=box)
     reads=[]
     for text,score,chars in details:
         name=names.get(key(text))
@@ -117,6 +145,34 @@ def glyph_mask(image):
     pixels=np.asarray(image.convert('RGB'))
     low=pixels.min(axis=2);high=pixels.max(axis=2)
     return ((low>175)&((high.astype(np.int16)-low)<65)).astype(np.uint8)
+
+
+def vertical_roman(image):
+    mask=glyph_mask(image)
+    edges=np.diff(np.r_[False,mask.any(axis=0),False].astype(int))
+    spans=list(zip(np.where(edges==1)[0],np.where(edges==-1)[0]))
+    if not spans:return None
+    selected=[spans[-1]]
+    word_gap=max(3,round(image.height*.18))
+    gap_found=False
+    for span in reversed(spans[:-1]):
+        if selected[-1][0]-span[1]>=word_gap:
+            gap_found=True;break
+        selected.append(span)
+    if not gap_found or not 1<=len(selected)<=3:return None
+    bounds=[]
+    for left,right in selected:
+        glyph=mask[:,left:right]
+        ys=np.where(glyph.any(axis=1))[0]
+        top,bottom=int(ys[0]),int(ys[-1])+1
+        height=bottom-top
+        if height<6 or (right-left)/height>.38 or glyph[top:bottom].mean()<.55:return None
+        # Border lines and clipped stems lack clear vertical margins.
+        if top==0 or bottom==image.height:return None
+        bounds.append((top,bottom))
+    if max(t for t,b in bounds)-min(t for t,b in bounds)>max(1,image.height*.08):return None
+    if max(b for t,b in bounds)-min(b for t,b in bounds)>max(1,image.height*.08):return None
+    return 'I'*len(selected)
 
 
 class MapMonitor:

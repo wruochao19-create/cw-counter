@@ -54,3 +54,9 @@ window with its blank left edge off-screen and verifies dashboard updates.
 Ground truth is West Rocky Mountain IV. Map tests reassemble its original
 I/V glyphs into synthetic V/VI/VII titles and resize them. These variants
 test real font pixels and model inference, but are not recordings of those maps.
+
+`user-map-decayed-iii.png` retains the title crop (0,0,325,125) from
+`codex-clipboard-56c41992-124b-4e02-b168-d164eec7a5e4.png` supplied by the user.
+Ground truth: Deep Passage / Decayed Tunnel III. The real OCR originally
+returned II or |II and rejected the map. Tests also derive I/II by replacing
+the suffix with copies of this screenshot's I glyph, keeping expected labels separate.

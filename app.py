@@ -22,7 +22,7 @@ from async_reader import AsyncNotificationReader
 
 CONFIG = bootstrap.ROOT / 'settings.json'
 OUTPUT = bootstrap.ROOT / 'sessions'
-VERSION = '0.32'
+VERSION = '0.33'
 
 
 class App:
