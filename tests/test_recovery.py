@@ -138,7 +138,7 @@ class FakeWorld:
     def grab(self,hwnd,box,**kwargs):
         self.grabs+=1
         image=Image.new('RGB',(box[2]-box[0],box[3]-box[1]),
-                        'black' if self.map_name=='The Road to the Dungeon' else 'white')
+                        'gray' if not self.map_valid else 'black' if self.map_name=='The Road to the Dungeon' else 'white')
         image.info['region']=box
         return image
 
@@ -346,6 +346,18 @@ class RecoveryIntegrationTests(unittest.TestCase):
         paused=self.ui.session.map_clock.seconds
         self.step(12.)
         self.assertEqual(paused,self.ui.session.map_clock.seconds)
+
+    def test_map_ocr_failure_on_unchanged_pixels_keeps_timer_and_hud_running(self):
+        self.begin()
+        session=self.ui.session
+        self.ui.map_monitor.recognize=Mock(return_value=None)
+        with patch.object(self.ui,'probe_hud') as hud,patch.object(self.ui,'reset_hud') as reset:
+            for index in range(1,121):self.step(1+index*.5)
+            self.assertGreater(session.map_clock.seconds,59)
+            self.assertTrue(self.ui.map_clock_active)
+            self.assertEqual(hud.call_count,120)
+            reset.assert_not_called()
+        self.assertIs(self.ui.session,session)
 
     def test_roman_map_ocr_flips_do_not_restart_exp_session_or_map_timer(self):
         from hud_exp import ExpReading

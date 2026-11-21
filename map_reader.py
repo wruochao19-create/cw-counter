@@ -243,6 +243,12 @@ class MapMonitor:
         found=self.recognize(image)
         self.last_read=dict(timestamp=timestamp,image_size=image.size,trusted=self.trusted,
             unchanged=unchanged,found=found)
+        if found is None and unchanged:
+            # A periodic OCR miss does not invalidate a title already verified
+            # from these pixels. After focus recovery, the normal two-frame
+            # confirmation below still applies before resuming the session.
+            self.last_read['used_verified_image']=True
+            found=dict(name=self.trusted,box=self.box)
         if found is None:
             self.confirmed=self.pending=None
             self.hits=0

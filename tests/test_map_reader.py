@@ -300,8 +300,22 @@ class MapTests(unittest.TestCase):
         recognizer.return_value=None
         self.assertIsNone(monitor.observe(image,1))
         recognizer.return_value=dict(name='East Rocky Mountain V',box=(2,2,180,35))
-        self.assertIsNone(monitor.observe(image,1.5))
+        self.assertEqual(monitor.observe(image,1.5),'East Rocky Mountain VI')
         self.assertEqual(monitor.observe(image,2),'East Rocky Mountain VI')
+
+    def test_periodic_ocr_misses_on_verified_pixels_do_not_pause_map(self):
+        image=self.roman_title('VII')
+        recognizer=Mock(return_value=dict(name='West Rocky Mountain VII',box=(99,85,380,110)))
+        monitor=MapMonitor(Catalog(),recognizer)
+        monitor.observe(image,0);monitor.observe(image,.5)
+        recognizer.return_value=None
+        for n in range(1,121):
+            self.assertEqual(monitor.observe(image,.5+n*5.1),'West Rocky Mountain VII')
+            self.assertTrue(monitor.last_read['used_verified_image'])
+        monitor.invalidate()
+        self.assertIsNone(monitor.observe(image,620))
+        self.assertEqual(monitor.observe(image,620.5),'West Rocky Mountain VII')
+        self.assertIsNone(monitor.observe(Image.new('RGB',image.size,'black'),621))
 
     def test_real_trailing_numeral_change_still_switches_maps(self):
         vi=Image.new('RGB',(220,45),'black')
