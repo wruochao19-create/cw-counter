@@ -146,8 +146,9 @@ class ExperienceProgress:
             exp_confirmed_age_seconds=round(confirmed_age,2) if confirmed_age is not None else None,
             exp_rejected_readings=self.rejected_readings)
 
-    def display(self,running=False,now=None):
+    def display(self,running=False,now=None,unit='小时'):
         s=self.snapshot(now);rate=s['exp_per_hour'];eta=s['level_eta_seconds']
+        if unit=='分钟' and rate is not None:rate/=60
         speed=f"{rate:,.0f} EXP" if rate is not None else '收集30秒数据中' if running else '—'
         if eta is not None:
             minutes=max(1,math.ceil(eta/60));hours,minutes=divmod(minutes,60)
@@ -155,7 +156,7 @@ class ExperienceProgress:
             estimate=f'约 {duration}'
         elif rate==0:estimate='暂无经验增长'
         else:estimate='等待有效读数与经验增长'
-        title=f'本图平均经验／小时：{speed}    按此速度升级：{estimate}'
+        title=f'本图平均经验／{unit}：{speed}    按此速度升级：{estimate}'
         seconds=int(self.seconds);minutes,seconds=divmod(seconds,60)
         state=' · 读取暂停，保留上次估算' if running and not s['exp_reading_live'] else ''
         detail=f'本图已记录经验 +{self.gained:,} · 经验条观察时长 {minutes}分{seconds:02d}秒 · 切窗暂停计时{state}'

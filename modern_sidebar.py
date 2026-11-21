@@ -68,7 +68,14 @@ def build_sidebar(ui, scale, open_settings, toggle_topmost):
     ui.section_widgets['context']=[context_line,ui.map_label,context]
     hero=frame(body);hero.grid(row=3,column=0,sticky='ew')
     hero.columnconfigure(0,weight=1)
-    label(hero,'EXP / 小时',size=12,color=MUTED).grid(row=0,column=0,sticky='w')
+    rate_heading=frame(hero);rate_heading.grid(row=0,column=0,sticky='w')
+    label(rate_heading,'EXP /',size=12,color=MUTED).pack(side='left',padx=(0,4))
+    ui.exp_rate_selector=ctk.CTkOptionMenu(rate_heading,values=['小时','分钟'],
+        variable=ui.exp_rate_unit,command=ui.exp_unit_changed,width=78,height=24,
+        font=font(11),fg_color=SOFT,button_color=SOFT,button_hover_color=LINE,
+        text_color=TEXT,dropdown_fg_color=SURFACE,dropdown_text_color=TEXT,
+        dropdown_hover_color=LINE)
+    ui.exp_rate_selector.pack(side='left')
     ui.hero_value=label(hero,variable=ui.rate_display,size=43,bold=True,color=TEXT)
     ui.hero_value.grid(row=1,column=0,sticky='w',pady=(0,4))
     label(hero,variable=ui.rate_note,size=10,color=MUTED).grid(row=2,column=0,columnspan=2,sticky='w',pady=(0,7))

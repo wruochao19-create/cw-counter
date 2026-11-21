@@ -152,7 +152,7 @@ def appearance_page(ui):
 
 def layout_page(ui):
     page = ui.settings_pages['显示内容']
-    switch(ui, page, '小窗模式 · 只看 EXP / 小时', ui.mini_mode,
+    switch(ui, page, '小窗模式 · 只看经验收益', ui.mini_mode,
            lambda: apply_layout(ui, persist=True)).pack(anchor='w', pady=6)
     ttk.Separator(page).pack(fill='x', pady=ui.px(14))
     ttk.Label(page, text='完整窗口', style='Section.TLabel').pack(anchor='w', pady=(0, 6))

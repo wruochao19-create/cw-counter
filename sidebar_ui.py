@@ -28,6 +28,8 @@ def build_interface(ui):
     ui.map_name = tk.StringVar(value=ui.settings.get('map') or ALL_MAPS)
     ui.character_display = tk.StringVar()
     ui.rate_display = tk.StringVar(value='—')
+    unit=ui.settings.get('exp_rate_unit','小时')
+    ui.exp_rate_unit=tk.StringVar(value=unit if unit in ('小时','分钟') else '小时')
     ui.rate_note = tk.StringVar(value='底部经验条 · 等待读数')
     ui.eta_display = tk.StringVar(value='开始后估算')
     ui.time_display = tk.StringVar(value='00:00')
@@ -82,7 +84,8 @@ def update_dashboard(ui,now=None):
     progress = s.exp_progress.snapshot(now=None if manual else now)
     quality='paused' if ui.running and ui.needs_resume else progress['exp_reading_status']
     rate, eta = progress['exp_per_hour'], progress['level_eta_seconds']
-    ui.rate_display.set(f'{rate:,.0f}' if rate is not None else '—')
+    displayed_rate=rate/60 if rate is not None and ui.exp_rate_unit.get()=='分钟' else rate
+    ui.rate_display.set(f'{displayed_rate:,.0f}' if displayed_rate is not None else '—')
     if eta is not None:
         minutes = max(1, math.ceil(eta / 60)); hours, minutes = divmod(minutes, 60)
         ui.eta_display.set((f'{hours}小时 ' if hours else '') + f'{minutes:02d}分')

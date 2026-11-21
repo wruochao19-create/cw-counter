@@ -22,7 +22,7 @@ from async_reader import AsyncNotificationReader
 
 CONFIG = bootstrap.ROOT / 'settings.json'
 OUTPUT = bootstrap.ROOT / 'sessions'
-VERSION = '0.36'
+VERSION = '0.37'
 
 
 class App:
@@ -227,6 +227,7 @@ class App:
                              always_on_top=self.topmost.get(),
                              appearance=self.appearance.get(),accent=self.accent_name.get(),opacity=self.opacity.get(),
                              mini_mode=self.mini_mode.get(),
+                             exp_rate_unit=self.exp_rate_unit.get(),
                              visible_sections={key:value.get() for key,value in self.visible_sections.items()},
                              full_geometry=self.full_geometry,
                              sidebar_geometry=f'{self.root.winfo_width()}x{self.root.winfo_height()}')
@@ -632,7 +633,7 @@ class App:
         if not visible or not valid_box(visible,rect[2],rect[3]) or visible[2]<rect[2]:
             if self.was_valid:self.reader.reset()
             self.was_valid=False;self.last_tick=None
-            self.notice('右侧经验提示区域已移出屏幕；底部经验条可见时继续统计 EXP／小时')
+            self.notice('右侧经验提示区域已移出屏幕；底部经验条可见时继续统计经验收益')
             return
         if visible!=self.auto_region.box:
             self.change_region(self.auto_region.box,visible,'适配屏幕可见范围')
@@ -740,9 +741,14 @@ class App:
             self.session.note('metrics_error',str(exc))
         if self.running:self.metric_job=self.root.after(200,self.metrics_tick)
 
+    def exp_unit_changed(self,value=None):
+        self.update_metrics()
+        self.save_settings()
+
     def update_metrics(self,now=None):
         now=time.monotonic() if now is None else now
-        title,detail=self.session.exp_progress.display(self.running,now=now if self.running else None)
+        title,detail=self.session.exp_progress.display(self.running,now=now if self.running else None,
+                                                      unit=self.exp_rate_unit.get())
         self.exp_summary.set(title);self.exp_detail.set(detail)
         update_dashboard(self,now=now if self.running else None)
 
