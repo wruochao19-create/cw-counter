@@ -7,12 +7,58 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 from counter import CounterSession
-from wallet import wallet_balance, WalletCheck, LiveWalletCheck
+from wallet import wallet_balance, WalletCheck, LiveWalletCheck, InventoryIncome
 from pixel_ocr import NotificationTracker
 from tests.test_notification_mix import coin
 
 
 class WalletTests(unittest.TestCase):
+    def test_inventory_income_ignores_hints_and_preserves_pause_segments(self):
+        check=InventoryIncome()
+        for t in range(33):
+            check.observe(True,1000+t*10,t)
+            check.count_event(t,999,True)
+        sample=check.snapshot(32)
+        self.assertEqual(sample['wallet_gain'],310)
+        self.assertEqual(sample['wallet_per_hour'],36000)
+        self.assertTrue(sample['live'])
+        self.assertFalse(check.snapshot(40)['live'])
+        for key in ('notification_gain','notification_per_hour','uncertain','difference'):
+            self.assertNotIn(key,sample)
+        check.break_interval()
+        for t in range(100,103):check.observe(True,50+(t-100)*10,t)
+        self.assertEqual(check.snapshot()['wallet_gain'],320)
+        self.assertEqual(check.snapshot()['seconds'],32)
+        check.finish()
+        self.assertFalse(check.snapshot()['live'])
+
+    def test_inventory_session_drops_mesos_but_counts_exp_and_exports_balance(self):
+        session=CounterSession({'Dark Axe Stump':43},inventory_only=True)
+        check=InventoryIncome()
+        session.wallet_checks.append(check)
+        for t in range(33):check.observe(True,1000+t*10,t)
+        for confident in (True,False):
+            self.assertIsNone(session.accept('coin'+str(confident),'mesos',999,
+                'white',confident,observed_at=20))
+        self.assertEqual(session.events,[])
+        self.assertEqual(session.coin_total,0)
+        self.assertEqual(session.unresolved,0)
+        event=session.accept('exp','exp',43,'white',True,observed_at=21)
+        self.assertEqual(event['status'],'matched_candidate')
+        self.assertEqual(session.counts['Dark Axe Stump'],1)
+        with tempfile.TemporaryDirectory() as directory:
+            session.close()
+            path=Path(directory)/'summary.csv'
+            session.export_summary(path)
+            with path.open(encoding='utf-8-sig') as handle:
+                rows=list(csv.reader(handle))
+            keys={r[0] for r in rows if r}
+            self.assertTrue(keys.isdisjoint({'pickup_mesos','mesos_per_hour','wallet_live_check'}))
+            sample=json.loads(next(r[1] for r in rows if r and r[0]=='wallet_income'))
+            self.assertEqual(sample['wallet_gain'],310)
+            self.assertEqual(sample['wallet_per_hour'],36000)
+            self.assertNotIn('notification_gain',sample)
+
     def test_real_wallet_dot_separator_and_meso_label(self):
         image=Image.open(Path(__file__).parent/'data/user-wallet-real.png').convert('RGB')
         for scale in (1,1.5):

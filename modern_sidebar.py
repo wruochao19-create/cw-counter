@@ -99,15 +99,12 @@ def build_sidebar(ui, scale, open_settings, toggle_topmost):
     coins=frame(body)
     coins.grid(row=10,column=0,sticky='ew',pady=(0,6))
     label(coins,variable=ui.coin_display,size=12).pack(side='left')
-    ctk.CTkButton(coins,text='重新对照',width=60,height=24,fg_color=SOFT,
+    ctk.CTkButton(coins,text='重置统计',width=60,height=24,fg_color=SOFT,
                   hover_color=LINE,text_color=TEXT,command=ui.arm_wallet).pack(side='right')
     hint=label(body,variable=ui.wallet_hint,size=10,color=MUTED)
     hint.grid(row=11,column=0,sticky='w')
-    secondary=label(body,variable=ui.notification_coin_display,size=12)
-    secondary.grid(row=11,column=0,sticky='w',pady=(0,4))
-    hint.grid_configure(row=12)
     hint.configure(wraplength=330)
-    ui.section_widgets['coins']=[coins,secondary,hint]
+    ui.section_widgets['coins']=[coins,hint]
 
     # Keep the mature Treeview model/keyboard behavior; remove its bevels and chrome.
     ui.list_frame=frame(ui.surface)

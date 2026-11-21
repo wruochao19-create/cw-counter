@@ -31,10 +31,11 @@ class CounterSession:
     FIELDS = ['time', 'event_id', 'elapsed_s', 'type', 'color', 'exp', 'monster', 'status', 'note',
               'source', 'observed_at', 'interval_start', 'interval_end', 'mesos']
 
-    def __init__(self, monsters=None, character='', map_name=''):
+    def __init__(self, monsters=None, character='', map_name='', *, inventory_only=False):
         self.monsters = dict(monsters or {})
         self.character = character
         self.map_name = map_name
+        self.inventory_only = inventory_only
         self.coin_total = 0
         self.wallet_checks = []
         self.counts = Counter()
@@ -85,6 +86,10 @@ class CounterSession:
 
     def accept(self, event_id, kind, amount, color, confident=True, note='',estimated=False,
                source='notification',observed_at=None,interval_start=None,interval_end=None):
+        # Keep legacy notification accounting available for historical replays,
+        # but live sessions use only the inventory balance for mesos income.
+        if self.inventory_only and kind == 'mesos':
+            return None
         if event_id in self.seen:
             return None
         self.seen.add(event_id)
@@ -186,11 +191,13 @@ class CounterSession:
             for name,count in self.estimated_counts.items():writer.writerow(['estimated_monster',self.safe_cell(name),count])
             for key,value in self.exp_progress.snapshot().items():writer.writerow([key,value])
             writer.writerow(['map_active_seconds',round(self.map_clock.seconds,2)])
-            writer.writerow(['pickup_mesos',self.coin_total])
-            writer.writerow(['mesos_per_hour',self.coin_rate()])
+            if not self.inventory_only:
+                writer.writerow(['pickup_mesos',self.coin_total])
+                writer.writerow(['mesos_per_hour',self.coin_rate()])
             for check in self.wallet_checks:
                 if hasattr(check,'snapshot'):
-                    writer.writerow(['wallet_live_check',json.dumps(check.snapshot())])
+                    writer.writerow(['wallet_income' if self.inventory_only else 'wallet_live_check',
+                                     json.dumps(check.snapshot())])
                     continue
                 if check.start:
                     writer.writerow(['wallet_check', json.dumps(dict(start=check.start, end=check.end,

@@ -198,3 +198,15 @@ class LiveWalletCheck:
                     notification_per_hour=round(self.total*3600/elapsed) if ready else None,
                     live=fresh,segments=list(self.closed_intervals),
                     current_segment_start=self.segment_start)
+
+
+class InventoryIncome(LiveWalletCheck):
+    """Inventory-only runtime statistics; legacy comparison remains for replay."""
+    def count_event(self,at,amount,valid):
+        pass
+
+    def snapshot(self,now=None):
+        result=super().snapshot(now)
+        for key in ('notification_gain','notification_per_hour','uncertain','difference'):
+            result.pop(key)
+        return result

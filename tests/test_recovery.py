@@ -213,6 +213,28 @@ class RecoveryIntegrationTests(unittest.TestCase):
         self.world.focus=True
         for t in (.1,.4,.9):self.step(t)
 
+    def test_inventory_only_dashboard_updates_and_reset_preserves_experience(self):
+        self.begin()
+        session=self.ui.session
+        self.assertTrue(session.inventory_only)
+        check=session.wallet_checks[-1]
+        self.assertIsInstance(check,app.InventoryIncome)
+        for t in range(33):check.observe(True,1000+t*10,t+2)
+        self.world.now=34
+        self.ui.update_metrics()
+        self.assertEqual(self.ui.coin_display.get(),'物品栏金币／小时 36,000')
+        self.assertEqual(self.ui.wallet_hint.get(),'余额净增 +310')
+        self.assertEqual(len(self.ui.section_widgets['coins']),2)
+        session.counts['Wild Boar']=7
+        session.personal_exp=322
+        self.ui.arm_wallet()
+        self.assertEqual(check.phase,'done')
+        self.assertIs(self.ui.session,session)
+        self.assertEqual(session.counts['Wild Boar'],7)
+        self.assertEqual(session.personal_exp,322)
+        self.assertEqual(self.ui.coin_display.get(),'物品栏金币／小时 —')
+        self.assertNotIn('notification_gain',session.wallet_checks[-1].snapshot())
+
     def test_clipped_blank_hud_edge_still_updates_dashboard_from_real_exp_pixels(self):
         from unittest.mock import Mock
         from hud_exp import HudReader,ExpReading
@@ -253,7 +275,8 @@ class RecoveryIntegrationTests(unittest.TestCase):
         self.assertNotEqual(self.ui.rate_display.get(),'—')
         self.assertNotEqual(self.ui.eta_display.get(),'等待读数确认')
         self.assertEqual(self.ui.time_display.get(),'01:00')
-        self.assertIn('7,380',self.ui.notification_coin_display.get())
+        self.assertFalse(hasattr(self.ui,'notification_coin_display'))
+        self.assertNotIn('右下角',self.ui.coin_display.get())
         # The exact EXP digits still must remain fully visible after discovery.
         self.ui.hud_sampler=None
         self.ui.hud_reader=HudReader()

@@ -37,7 +37,6 @@ def build_interface(ui):
     ui.estimate_display = tk.StringVar(value='仅显示已击杀的怪物')
     ui.status = tk.StringVar(value='点击开始，切回 CW 后自动识别。')
     ui.coin_display = tk.StringVar()
-    ui.notification_coin_display = tk.StringVar()
     ui.wallet_hint = tk.StringVar()
     ui.stats = tk.StringVar()
     ui.exp_summary = tk.StringVar()
@@ -102,23 +101,15 @@ def update_dashboard(ui,now=None):
     if check and hasattr(check,'snapshot'):
         money=check.snapshot(now if ui.running else None)
         wallet_speed=money['wallet_per_hour']
-        hint_speed=money['notification_per_hour']
-        ui.coin_display.set('物品栏／小时 '+(f'{wallet_speed:,}' if wallet_speed is not None else '—'))
-        ui.notification_coin_display.set('右下角／小时 '+(f'{hint_speed:,}' if hint_speed is not None else '—'))
+        ui.coin_display.set('物品栏金币／小时 '+(f'{wallet_speed:,}' if wallet_speed is not None else '—'))
         if money['wallet_gain'] is not None:
-            mark=' · 手动暂停' if manual else '' if money['live'] or not ui.running else ' · 钱包读取暂停'
-            ui.wallet_hint.set(f"余额净增 {money['wallet_gain']:+,} · 提示 {money['notification_gain']:,}"
-                               f" · 差额 {money['difference']:+,} · 待确认 {money['uncertain']} 笔"+mark)
+            mark=' · 手动暂停' if manual else '' if money['live'] or not ui.running else ' · 请打开物品栏继续读取'
+            ui.wallet_hint.set(f"余额净增 {money['wallet_gain']:+,}"+mark)
         else:
-            rate=s.coin_rate()
-            speed=f'{rate:,}' if rate is not None else '—'
-            ui.notification_coin_display.set(f'右下角／小时 {speed} · 累计 {s.coin_total:,}')
-            ui.wallet_hint.set('物品栏余额尚未确认；右下角先显示会话统计，余额确认后对齐区间')
+            ui.wallet_hint.set('请打开物品栏，保持金币余额可见；累计30秒有效读数后显示时薪')
     else:
-        rate=s.coin_rate()
-        ui.coin_display.set('右下角／小时 '+(f'{rate:,}' if rate is not None else '—'))
-        ui.notification_coin_display.set(f'已确认提示金币 {s.coin_total:,}')
-        ui.wallet_hint.set('')
+        ui.coin_display.set('物品栏金币／小时 —')
+        ui.wallet_hint.set('开始后打开物品栏，保持金币余额可见')
     ui.time_display.set(f'{seconds//60:02d}:{seconds%60:02d}')
     percent = progress['current_hud_percent']
     ui.percent_display.set(f'{percent:.2f}%' if percent is not None else '—')

@@ -8,7 +8,7 @@ from dataclasses import asdict
 from PIL import Image, ImageTk
 from counter import CounterSession
 from catalog import Catalog, ALL_MAPS, BUILTIN, CUSTOM, settings_profile
-from wallet import LiveWalletCheck, wallet_balance
+from wallet import InventoryIncome, wallet_balance
 from recognition import Calibration
 from pixel_ocr import RapidReader
 from map_reader import MapMonitor,title_box
@@ -22,7 +22,7 @@ from async_reader import AsyncNotificationReader
 
 CONFIG = bootstrap.ROOT / 'settings.json'
 OUTPUT = bootstrap.ROOT / 'sessions'
-VERSION = '0.35'
+VERSION = '0.36'
 
 
 class App:
@@ -36,7 +36,7 @@ class App:
         self.manual_paused = False
         self.diagnostic=None
         self.tick_job = None
-        self.session = CounterSession()
+        self.session = CounterSession(inventory_only=True)
         self.calibration = None
         self.reader = None
         self.hwnd = None
@@ -80,14 +80,14 @@ class App:
 
     def arm_wallet(self):
         if not self.running:
-            self.notice('请先开始新会话，再重新对照金币。')
+            self.notice('请先开始新会话，再重置金币统计。')
             return
         checks=self.session.wallet_checks
         if checks and hasattr(checks[-1],'finish'):
             checks[-1].finish()
-        checks.append(LiveWalletCheck())
+        checks.append(InventoryIncome())
         self.wallet_box=None
-        self.session.note('wallet_armed','持续测试：保持物品栏和右侧提示可见，30秒后显示两路时薪')
+        self.session.note('wallet_armed','保持物品栏余额可见，有效读数累计30秒后显示金币时薪')
         self.update_metrics()
 
     def probe_wallet(self,rect,monitors):
@@ -126,24 +126,6 @@ class App:
             self.session._record(type=marker,source='wallet',observed_at=observed,
                                  mesos=check.current[1],status='confirmed',
                                  note=json.dumps(check.snapshot(observed),ensure_ascii=False))
-
-    def trace_wallet_frame(self,now,gap):
-        checks=self.session.wallet_checks
-        if not checks:
-            return
-        check=checks[-1]
-        if check.end and now>check.end[0]+4:
-            return
-        rows=[{key:row.get(key) for key in ('text','box','score','said','color','digit_reads',
-                                          'digit_verified','digit_min_score','digit_scores',
-                                          'digit_texts','digit_complete')}
-              for row in getattr(self.reader,'last_lines',[])]
-        state=getattr(self.reader,'last_diagnostics',{})
-        evidence=dict(lines=rows,baseline=state.get('baseline',False),gap=gap)
-        if evidence!=check.last_lines:
-            self.session._record(type='wallet_ocr_frame',source='notification',observed_at=now,
-                                 note=json.dumps(evidence,ensure_ascii=False))
-            check.last_lines=evidence
 
     def arm_diagnostic(self):
         if not self.running:
@@ -300,9 +282,9 @@ class App:
             automated=self.auto_map.get() and self.mode.get()==BUILTIN
             monsters = {} if automated else settings_profile(self.settings, self.catalog)
             self.session.close()
-            self.session = CounterSession(monsters, self.character.get(), '等待读图确认' if automated else self.map_name.get())
+            self.session = CounterSession(monsters, self.character.get(), '等待读图确认' if automated else self.map_name.get(), inventory_only=True)
             self.session.open_log(OUTPUT)
-            self.session.wallet_checks.append(LiveWalletCheck())
+            self.session.wallet_checks.append(InventoryIncome())
             self.wallet_box=None
             self.session.note('app_version', VERSION)
             self.session.note('reference', f'模式={self.mode.get()}; 倍率={self.multiplier.get()}; 来源={self.catalog.metadata}')
@@ -357,9 +339,9 @@ class App:
             summary=self.session.path.with_name(self.session.path.name.replace('-events.csv','-summary.csv'))
             self.session.export_summary(summary)
             self.session.close()
-            self.session=CounterSession(profile,self.character.get(),map_name)
+            self.session=CounterSession(profile,self.character.get(),map_name,inventory_only=True)
             self.session.open_log(OUTPUT)
-            self.session.wallet_checks.append(LiveWalletCheck())
+            self.session.wallet_checks.append(InventoryIncome())
             self.wallet_box=None
             self.session.note('app_version', VERSION)
         else:
@@ -678,7 +660,6 @@ class App:
             events,gap=self.reader.read(image,now)
         if not self.view_unchanged(rect):
             self.pause_capture('窗口正在移动或切换，等待画面稳定');return
-        self.trace_wallet_frame(now,gap)
         if self.diagnostic and not self.diagnostic.done:
             hud=self.hud_sampler.snapshot() if self.hud_sampler else None
             self.diagnostic.add(image,now,box,getattr(self.reader,'last_lines',[]),events,hud=hud)
@@ -695,10 +676,7 @@ class App:
             self.session.note('auto_calibration_ready',json.dumps(self.auto_region.settings()))
         for event in events:
             row=self.session.accept(**event)
-            if row and row['type']=='mesos':
-                result='已计入' if row['status']=='counted' else '金额待确认'
-                self.append_log(f"金币 +{row['mesos']} · {result}")
-            elif row:
+            if row:
                 label={'matched_candidate':'已计入','estimated_candidate':'估计计入','uncertain':'待确认，未计入',
                        'uncertain_color':'颜色待确认，未计入'}.get(row['status'],row['status'])
                 reason=f"；{row['note']}" if row['status'].startswith('uncertain') else ''
