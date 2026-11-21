@@ -6,6 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from exp_progress import ExperienceProgress
 from session_clock import MapClock
+from session_storage import active_logs,prune_sessions
 
 
 def parse_monsters(text):
@@ -55,9 +56,11 @@ class CounterSession:
         Path(directory).mkdir(parents=True, exist_ok=True)
         self.path = Path(directory) / (datetime.now().strftime('%Y%m%d-%H%M%S-%f') + '-events.csv')
         self.file = self.path.open('w', newline='', encoding='utf-8-sig')
+        active_logs.add(self.path.resolve())
         self.writer = csv.DictWriter(self.file, fieldnames=self.FIELDS)
         self.writer.writeheader()
         self.note('session_start', f'角色={self.character}; 地图={self.map_name}; 经验表={self.monsters}')
+        prune_sessions(self.path.parent)
 
     @staticmethod
     def safe_cell(value):
@@ -204,4 +207,6 @@ class CounterSession:
         if self.file:
             self.file.close()
             self.file = self.writer = None
+            active_logs.discard(self.path.resolve())
+            prune_sessions(self.path.parent)
 
