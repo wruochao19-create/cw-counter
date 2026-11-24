@@ -1,13 +1,19 @@
 """Map-session EXP efficiency from verified HUD samples, independent of kills."""
 import math
+from collections import deque
 
 
 class ExperienceProgress:
     FRESH_SECONDS = 1.2
+    RATE_WINDOW_SECONDS = 600.
+    RATE_WARMUP_SECONDS = 60.
 
     def __init__(self):
         self.gained=0
         self.seconds=0.
+        self.rate_intervals=deque()
+        self.rate_seconds=0.
+        self.rate_gain=0.
         self.current=None
         self.capacity_range=None
         self.last_sample_at=None
@@ -47,8 +53,11 @@ class ExperienceProgress:
 
     def _accept(self,reading,now,capacity,rebase=False):
         if not rebase and self.baseline is not None and self.compatible(self.baseline,reading):
-            self.gained+=reading.amount-self.baseline.amount
-            self.seconds+=now-self.baseline_at
+            gain=reading.amount-self.baseline.amount
+            duration=now-self.baseline_at
+            self.gained+=gain
+            self.seconds+=duration
+            self._append_rate_interval(duration,gain)
         if capacity is not None:
             if self.overlap(self.capacity_range,capacity):
                 self.capacity_range=(max(self.capacity_range[0],capacity[0]),min(self.capacity_range[1],capacity[1]))
@@ -57,6 +66,29 @@ class ExperienceProgress:
         self.last_confirmed_at=now
         self.level_candidate=None
         self.reading_status='live'
+
+    def _append_rate_interval(self,duration,gain):
+        # Matched gain/time intervals only, including idle (zero-gain) samples.
+        # Pauses and rebases never enter either side of the rate calculation.
+        if duration<=0:return
+        self.rate_intervals.append((duration,float(gain)))
+        self.rate_seconds+=duration
+        self.rate_gain+=gain
+        excess=self.rate_seconds-self.RATE_WINDOW_SECONDS
+        while excess>0 and self.rate_intervals:
+            seconds,amount=self.rate_intervals.popleft()
+            removed=min(excess,seconds)
+            removed_gain=amount*(removed/seconds)
+            self.rate_seconds-=removed
+            self.rate_gain-=removed_gain
+            excess-=removed
+            if removed<seconds:
+                # Interpolate only the tiny interval crossing the window edge;
+                # dropping a whole sample would introduce a periodic step.
+                self.rate_intervals.appendleft((seconds-removed,amount-removed_gain))
+        # Fractional eviction may leave roundoff after all earned EXP expires.
+        # Treat sub-millionth EXP residue as zero, including for ETA division.
+        self.rate_gain=0. if self.rate_gain<1e-6 else self.rate_gain
 
     def observe(self,reading,now):
         # Preserve the high-water sample timestamp through pauses so queued old
@@ -117,9 +149,14 @@ class ExperienceProgress:
         if self.last_confirmed_at is not None and now-self.last_confirmed_at>self.FRESH_SECONDS:
             self.baseline=None;self.baseline_at=None
 
-    def snapshot(self,now=None):
-        ready=self.seconds>=30
-        rate=self.gained*3600/self.seconds if ready else None
+    def snapshot(self,now=None,unit='小时'):
+        rolling_ready=self.rate_seconds>=self.RATE_WARMUP_SECONDS-1e-7
+        rolling_rate=self.rate_gain*3600/self.rate_seconds if rolling_ready else None
+        session_ready=self.seconds>=30
+        session_rate=self.gained*3600/self.seconds if session_ready else None
+        rolling=unit=='分钟'
+        ready=rolling_ready if rolling else session_ready
+        rate=rolling_rate if rolling else session_rate
         remaining=None
         if self.current and self.current.amount>0 and .1<=self.current.percent<100:
             remaining=self.current.amount*(100-self.current.percent)/self.current.percent
@@ -137,6 +174,15 @@ class ExperienceProgress:
         elif status=='live' and not fresh:status='confirming'
         return dict(hud_exp_gained=self.gained,hud_observed_seconds=round(self.seconds,2),
             exp_per_hour=round(rate,1) if rate is not None else None,
+            exp_rate_basis='rolling_valid_600s' if rolling else 'session_valid',
+            exp_rate_window_seconds=self.RATE_WINDOW_SECONDS,
+            exp_rate_observed_seconds=round(self.rate_seconds,2),
+            exp_rate_window_gain=round(self.rate_gain,3),
+            exp_rate_window_full=self.rate_seconds>=self.RATE_WINDOW_SECONDS-1e-7,
+            exp_session_per_hour=round(session_rate,1) if session_rate is not None else None,
+            exp_rolling_per_hour=round(rolling_rate,1) if rolling_rate is not None else None,
+            exp_rolling_per_minute=round(rolling_rate/60,3) if rolling_rate is not None else None,
+            exp_rolling_eta_seconds=round(remaining/rolling_rate*3600,1) if remaining is not None and rolling_rate is not None and rolling_rate>0 else None,
             remaining_exp_estimate=round(remaining) if remaining is not None else None,
             level_eta_seconds=round(eta,1) if eta is not None else None,
             current_hud_exp=self.current.amount if self.current else None,
@@ -147,17 +193,21 @@ class ExperienceProgress:
             exp_rejected_readings=self.rejected_readings)
 
     def display(self,running=False,now=None,unit='小时'):
-        s=self.snapshot(now);rate=s['exp_per_hour'];eta=s['level_eta_seconds']
+        s=self.snapshot(now,unit=unit);rate=s['exp_per_hour'];eta=s['level_eta_seconds']
         if unit=='分钟' and rate is not None:rate/=60
-        speed=f"{rate:,.0f} EXP" if rate is not None else '收集30秒数据中' if running else '—'
+        warmup='积累1分钟有效数据中' if unit=='分钟' else '收集30秒数据中'
+        speed=f"{rate:,.0f} EXP" if rate is not None else warmup if running else '—'
         if eta is not None:
             minutes=max(1,math.ceil(eta/60));hours,minutes=divmod(minutes,60)
             duration=(f'{hours}小时' if hours else '')+(f'{minutes}分钟' if minutes else '')
             estimate=f'约 {duration}'
         elif rate==0:estimate='暂无经验增长'
         else:estimate='等待有效读数与经验增长'
-        title=f'本图平均经验／{unit}：{speed}    按此速度升级：{estimate}'
+        basis='最近10分钟' if unit=='分钟' else '本图整场平均'
+        title=f'{basis}经验／{unit}：{speed}    按此速度升级：{estimate}'
         seconds=int(self.seconds);minutes,seconds=divmod(seconds,60)
         state=' · 读取暂停，保留上次估算' if running and not s['exp_reading_live'] else ''
-        detail=f'本图已记录经验 +{self.gained:,} · 经验条观察时长 {minutes}分{seconds:02d}秒 · 切窗暂停计时{state}'
+        window='已满10分钟' if s['exp_rate_window_full'] else f"已积累 {s['exp_rate_observed_seconds']:.0f}/600 秒，未满10分钟"
+        window_note=f' · 滚动窗口{window}' if unit=='分钟' else ''
+        detail=f'本图已记录经验 +{self.gained:,} · 经验条观察时长 {minutes}分{seconds:02d}秒{window_note} · 切窗暂停计时{state}'
         return title,detail

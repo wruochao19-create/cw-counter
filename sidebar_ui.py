@@ -81,7 +81,7 @@ def apply_topmost(ui, persist=False):
 def update_dashboard(ui,now=None):
     s = ui.session
     manual=getattr(ui,'manual_paused',False)
-    progress = s.exp_progress.snapshot(now=None if manual else now)
+    progress = s.exp_progress.snapshot(now=None if manual else now,unit=ui.exp_rate_unit.get())
     quality='paused' if ui.running and ui.needs_resume else progress['exp_reading_status']
     rate, eta = progress['exp_per_hour'], progress['level_eta_seconds']
     displayed_rate=rate/60 if rate is not None and ui.exp_rate_unit.get()=='分钟' else rate
@@ -96,7 +96,11 @@ def update_dashboard(ui,now=None):
     state={'stale':'读数过期，保留上次均值','rejected':'数字冲突，正在校验',
            'level_change_pending':'正在确认升级','confirming':'正在验证数字',
            'paused':'读取暂停','waiting':'等待读数','live':'有效读数均值'}[quality]
-    ui.rate_note.set('底部经验条 · '+('手动暂停' if manual else state))
+    window='近10分钟' if progress['exp_rate_window_full'] else f"已采集{int(progress['exp_rate_observed_seconds'])}秒 / 10分钟"
+    if ui.exp_rate_unit.get()=='小时':window='本图整场平均'
+    if not progress['exp_rate_ready'] and ui.running and quality in ('live','confirming'):
+        state='积累1分钟后估算' if ui.exp_rate_unit.get()=='分钟' else '积累30秒后估算'
+    ui.rate_note.set(window+' · '+('手动暂停' if manual else state))
     if ui.running and not manual and progress['current_hud_exp'] is None:
         ui.rate_note.set(ui.hud_status.get())
     seconds = int(s.map_clock.seconds)

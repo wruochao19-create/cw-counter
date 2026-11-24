@@ -13,6 +13,40 @@ from ui_theme import ACCENTS, TEXT, SOFT, SURFACE
 
 
 class LayoutTests(unittest.TestCase):
+    def test_hour_and_minute_select_different_hud_averages_without_notification_income(self):
+        from hud_exp import ExpReading
+        with tempfile.TemporaryDirectory() as directory:
+            with patch.object(app,'CONFIG',Path(directory)/'settings.json'),patch.object(app.capture,'enumerate_windows',return_value=[]):
+                root=tk.Tk();root.withdraw();ui=app.App(root)
+                try:
+                    session=ui.session;p=session.exp_progress;amount=100000
+                    for t in range(901):
+                        if t:amount+=10 if t<=300 else 1
+                        reading=ExpReading(amount,round(amount/10000,2))
+                        p.observe(reading,t);p.observe(reading,t+.15)
+                    before=p.snapshot()
+                    ui.exp_rate_selector.set('小时');ui.exp_unit_changed()
+                    self.assertEqual(ui.rate_display.get(),'14,400')
+                    self.assertIn('本图整场平均',ui.rate_note.get())
+                    hourly_eta=ui.eta_display.get()
+                    ui.exp_rate_selector.set('分钟');ui.exp_unit_changed()
+                    self.assertEqual(ui.rate_display.get(),'60')
+                    self.assertIn('近10分钟',ui.rate_note.get())
+                    self.assertIn('最近10分钟',ui.exp_summary.get())
+                    self.assertNotEqual(ui.eta_display.get(),hourly_eta)
+                    # Even a huge notification gain is not input to either HUD rate.
+                    session.accept('hint','exp',999999,'white')
+                    session.accept('party','bonus',999999,'yellow')
+                    ui.update_metrics()
+                    self.assertEqual(ui.rate_display.get(),'60')
+                    self.assertEqual(ui.gain_display.get(),'+3,600')
+                    ui.exp_rate_selector.set('小时');ui.exp_unit_changed()
+                    self.assertEqual(ui.rate_display.get(),'14,400')
+                    self.assertEqual(ui.eta_display.get(),hourly_eta)
+                    self.assertEqual(p.snapshot(),before)
+                    self.assertIs(ui.session,session)
+                finally:ui.close()
+
     def test_mini_and_sections_preserve_live_session_and_restore_preferences(self):
         with tempfile.TemporaryDirectory() as directory:
             path=Path(directory)/'settings.json'
